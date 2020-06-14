@@ -3,11 +3,15 @@ import { openWcLogo } from './open-wc-logo.js';
 
 export class HomePage extends LitElement {
 
-  @property({type: String}) page = 'main';
+  @property({
+    type: String
+  }) page = 'main';
 
-  @property({type: String}) title = '';
+  @property({
+    type: String
+  }) title = '';
 
-  static styles = css`
+  static styles = css `
     :host {
       min-height: 100vh;
       display: flex;
@@ -47,11 +51,60 @@ export class HomePage extends LitElement {
     .app-footer a {
       margin-left: 5px;
     }
+
+    /* Style the navbar */
+    #navbar {
+      overflow: hidden;
+      background-color: #333;
+      position: fixed;
+    top: 0;
+    width: 100%;
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 1px 8px #000000;
+    }
+
+    #navbar .links {
+      float: right;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px;
+      text-decoration: none;
+    }
+
+    #home {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px;
+      text-decoration: none;
+    }
+
+    #navbar a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    #navbar a.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+
   `;
 
   render() {
-    return html`
+    return html `
+<div id="navbar">
+        <a id="home" href="#home">ピーク</a>
+        <a class="links" href="#news">GitHub</a>
+        <a class="links" href="#contact">Contact</a>
+
+      </div>
       <main>
+
         <div class="logo">${openWcLogo}</div>
         <h1>My app</h1>
 
