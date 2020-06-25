@@ -1,5 +1,6 @@
 import { LitElement, html, css, property } from 'lit-element';
 import { openWcLogo } from './open-wc-logo.js';
+import {Router} from '@vaadin/router';
 
 export class HomePage extends LitElement {
 
@@ -10,6 +11,34 @@ export class HomePage extends LitElement {
   @property({
     type: String
   }) title = '';
+
+  @property({type: String}) activeTab = '';
+  @property({type: Array}) tabs = ['basic', 'intermediate', 'advanced'];
+
+  constructor(){
+    super();
+    this.activeTab = location.pathname === '/' ? 'basic' : location.pathname.replace('/', '');
+    this.tabs = ['basic', 'intermediate', 'advanced'];
+  }
+
+  firstUpdated() {
+    const router = new Router(this.shadowRoot.getElementById('outlet'));
+    router.setRoutes([
+      {path: '/',     component: 'basic-demos'},
+      {path: '/basic',  component: 'basic-demos'},
+      {path: '/intermediate',  component: 'intermediate-demos'},
+      {path: '/advanced',  component: 'advanced-demos'},
+      {path: '(.*)', redirect: '/', action: () => {
+        this.activeTab = 'basic';
+        }
+      }
+    ]);
+  }
+
+  switchRoute(route) {
+    this.activeTab = route;
+    Router.go(`/${route}`);
+  }
 
   static styles = css `
     :host {
@@ -93,6 +122,7 @@ export class HomePage extends LitElement {
     }
 
 
+
   `;
 
   render() {
@@ -100,7 +130,7 @@ export class HomePage extends LitElement {
 <div id="navbar">
         <a id="home" href="#home">ピーク</a>
         <a class="links" href="#news">GitHub</a>
-        <a class="links" href="#contact">Contact</a>
+        <a class="links" href="contact">Contact</a>
 
       </div>
       <main>
