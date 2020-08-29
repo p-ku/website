@@ -1,0 +1,105 @@
+{
+  "scripts": {
+    "lint:eslint": "eslint --ext .ts,.html . --ignore-path .gitignore",
+    "format:eslint": "eslint --ext .ts,.html . --fix --ignore-path .gitignore",
+    "lint:prettier": "prettier \"**/*.js\" \"**/*.ts\" --check --ignore-path .gitignore",
+    "format:prettier": "prettier \"**/*.js\" \"**/*.ts\" --write --ignore-path .gitignore",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "test": "tsc && karma start --coverage",
+    "test:watch": "concurrently --kill-others --names tsc,karma \"npm run tsc:watch\" \"karma start --auto-watch=true --single-run=false\"",
+    "storybook": "concurrently --kill-others --names tsc,storybook \"npm run tsc:watch\" \"start-storybook --node-resolve --watch --open\"",
+    "storybook:build": "build-storybook",
+    "build": "rimraf dist && tsc && rollup -c rollup.config.js",
+    "start:build": "npm run build && es-dev-server --root-dir dist --app-index index.html --open --compatibility none",
+    "start": "concurrently --kill-others --names tsc,es-dev-server \"npm run tsc:watch\" \"es-dev-server --app-index index.html --node-resolve --open --watch\"",
+    "tsc:watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@open-wc/building-rollup": "^1.0.0",
+    "@open-wc/demoing-storybook": "^2.3.20",
+    "@open-wc/eslint-config": "^2.0.0",
+    "@open-wc/rollup-plugin-html": "^1.2.3",
+    "@open-wc/testing": "^2.0.0",
+    "@open-wc/testing-karma": "^3.0.0",
+    "@types/node": "13.11.1",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "chai": "^4.2.0",
+    "concurrently": "^5.3.0",
+    "deepmerge": "^3.2.0",
+    "es-dev-server": "^1.57.4",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "husky": "^1.0.0",
+    "karma": "^5.1.1",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "lint-staged": "^10.0.0",
+    "mocha": "^8.1.3",
+    "prettier": "^2.0.4",
+    "puppeteer": "^5.2.1",
+    "rimraf": "^2.6.3",
+    "rollup": "^2.3.4",
+    "serialize-javascript": "^4.0.0",
+    "sinon": "^9.0.3",
+    "tslib": "^1.11.0",
+    "typescript": "~3.8.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@open-wc/eslint-config",
+      "eslint-config-prettier"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "avoid"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "name": "home-page",
+  "version": "0.0.0",
+  "description": "Webcomponent home-page following open-wc recommendations",
+  "author": "home-page",
+  "license": "MIT",
+  "dependencies": {
+    "@material/mwc-button": "^0.15.0",
+    "@material/mwc-checkbox": "^0.15.0",
+    "@material/mwc-dialog": "^0.15.0",
+    "@material/mwc-drawer": "^0.15.0",
+    "@material/mwc-fab": "^0.15.0",
+    "@material/mwc-formfield": "^0.15.0",
+    "@material/mwc-icon": "^0.15.0",
+    "@material/mwc-icon-button": "^0.15.0",
+    "@material/mwc-icon-button-toggle": "^0.15.0",
+    "@material/mwc-linear-progress": "^0.15.0",
+    "@material/mwc-list": "^0.15.0",
+    "@material/mwc-menu": "^0.15.0",
+    "@material/mwc-radio": "^0.15.0",
+    "@material/mwc-select": "^0.15.0",
+    "@material/mwc-slider": "^0.15.0",
+    "@material/mwc-snackbar": "^0.15.0",
+    "@material/mwc-switch": "^0.15.0",
+    "@material/mwc-tab": "^0.15.0",
+    "@material/mwc-tab-bar": "^0.15.0",
+    "@material/mwc-textarea": "^0.15.0",
+    "@material/mwc-textfield": "^0.15.0",
+    "@material/mwc-top-app-bar": "^0.15.0",
+    "@material/mwc-top-app-bar-fixed": "^0.15.0",
+    "@vaadin/router": "^1.7.2",
+    "lit-element": "^2.4.0",
+    "lit-html": "^1.3.0"
+  }
+}
