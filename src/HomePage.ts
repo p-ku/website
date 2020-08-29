@@ -21,7 +21,7 @@ export class HomePage extends LitElement {
     this.tabs = ['basic', 'intermediate', 'advanced'];
   }
 
-  firstUpdated() {
+ /*  firstUpdated() {
     const router = new Router(this.shadowRoot.getElementById('outlet'));
     router.setRoutes([
       {path: '/',     component: 'basic-demos'},
@@ -33,12 +33,12 @@ export class HomePage extends LitElement {
         }
       }
     ]);
-  }
+  } */
 
-  switchRoute(route) {
+/*   switchRoute(route) {
     this.activeTab = route;
     Router.go(`/${route}`);
-  }
+  } */
 
   static styles = css `
     :host {
@@ -128,8 +128,8 @@ export class HomePage extends LitElement {
   render() {
     return html `
 <div id="navbar">
-        <a id="home" href="#home">ピーク</a>
-        <a class="links" href="#news">GitHub</a>
+        <a id="home" href="#home">ピークu</a>
+        <a class="links" href="https://github.com/p-ku">GitHub</a>
         <a class="links" href="contact">Contact</a>
 
       </div>
