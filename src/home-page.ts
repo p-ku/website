@@ -60,95 +60,146 @@ class HomePage extends LitElement {
       flex-grow: 1;
     }
 
-    .app-footer {
+/*     .app-footer {
       font-size: calc(12px + 0.5vmin);
       align-items: center;
     }
 
     .app-footer a {
-      margin-left: 5px;
+             margin-left: 5px;
       padding-left: calc(20px + 0.5vmin);
       padding-right: calc(20px + 0.5vmin);
-    }
+    } */
 
     /* Style the navbar */
     #navbar {
-      list-style-type: none;
       overflow: hidden;
       background-color: #333;
       border-radius: 0px 0px 12px 12px;   
       width: 100%;
       height: calc(32px + 2vmin);
       box-shadow: 0px 0px 5px 1px #000000;
+      
     }
-
-    #navbar div {
+    #footer {
+      font-size: calc(12px + 0.5vmin);
+      align-items: center;
+      overflow: hidden;
+      width: 100%;
       height: calc(32px + 2vmin);
-    } 
-
-    #lang:hover {
-      background-color: #f2f2f2; /* Green */
     }
 
-    #demo1, #demo2 {
-      color: #f2f2f2;
-      text-align: center;
-      text-decoration: none;
-      display: inline-flex;
-      line-height: calc(32px + 2vmin);
-      padding-left: calc(0.5vmin);
-      padding-right: calc(0.5vmin);
-    }
-
-    #navbar div a:hover:not(.active) {background-color: #111;}
-    #navbar div a.active:hover {background-color: darkslateblue;}
-
-    #home {
-      color: #f2f2f2;
-      text-align: center;
-      text-decoration: none;
-      display: inline-flex;
-      line-height: calc(32px + 2vmin);
-      padding-left: calc(0.5vmin);
-      padding-right: calc(0.5vmin);
-    }
-
-    #lang {
-      text-align: center;
-      text-decoration: none;
-      border: none;
-      width: calc(3 * calc(20px + 2vmin));
-      line-height: calc(32px + 2vmin);
-      top: 0;
-      background-color: gray;
+    .lang:hover {
+      background-color: blue;
       transition-duration: 0.1s;
-      font-size: calc(10px + 2vmin);
-      cursor: pointer;
+    }
+    .english:hover {
+      background-color: #012169;
+      color: #f2f2f2;
+    }
+    .japanese:hover {
+      background-color: #EF3340;
+      color: #f2f2f2;
+    }
+
+    .lang:active {
+      background-color: blue;
+      transform: 0px 0px;
+      transition-duration: 0.1s;
+    }
+    .english:active {
+      background-color: #012169;
+      color: white;
+    }
+    
+    .japanese:active {
+      color: white;
+      background-color: #EF3340;
+    }
+
+
+/*     #lang:focus {
+      box-shadow: 0px 0px 5px 1px green;
+    } */
+
+    a.head {
+      color: #f2f2f2;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      line-height: calc(32px + 2vmin);
+      padding-left: calc(1vmin);
+      padding-right: calc(1vmin);
+      color: gray;
+      transition-duration: 0.1s;
+      font-size: calc(4px + 2vmin);
+    }
+
+    a.foot {
+      color: #f2f2f2;
+      text-decoration: none;
+      transition-duration: 0.1s;
     }
 
     a.active {
-      background-color: darkcyan;
+      text-shadow: 0 0 3px cyan;
+      color: #FFFFFF;
+    }
+
+    #navbar div a:hover:not(.active) {background-color: #111;}
+    #navbar div a.active:hover {}
+
+    #home {
+      color: #f2f2f2;
+      font-size: calc(10px + 2vmin);
+    }
+/* 
+    .centerlang {
+
+  position: absolute;
+  margin-top:0%;
+right:0;
+
+} */
+
+    .lang {
+      text-align: center;
+      color: #f2f2f2;
+      text-decoration: none;
+      border: none;
+      width: calc(60px + 1vmin);
+      line-height: calc(60px + 1vmin);
+      background-color: dimgray;
+      transition-duration: 0.1s;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 100%;
+      font-size: calc(12px + 0.5vmin);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+
     }
 
     #navleft {float: left;}
-
-    #navright {float: right;}
-
+    #navright {float: right; padding-right: calc(16px + 0.5vmin);height:100%; position: relative; display: flex;
+  align-items: center;
+  justify-content: center;}
     #navcenter {float: none;}
+
+    #footleft {float: left; width: 45%}
+    #footright {float: right; width: 45%}
+    #footcenter {float: none; width: 10%}
+
+    #email {float: left}
+    #source {float: right}
 
   @media screen and (max-width: 960px) {
     #navbar {border-radius: 0px;}
     }
 
     @media screen and (max-width: 600px) {
-      #navright button {border-radius: 0px}
 
-      #navcenter {
-        position: relative;
-        top: 0;
-        left: 0;
-        transform: none;
-      }
     }
 
   `;
@@ -158,14 +209,14 @@ class HomePage extends LitElement {
 
 <div id="navbar">
   <div id="navleft">
-    <a id="home" href="" @click=${() => this.switchRoute('main')}>ピ-クu</a>
+    <a id="home" class="head" href="" @click=${() => this.switchRoute('main')}>ピ-クu</a>
   </div>
-  <div id="navright">
-    <button id="lang" @click=${() => (this.language = !this.language)}>${this.language ? "日本語" : "EN"}</button>
+  <div id="navright" class="centerlang">
+    <button class=${this.language ? "japanese lang" : "english lang"} @click=${() => (this.language = !this.language)}>${this.language ? "JP" : "EN"}</button>
   </div>
   <div id="navcenter">
-    <a id="demo1" class=${this.activeTab==="demo1" ? "active" : "inactive"} href="demo1" @click=${() => this.switchRoute('demo1') }>${this.language ? "Demo 1" : "デモ１"}</a>
-    <a id="demo2" class=${(this.activeTab==="demo2") ? "active" : "inactive"} href="demo2" @click=${() => this.switchRoute('demo2') }>${this.language ? "Demo 2" : "デモ２"}</a>
+    <a class=${this.activeTab==="demo1" ? "active head" : "inactive head"} href="demo1" @click=${() => this.switchRoute('demo1') }>${this.language ? "Demo 1" : "デモ１"}</a>
+    <a class=${(this.activeTab==="demo2") ? "active head" : "inactive head"} href="demo2" @click=${() => this.switchRoute('demo2') }>${this.language ? "Demo 2" : "デモ２"}</a>
   </div>
 </div>
 
@@ -174,14 +225,19 @@ class HomePage extends LitElement {
   </div>
 </main>
 
-<p class="app-footer">
-  <a id='sourcecode'
-    target="_blank"
-    rel="noopener noreferrer"
-    href="https://github.com/p-ku"
-    >${this.language ? "Source Code" : "ソースコード"}</a>
-    <a id='email'>contact@p-ku.com</a>
-</p>
+<div id="footer">
+  <div id="footleft">
+    <a id="source"
+      target="_blank"
+      rel="noopener noreferrer"
+      href="https://github.com/p-ku"
+      >${this.language ? "Source Code" : "ソースコード"}</a>
+  </div>
+  <div id="footright">
+    <a id="email">contact@p-ku.com</a>
+  </div>
+</div>
+
     `;
   }
 }
