@@ -1,6 +1,5 @@
 import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
-
 import {Router} from '@vaadin/router';
 
 export class WebSite extends LitElement {
@@ -26,17 +25,21 @@ export class WebSite extends LitElement {
     const outlet = this.shadowRoot?.getElementById('outlet');
     const router = new Router(outlet);
     router.setRoutes([
+
       {path: '/',     component: 'home-page'},
       {path: '/crypto',  component: 'crypto-demo'},
       {path: '/civil',  component: 'civil-demo'},
       {path: '(.*)', redirect: '/', action: () => {
         this.activeTab = 'home';
+
         }
       }
     ]);
   }
 
   switchRoute(route = 'home') {
+
+
     this.activeTab = route;
     Router.go(`/${route}`);
   }
@@ -86,6 +89,7 @@ export class WebSite extends LitElement {
 #navcenter {display: flex;align-items: center;}
 
 /*    .app-footer {
+
       font-size: calc(12px + 0.5vmin);
       align-items: center;
     }
@@ -94,27 +98,26 @@ export class WebSite extends LitElement {
              margin-left: 5px;
       padding-left: calc(20px + 0.5vmin);
       padding-right: calc(20px + 0.5vmin);
-    }  */
 
-/*     #footleft {float: left; width: 45%}
-    #footright {float: right; width: 45%}
-    #footcenter {float: none; width: 10%} */
+    } */
 
-/*     #email {float: left}
-    #source {float: right} */
-
-/*       a.foot {
-      color: #f2f2f2;
-      text-decoration: none;
-      transition-duration: 0.1s;
+    /* Style the navbar */
+    #navbar {
+      overflow: hidden;
+      background-color: #333;
+      border-radius: 0px 0px 12px 12px;   
+      width: 100%;
+      height: calc(32px + 2vmin);
+      box-shadow: 0px 0px 5px 1px #000000;
     }
-    */
+
     #footer {
       font-size: calc(12px + 0.5vmin);
       align-items: center;
       overflow: hidden;
       width: 100%;
       height: calc(32px + 2vmin);
+
     }   
 
 .langspace {
@@ -233,6 +236,7 @@ justify-content: center;
       to {
         transform: rotate(360deg);
       }
+
     }
 /* 
     .centerlang {
@@ -251,6 +255,7 @@ right:0;
     #navbar {
     border-radius: 0 0 4vmin 4vmin;
     }
+  }
 
     @media screen and (max-width: 600px) {
 
@@ -260,7 +265,6 @@ right:0;
 
   render() {
     return html `
-
 
 
 <div id="navbar">
@@ -288,6 +292,7 @@ right:0;
       target="_blank"
       rel="noopener noreferrer"
       href="https://github.com/p-ku/homepage"
+
       >${this.language ? "Source Code" : "ソースコード"}</a>
   </div>
   <div id="footright">
