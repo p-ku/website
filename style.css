@@ -1,0 +1,35 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', '游ゴシック',
+    '游ゴシック体', YuGothic, 'Yu Gothic', 'メイリオ', Meiryo, 'ＭＳ ゴシック',
+    'MS Gothic', HiraKakuProN-W3, 'TakaoExゴシック', TakaoExGothic,
+    'MotoyaLCedar', 'Droid Sans Japanese', sans-serif;
+  background-color: #ededed;
+  overflow: hidden;
+  --primary-cyan: #33efe2;
+  --japan-red: #ef3340;
+  --pink: #ef339e;
+  --orange: #ef8433;
+  --white: #f2f2f2;
+  --black: #121212;
+  --navbar: #9df5ee;
+  --demo: var(--navbar);
+  --demo-hover: #f2f2f2;
+  --demo-active: #f4bbdf;
+  --home: #fbe54f;
+  --lang: var(--navbar);
+  --lang-hover: #d02032;
+  --lang-active: var(--japan-red);
+  --japan: var(--japan-red);
+  --japan-hover: var(--japan-red);
+  --japan-active: var(--japan-red);
+  --demo-shadow: var(--black);
+
+  --primary-font-size: var(calc(10px + 2vmin));
+  --footer-font-size: var(calc(12px + 0.5vmin));
+  --demo-font-size: ;
+  --home-font-size: ;
+  --lang-font-size: ;
+}
