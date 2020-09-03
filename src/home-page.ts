@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit-element';
-import { bigCircle } from './big-circle.js';
 
 class MainPage extends LitElement {
   static styles = css`
@@ -19,10 +18,7 @@ class MainPage extends LitElement {
   `;
 
   render() {
-    return html`
-      <h1>My app</h1>
-      <!-- <div class="logo">${bigCircle}</div> -->
-    `;
+    return html` <h1>My app</h1> `;
   }
 }
 
