@@ -1,56 +1,44 @@
 import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
-import {Router} from '@vaadin/router';
+import { Router } from '@vaadin/router';
 
 export class WebSite extends LitElement {
+  @property({ type: String }) page = 'home';
+  @property({ type: String }) title = '';
+  @property({ type: String }) activeTab = '';
+  @property({ type: Boolean }) smallScreen = false;
+  @property({ type: Boolean }) language = true;
+  @property({ type: String }) currentPage = 'home';
 
-  @property({type: String}) page = 'home';
-  @property({type: String}) title = '';
-  @property({type: String}) activeTab = '';
-  @property({type: Boolean}) smallScreen = false;
-  @property({type: Object}) tabClass = {'home': true, 'crypto': false, 'civil': false};
-  @property({type: Boolean}) language = true;
-  @property({type: Object}) peek = {EN: "peek", JP: "ピーク"};
-  @property({type: Object}) demo = {EN: "demo", JP: "デモ"};
-  @property({type: Object}) privacypolicy = {EN: "privacy policy", JP: "個人情報保護方針"};
-  @property({type: Object}) termsofservice = {EN: "terms of service", JP: "利用規約"};
-  @property({type: String}) currentPage = 'home';
-
-  constructor(){
+  constructor() {
     super();
-    this.activeTab = location.pathname === '/' ? 'home' : location.pathname.replace('/', '');
-}
+    this.activeTab =
+      location.pathname === '/' ? 'home' : location.pathname.replace('/', '');
+  }
 
   firstUpdated() {
     const outlet = this.shadowRoot?.getElementById('outlet');
     const router = new Router(outlet);
     router.setRoutes([
-
-      {path: '/',     component: 'home-page'},
-      {path: '/crypto',  component: 'crypto-demo'},
-      {path: '/civil',  component: 'civil-demo'},
-      {path: '(.*)', redirect: '/', action: () => {
-        this.activeTab = 'home';
-
-        }
-      }
+      { path: '/', component: 'home-page' },
+      { path: '/crypto', component: 'crypto-demo' },
+      { path: '/civil', component: 'civil-demo' },
+      {
+        path: '(.*)',
+        redirect: '/',
+        action: () => {
+          this.activeTab = 'home';
+        },
+      },
     ]);
   }
 
   switchRoute(route = 'home') {
-
-
     this.activeTab = route;
     Router.go(`/${route}`);
   }
 
-
-/* updated() {
-  this.switchRoute('home')
-} */
-
-
-  static styles = css `
+  static styles = css`
     :host {
       min-height: 100vh;
       display: flex;
@@ -58,8 +46,7 @@ export class WebSite extends LitElement {
       align-items: center;
       justify-content: flex-start;
       font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-      max-width: 960px;
+      max-width: 100vw;
       margin: 0 auto;
       text-align: center;
     }
@@ -68,147 +55,146 @@ export class WebSite extends LitElement {
       flex-grow: 1;
     }
 
-    /* Style the navbar */
+    .logo > svg {
+      margin-top: 36px;
+      animation: app-logo-spin infinite 20s linear;
+    }
+
+    @keyframes app-logo-spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     #navbar {
+      display: flex;
+      max-width: 100vw;
       overflow: hidden;
-      background-color: #505050;
+      background-color: var(--navbar);
+      width: 100%;
+      height: calc(30px + 4vmin);
+      box-shadow: 0px 0px 5px 1px var(--black);
+      z-index: 1;
+      justify-content: center;
+      transition-duration: 0.1s;
+    }
+
+    #limit {
       display: flex;
       justify-content: space-between;
       align-items: stretch;
       align-content: center;
-     /*  border-radius: 0px 0px 80000px 12px;   */ 
-     border-radius: 0 0 4vmin 4vmin;
-      width: 100%;
-      height: calc(32px + 4vmin);
-      box-shadow: 0px 0px 5px 1px #121212;
-      z-index: 1;
-}
-
-#navleft {display: flex;align-items: center;width: calc(150px + 2vmin);padding-left: 6px;}
-#navright {display: flex;align-items: center;width: calc(150px + 2vmin);justify-content: flex-end;padding-right: 6px;}
-#navcenter {display: flex;align-items: center;}
-
-/*    .app-footer {
-
-      font-size: calc(12px + 0.5vmin);
-      align-items: center;
+      align-self: center;
+      width: 960px;
     }
 
-    .app-footer a {
-             margin-left: 5px;
-      padding-left: calc(20px + 0.5vmin);
-      padding-right: calc(20px + 0.5vmin);
-
-    } */
-
-    /* Style the navbar */
-    #navbar {
-      overflow: hidden;
-      background-color: #333;
-      border-radius: 0px 0px 12px 12px;   
-      width: 100%;
-      height: calc(32px + 2vmin);
-      box-shadow: 0px 0px 5px 1px #000000;
+    #navleft {
+      display: flex;
+      align-items: center;
+      width: calc(150px + 2vmin);
+      padding-left: calc(5px + 1vmin);
+    }
+    #navright {
+      display: flex;
+      align-items: center;
+      width: calc(150px + 2vmin);
+      justify-content: flex-end;
+      padding-right: calc(5px + 1vmin);
+    }
+    #navcenter {
+      display: flex;
+      align-items: center;
     }
 
     #footer {
       font-size: calc(12px + 0.5vmin);
       align-items: center;
-      overflow: hidden;
-      width: 100%;
-      height: calc(32px + 2vmin);
-
-    }   
-
-.langspace {
-      display: flex;
-justify-content: center;
     }
 
+    #footer a {
+      margin-left: 5px;
+      padding-left: calc(20px + 0.5vmin);
+      padding-right: calc(20px + 0.5vmin);
+    }
+
+    .langspace {
+      display: flex;
+      justify-content: center;
+    }
 
     .lang:hover {
-      transition-duration: 0.1s;
-      color: #f2f2f2;
-      background-color: #D02032;
-      box-shadow: 0 0 3px 2px #f2f2f2;
+      color: var(--white);
+      background-color: var(--lang-hover);
+      box-shadow: 0 0 4px 2px var(--white);
     }
     .lang:active {
-  text-shadow: 0 0 3px #f2f2f2;
-  box-shadow: 0 0 2px 1px #f2f2f2;
-  background-color: #EF3340;
-}
-/*     .lang {
-      color: black;
-      transition-duration: 0.1s;
-      cursor: pointer;
-      border-radius: 50%;
-      line-height: calc(20px + 2vmin);
-      width: calc(20px + 2vmin);
-      background-color: #501114;
-      font-size: calc(5px + 2vmin);
-      box-shadow: 0 0 3px 1px black;
-      font-weight: 700;
-    } */
+      text-shadow: 0 0 3px var(--white);
+      box-shadow: 0 0 2px 1px var(--white);
+      background-color: var(--lang-active);
+    }
+
     .lang {
-      color: #505050;
+      color: var(--navbar);
       transition-duration: 0.1s;
       cursor: pointer;
       border-radius: 50%;
       line-height: calc(20px + 2vmin);
       width: calc(20px + 2vmin);
-      background-color: #505050;
+      background-color: var(--navbar);
       font-size: calc(5px + 2vmin);
       font-weight: 700;
-      text-shadow: 1px 1px 2px black;
+      text-shadow: 1px 1px 2px var(--black);
     }
     .japanese {
-      color: #f2f2f2;
-      background-color: #EF3340;
-      box-shadow: 0 0 3px calc(30px + 2vmin) #f2f2f2;
+      color: var(--white);
+      background-color: var(--japan);
+      box-shadow: 0 0 20px calc(30px + 2vmin) var(--white);
     }
     .japanese:hover {
-      box-shadow: 0 0 3px calc(30px + 2vmin) #f2f2f2;
-      background-color: #EF3340;
-      text-shadow: 0 0 3px #f2f2f2;
+      box-shadow: 0 0 20px calc(30px + 2vmin) var(--white);
+      background-color: var(--japan-hover);
+      text-shadow: 0 0 3px var(--white);
     }
     .japanese:active {
-      box-shadow: 0 0 3px calc(25px + 2vmin) #f2f2f2;
-      background-color: #EF3340;
-      text-shadow: 0 0 4px #f2f2f2;
+      box-shadow: 0 0 20px calc(35px + 2vmin) var(--white);
+      background-color: var(--japan-active);
+      text-shadow: 0 0 4px var(--white);
     }
     .lang::selection {
-  background: transparent;
-}
+      background: transparent;
+    }
 
     a.mid {
-      color: #e9e9e9;
-       text-decoration: none;
-      color: gray;
+      color: var(--demo);
+      text-decoration: none;
       transition-duration: 0.1s;
       padding: 1vmin;
-      font-weight: 500;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px var(--black);
     }
     a.active {
-      text-shadow: 0 0 3px #33EFE2;
-      color: #f2f2f2;
+      text-shadow: 0 0 3px var(--demo-shadow);
+      color: var(--demo-active);
     }
 
-#home:hover {
-        font-size: calc(20px + 2vmin)
-      }
+    #home:hover {
+      font-size: calc(20px + 2vmin);
+    }
 
-      #home {
-      color: #f2f2f2;
-       text-decoration: none;
+    #home {
+      color: var(--home);
+      text-decoration: none;
       transition-duration: 0.05s;
-      text-shadow: 2px 2px 1px #121212;
+      text-shadow: 2px 2px 1px var(--black);
       font-weight: 600;
-      }
+    }
 
-    #navbar a:hover:not(.active) {color: #f2f2f2;}
-/*     #navbar div a.active:hover {}
- */
-
+    #navbar a:hover:not(.active) {
+      color: var(--white);
+    }
 
     .navcircle {
       --b: 20vmin;
@@ -219,87 +205,88 @@ justify-content: center;
 
       height: var(--d);
       width: var(--d);
-      background: linear-gradient(to right, red , yellow);
+      background: linear-gradient(to right, red, yellow);
       border-radius: 50%;
-      box-shadow: 0px 0px 5px 1px #000000;
+      box-shadow: 0px 0px 5px 1px var(--black);
       animation: app-logo-spin infinite 20s linear;
       position: absolute;
       top: calc(0vmin - var(--r) - var(--k));
       box-sizing: border-box;
-}
+    }
 
-  
-  @keyframes app-logo-spin {
+    @keyframes app-logo-spin {
       from {
         transform: rotate(0deg);
       }
       to {
         transform: rotate(360deg);
       }
-
     }
-/* 
-    .centerlang {
-
-  position: absolute;
-  margin-top:0%;
-right:0;
-
-} */
-
-
-
-
-
-  @media screen and (max-width: 960px) {
-    #navbar {
-    border-radius: 0 0 4vmin 4vmin;
-    }
-  }
-
-    @media screen and (max-width: 600px) {
-
-    }
-
   `;
 
   render() {
-    return html `
+    return html`
+      <div id="navbar">
+        <div id="limit">
+          <div id="navleft">
+            <a
+              id="home"
+              href=""
+              class=${this.currentPage === 'home' ? 'athome' : ''}
+              @click=${() => (this.currentPage = 'home')}
+              >ピ-クu</a
+            >
+          </div>
+          <div id="navcenter">
+            <a
+              id="crypto"
+              class=${this.currentPage === 'crypto'
+                ? 'active mid'
+                : 'inactive mid'}
+              href="crypto"
+              @click=${() => (this.currentPage = 'crypto')}
+              >${this.language ? 'Crypto' : 'クリプト'}</a
+            >
+            <a
+              id="civil"
+              class=${this.currentPage === 'civil'
+                ? 'active mid'
+                : 'inactive mid'}
+              href="civil"
+              @click=${() => (this.currentPage = 'civil')}
+              >${this.language ? 'Civil' : 'デモ２'}</a
+            >
+          </div>
+          <div id="navright" class="centerlang">
+            <span
+              class=${this.language ? 'english lang' : 'japanese lang'}
+              @click=${() => {
+                this.language = !this.language;
+                return false;
+              }}
+              >JP</span
+            >
+          </div>
+        </div>
+      </div>
 
-
-<div id="navbar">
-  <div id="navleft">
-    <a id="home" href="" class=${this.currentPage==="home" ? "athome" : ""} @click=${() => this.currentPage='home' }>ピ-クu</a>
-  </div>
-    <div id="navcenter">
-    <a id="crypto" class=${this.currentPage==="crypto" ? "active mid" : "inactive mid"} href="crypto" @click=${() => this.currentPage='crypto' }>${this.language ? "Crypto" : "クリプト"}</a>
-    <a id="civil" class=${(this.currentPage==="civil") ? "active mid" : "inactive mid"} href="civil" @click=${() => this.currentPage='civil' }>${this.language ? "Civil" : "デモ２"}</a>
-  </div>
-  <div id="navright" class="centerlang">
-    <span class=${this.language ? "english lang" : "japanese lang"} @click=${() => {(this.language = !this.language); return false;}}>JP</span>
-  </div>
-</div>
-
-<main>
-  <div id="outlet">
-  </div>
-
-</main>
-
-<div id="footer">
-  <div id="footleft">
-    <a id="source"
-      target="_blank"
-      rel="noopener noreferrer"
-      href="https://github.com/p-ku/homepage"
-
-      >${this.language ? "Source Code" : "ソースコード"}</a>
-  </div>
-  <div id="footright">
-    <a id="email">contact@p-ku.com</a>
-  </div>
-</div>
-
+      <main>
+        <div id="outlet"></div>
+      </main>
+      <div id="footer">
+        <div id="footleft">
+          <a
+            id="source"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/p-ku/website"
+            >${this.language ? 'Source Code' : 'ソースコード'}</a
+          >
+        </div>
+        <div id="footright">
+          <a id="email">contact@p-ku.com</a>
+        </div>
+      </div>
     `;
   }
 }
