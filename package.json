@@ -20,7 +20,7 @@
     "es-dev-server": "^1.5.0",
     "eslint-config-prettier": "^6.11.0",
     "prettier": "^2.1.1",
-    "rollup": "^2.3.4"
+    "rollup": "^2.26.10"
   },
   "eslintConfig": {
     "extends": [
@@ -50,21 +50,24 @@
   "author": "web-site",
   "license": "MIT",
   "dependencies": {
+    "@google/model-viewer": "^1.2.1",
     "@open-wc/eslint-config": "^3.0.0",
     "@open-wc/testing-karma": "^4.0.5",
-    "@types/node": "^14.6.3",
+    "@types/node": "^14.6.4",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vaadin/router": "^1.7.2",
     "chrome-launcher": "^0.13.4",
     "deepmerge": "^4.2.2",
     "eslint": "^7.8.1",
+    "html-minifier-terser": "^5.1.1",
     "husky": "^4.2.5",
     "lint-staged": "^10.3.0",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0",
     "puppeteer": "^5.2.1",
     "rimraf": "^3.0.2",
+    "serialize-javascript": "^4.0.0",
     "tslib": "^2.0.1",
     "typescript": "^4.0.2"
   }
