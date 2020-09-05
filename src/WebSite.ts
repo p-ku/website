@@ -115,21 +115,25 @@ export class WebSite extends LitElement {
       height: var(--navbar-height);
       z-index: 2;
       overflow: hidden;
-      justify-content: center;
       font-size: var(--navbar-height);
       align-items: center;
       align-content: center;
+      max-width: 70%;
+      width: max-content;
     }
 
     #navleft {
       display: flex;
       height: var(--navbar-height);
       z-index: 2;
-      overflow: hidden;
-      justify-content: flex-end;
+      overflow: visible;
+      justify-self: flex-start;
+      justify-content: space-between;
       font-size: var(--navbar-height);
       align-items: center;
       align-content: center;
+      max-width: 70%;
+      width: max-content;
     }
 
     #demobar {
@@ -141,7 +145,7 @@ export class WebSite extends LitElement {
       z-index: 1;
       justify-content: space-around;
       align-items: center;
-      padding-right: calc(var(--navbar-height));
+      padding-right: calc(var(--navbar-height) + 2vmin);
       position: relative;
       right: calc(var(--navbar-height) * 1.5);
       max-width: 30%;
@@ -153,7 +157,9 @@ export class WebSite extends LitElement {
       align-self: flex-end;
       color: var(--demobar);
       cursor: default;
-      width: calc((var(--navbar-height) * 3) - 18px);
+      padding-right: calc(
+        var(--navbar-height) * 1.5 - calc(var(--navbar-height) / 1.5)
+      );
       font-weight: 700;
     }
     #footer {
@@ -181,23 +187,54 @@ export class WebSite extends LitElement {
       text-decoration: none;
       font-weight: 600;
       font-size: 70%;
+      padding-right: var(--navbar-height);
     }
 
     #home:hover {
       color: var(--home);
     }
 
-    #sbear {
+    #sbears {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      align-self: flex-end;
+      width: max-content;
+    }
+
+    #sbear1 {
       display: flex;
       color: #33efe2cc;
       font-size: 50%;
       text-decoration: none;
-      align-self: flex-end;
-      width: calc(var(--navbar-height) * 2.5);
       font-size: calc(var(--navbar-height) / 3);
       cursor: default;
-      align-self: flex-end;
       font-weight: 900;
+      width: max-content;
+
+      position: absolute;
+      opacity: 1;
+    }
+
+    #sbear2 {
+      display: flex;
+      color: #33efe2cc;
+      font-size: 50%;
+      text-decoration: none;
+      font-size: calc(var(--navbar-height) / 3);
+      cursor: default;
+      font-weight: 900;
+      z-index: 10;
+      width: max-content;
+      opacity: 0;
+      transition-duration: 0.9s;
+    }
+
+    #sbear2:hover {
+      transition-duration: 0.9s;
+      opacity: 1;
     }
 
     #demobar a:hover:not(.chosen) {
@@ -215,12 +252,14 @@ export class WebSite extends LitElement {
 
     .lang {
       display: flex;
-      color: var(--redm5);
+      color: var(--redm3);
+      border: solid;
+      border-color: var(--redm3);
       cursor: pointer;
       border-radius: 50%;
       width: calc(var(--navbar-height) / 1.5);
       height: calc(var(--navbar-height) / 1.5);
-      background-color: var(--redp3);
+      background-color: #00000000;
       font-size: calc(var(--navbar-height) / 3);
       font-weight: 700;
       justify-content: center;
@@ -230,14 +269,17 @@ export class WebSite extends LitElement {
     .japanese {
       color: var(--white);
       background-color: var(--japan);
+      border-color: var(--white);
     }
     .japanese:hover {
       background-color: var(--redm1);
       transition-duration: 0.1s;
+      border-color: var(--white);
     }
     .japanese:active {
       background-color: var(--redm2);
       transition-duration: 0.1s;
+      border-color: var(--white);
     }
 
     @keyframes app-logo-spin {
@@ -262,13 +304,20 @@ export class WebSite extends LitElement {
               @click=${() => (this.currentPage = 'home')}
               >ピ-クu</a
             >
-
-            <span
-              id="sbear"
-              class=${this.currentPage === 'home' ? 'athome' : ''}
-              @click=${() => (this.currentPage = 'home')}
-              >ʕ • ᴥ • ʔ ʕ&#9673;ᴥ&#9678;ʔ
-            </span>
+            <div id="sbears">
+              <span
+                id="sbear1"
+                class=${this.currentPage === 'home' ? 'athome' : ''}
+                @click=${() => (this.currentPage = 'home')}
+                >ʕ •ᴥ• ʔ
+              </span>
+              <span
+                id="sbear2"
+                class=${this.currentPage === 'home' ? 'athome' : ''}
+                @click=${() => (this.currentPage = 'home')}
+                >&#9673; &#9678;
+              </span>
+            </div>
           </div>
           <div id="navright">
             <span id="demotitle">${this.language ? 'demo' : 'デモ'}</span>
