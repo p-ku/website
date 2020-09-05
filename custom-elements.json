@@ -8,7 +8,7 @@
         {
           "name": "title",
           "type": "String",
-          "description": "The title of your application",
+          "description": "p-ku.com",
           "default": "Hey there"
         },
         {

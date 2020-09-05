@@ -26,6 +26,31 @@ export const bigCircle = html`
      --rt: 1490vmin;
 } */
 
+    /* .navcircle {
+      --b: 20vmin;
+      --bcsq: calc(var(--b) / 4);
+      --k: calc(10000vmin + var(--bcsq) - var(--b));
+      --r: calc(var(--k) + var(--b));
+      --d: calc(2 * var(--r));
+
+      height: var(--d);
+      width: var(--d);
+      background: linear-gradient(to right, red, yellow);
+      border-radius: 50%;
+      box-shadow: 0px 0px 5px 1px var(--black);
+      animation: app-logo-spin infinite 20s linear;
+      position: absolute;
+      top: calc(0vmin - var(--r) - var(--k));
+      box-sizing: border-box;
+    } */
+
+    /* 
+    .logo > svg {
+      margin-top: 36px;
+      animation: app-logo-spin infinite 20s linear;
+    }
+ */
+
     svg {
       --b: 10vmin;
       --bcsq: calc(var(--b) / 1);

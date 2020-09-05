@@ -1,45 +1,51 @@
 import { LitElement, html, css } from 'lit-element';
-import './crypto-demo.js';
-import './civil-demo.js';
-import { bigCircle } from './big-circle.js';
-
-class HomePage extends LitElement {
+/* import '@google/model-viewer';
+ */
+class CivilDemo extends LitElement {
   static styles = css`
-    .logo > svg {
-      margin-top: 0px;
-      animation: app-logo-spin infinite 20s linear;
+    /* Transform the page into a 2-column grid */
+    #holder {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100%;
     }
-    /*     .navcircle {
-      --b: 20vmin;
-      --bcsq: calc(var(--b) / 4);
-      --k: calc(10000vmin + var(--bcsq) - var(--b));
-      --r: calc(var(--k) + var(--b));
-      --d: calc(2 * var(--r));
 
-      height: var(--d);
-      width: var(--d);
-      animation: app-logo-spin infinite 20s linear;
-      position: absolute;
-      top: calc(0vmin - var(--r) - var(--k));
-      box-sizing: border-box;
-} */
-
-    @keyframes app-logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
+    /* The left grid contains the text and occupies 50% of the available space */
+    #text {
+      align-self: center;
+      justify-self: center;
+      text-align: center;
+      margin: 0px 45px;
     }
   `;
 
   render() {
     return html`
-      <h1>My app</h1>
-      <!-- <div class="logo">${bigCircle}</div> -->
+      <span>hello</span>
+      <body>
+        <div id="holder">
+          <div id="text">
+            <h1 class="sample-text">
+              Play around with the model on the right!
+            </h1>
+            <h1 class="sample-text">
+              Just watch it rotate on its own or do it yourself with the mouse
+            </h1>
+            <h1 class="sample-text">You can also zoom in the model!</h1>
+          </div>
+          <div id="model">
+            <!--             <model-viewer
+              src="./Astronaut.gltf"
+              alt="A 3D model of a robot"
+              auto-rotate=""
+              camera-controls=""
+              background-color="#455A64"
+            ></model-viewer> -->
+          </div>
+        </div>
+      </body>
     `;
   }
 }
 
-customElements.define('home-page', HomePage);
+customElements.define('civil-demo', CivilDemo);

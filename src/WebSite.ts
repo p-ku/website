@@ -1,5 +1,6 @@
 import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
+import './crypto-demo.js';
 import { Router } from '@vaadin/router';
 
 export class WebSite extends LitElement {
@@ -55,12 +56,7 @@ export class WebSite extends LitElement {
       flex-grow: 1;
     }
 
-    .logo > svg {
-      margin-top: 36px;
-      animation: app-logo-spin infinite 20s linear;
-    }
-
-    @keyframes app-logo-spin {
+    @keyframes shiny {
       from {
         transform: rotate(0deg);
       }
@@ -69,46 +65,97 @@ export class WebSite extends LitElement {
       }
     }
 
-    #navbar {
-      display: flex;
-      max-width: 100vw;
-      overflow: hidden;
-      background-color: var(--navbar);
-      width: 100%;
-      height: calc(30px + 4vmin);
-      box-shadow: 0px 0px 5px 1px var(--black);
-      z-index: 1;
-      justify-content: center;
-      transition-duration: 0.1s;
+    a::selection,
+    span::selection,
+    div::selection {
+      background: transparent;
     }
 
-    #limit {
+    #navbar {
       display: flex;
-      justify-content: space-between;
-      align-items: stretch;
+      background-image: linear-gradient(45deg, var(--navbar), #683e00);
+      max-width: 100vw;
+      width: 100vw;
+      height: var(--navbar-height);
+      box-shadow: 0px 0px 5px 1px var(--black);
+      z-index: 2;
+      overflow: hidden;
+      justify-content: center;
+      font-size: var(--navbar-height);
+      align-items: center;
       align-content: center;
-      align-self: center;
-      width: 960px;
+    }
+
+    #navspace {
+      padding: calc((var(--navbar-height) - (var(--navbar-height) / 1.5)) / 2);
+      display: flex;
+      max-width: 960px;
+      width: 100%;
+      height: var(--navbar-height);
+      z-index: 3;
+      overflow: hidden;
+      justify-content: space-between;
+      font-size: var(--navbar-height);
+      align-items: center;
+      align-content: center;
+    }
+
+    #demospace {
+      display: flex;
+      max-width: 960px;
+      width: 100%;
+      height: var(--demobar-height);
+      overflow: hidden;
+      font-size: var(--navbar-height);
+      justify-content: flex-end;
+    }
+
+    #navright {
+      display: flex;
+      height: var(--navbar-height);
+      z-index: 2;
+      overflow: hidden;
+      justify-content: center;
+      font-size: var(--navbar-height);
+      align-items: center;
+      align-content: center;
     }
 
     #navleft {
       display: flex;
-      align-items: center;
-      width: calc(150px + 2vmin);
-      padding-left: calc(5px + 1vmin);
-    }
-    #navright {
-      display: flex;
-      align-items: center;
-      width: calc(150px + 2vmin);
+      height: var(--navbar-height);
+      z-index: 2;
+      overflow: hidden;
       justify-content: flex-end;
-      padding-right: calc(5px + 1vmin);
-    }
-    #navcenter {
-      display: flex;
+      font-size: var(--navbar-height);
       align-items: center;
+      align-content: center;
     }
 
+    #demobar {
+      display: flex;
+      background-color: var(--demobar);
+      height: var(--demobar-height);
+      border-radius: calc(var(--demobar-height) / 2) 0
+        calc(var(--demobar-height) + 70%) var(--demobar-height);
+      z-index: 1;
+      justify-content: space-around;
+      align-items: center;
+      padding-right: calc(var(--navbar-height));
+      position: relative;
+      right: calc(var(--navbar-height) * 1.5);
+      max-width: 30%;
+      width: calc(var(--navbar-height) * 3);
+    }
+
+    #demotitle {
+      font-size: calc(12px + 0.5vmin);
+      align-self: flex-end;
+      color: var(--demobar);
+      cursor: default;
+      width: calc((var(--navbar-height) * 3) - 18px);
+      font-weight: 700;
+    }
     #footer {
       font-size: calc(12px + 0.5vmin);
       align-items: center;
@@ -119,99 +166,78 @@ export class WebSite extends LitElement {
       padding-left: calc(20px + 0.5vmin);
       padding-right: calc(20px + 0.5vmin);
     }
-
-    .langspace {
-      display: flex;
-      justify-content: center;
-    }
-
-    .lang:hover {
-      color: var(--white);
-      background-color: var(--lang-hover);
-      box-shadow: 0 0 4px 2px var(--white);
-    }
-    .lang:active {
-      text-shadow: 0 0 3px var(--white);
-      box-shadow: 0 0 2px 1px var(--white);
-      background-color: var(--lang-active);
-    }
-
-    .lang {
-      color: var(--navbar);
-      transition-duration: 0.1s;
-      cursor: pointer;
-      border-radius: 50%;
-      line-height: calc(20px + 2vmin);
-      width: calc(20px + 2vmin);
-      background-color: var(--navbar);
-      font-size: calc(5px + 2vmin);
-      font-weight: 700;
-      text-shadow: 1px 1px 2px var(--black);
-    }
-    .japanese {
-      color: var(--white);
-      background-color: var(--japan);
-      box-shadow: 0 0 20px calc(30px + 2vmin) var(--white);
-    }
-    .japanese:hover {
-      box-shadow: 0 0 20px calc(30px + 2vmin) var(--white);
-      background-color: var(--japan-hover);
-      text-shadow: 0 0 3px var(--white);
-    }
-    .japanese:active {
-      box-shadow: 0 0 20px calc(35px + 2vmin) var(--white);
-      background-color: var(--japan-active);
-      text-shadow: 0 0 4px var(--white);
-    }
-    .lang::selection {
-      background: transparent;
-    }
-
     a.mid {
-      color: var(--demo);
+      color: var(--demo-text);
       text-decoration: none;
-      transition-duration: 0.1s;
-      padding: 1vmin;
       font-weight: 600;
-      text-shadow: 1px 1px 2px var(--black);
+      font-size: calc(var(--navbar-height) / 3);
     }
-    a.active {
-      text-shadow: 0 0 3px var(--demo-shadow);
-      color: var(--demo-active);
-    }
-
-    #home:hover {
-      font-size: calc(20px + 2vmin);
+    a.chosen {
+      color: var(--demo-chosen);
     }
 
     #home {
       color: var(--home);
       text-decoration: none;
-      transition-duration: 0.05s;
-      text-shadow: 2px 2px 1px var(--black);
       font-weight: 600;
+      font-size: 70%;
     }
 
-    #navbar a:hover:not(.active) {
+    #home:hover {
+      color: var(--home);
+    }
+
+    #sbear {
+      display: flex;
+      color: #33efe2cc;
+      font-size: 50%;
+      text-decoration: none;
+      align-self: flex-end;
+      width: calc(var(--navbar-height) * 2.5);
+      font-size: calc(var(--navbar-height) / 3);
+      cursor: default;
+      align-self: flex-end;
+      font-weight: 900;
+    }
+
+    #demobar a:hover:not(.chosen) {
+      color: #570f73;
+    }
+
+    .lang:hover {
       color: var(--white);
+      transition-duration: 0.1s;
+      background-color: var(--redp2);
+    }
+    .lang:active {
+      background-color: var(--redp1);
     }
 
-    .navcircle {
-      --b: 20vmin;
-      --bcsq: calc(var(--b) / 4);
-      --k: calc(10000vmin + var(--bcsq) - var(--b));
-      --r: calc(var(--k) + var(--b));
-      --d: calc(2 * var(--r));
-
-      height: var(--d);
-      width: var(--d);
-      background: linear-gradient(to right, red, yellow);
+    .lang {
+      display: flex;
+      color: var(--redm5);
+      cursor: pointer;
       border-radius: 50%;
-      box-shadow: 0px 0px 5px 1px var(--black);
-      animation: app-logo-spin infinite 20s linear;
-      position: absolute;
-      top: calc(0vmin - var(--r) - var(--k));
-      box-sizing: border-box;
+      width: calc(var(--navbar-height) / 1.5);
+      height: calc(var(--navbar-height) / 1.5);
+      background-color: var(--redp3);
+      font-size: calc(var(--navbar-height) / 3);
+      font-weight: 700;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .japanese {
+      color: var(--white);
+      background-color: var(--japan);
+    }
+    .japanese:hover {
+      background-color: var(--redm1);
+      transition-duration: 0.1s;
+    }
+    .japanese:active {
+      background-color: var(--redm2);
+      transition-duration: 0.1s;
     }
 
     @keyframes app-logo-spin {
@@ -227,7 +253,7 @@ export class WebSite extends LitElement {
   render() {
     return html`
       <div id="navbar">
-        <div id="limit">
+        <div id="navspace">
           <div id="navleft">
             <a
               id="home"
@@ -236,40 +262,50 @@ export class WebSite extends LitElement {
               @click=${() => (this.currentPage = 'home')}
               >ピ-クu</a
             >
-          </div>
-          <div id="navcenter">
-            <a
-              id="crypto"
-              class=${this.currentPage === 'crypto'
-                ? 'active mid'
-                : 'inactive mid'}
-              href="crypto"
-              @click=${() => (this.currentPage = 'crypto')}
-              >${this.language ? 'Crypto' : 'クリプト'}</a
-            >
-            <a
-              id="civil"
-              class=${this.currentPage === 'civil'
-                ? 'active mid'
-                : 'inactive mid'}
-              href="civil"
-              @click=${() => (this.currentPage = 'civil')}
-              >${this.language ? 'Civil' : 'デモ２'}</a
-            >
-          </div>
-          <div id="navright" class="centerlang">
+
             <span
+              id="sbear"
+              class=${this.currentPage === 'home' ? 'athome' : ''}
+              @click=${() => (this.currentPage = 'home')}
+              >ʕ • ᴥ • ʔ ʕ&#9673;ᴥ&#9678;ʔ
+            </span>
+          </div>
+          <div id="navright">
+            <span id="demotitle">${this.language ? 'demo' : 'デモ'}</span>
+            <div
               class=${this.language ? 'english lang' : 'japanese lang'}
               @click=${() => {
                 this.language = !this.language;
                 return false;
               }}
-              >JP</span
             >
+              JP
+            </div>
           </div>
         </div>
       </div>
-
+      <div id="demospace">
+        <div id="demobar">
+          <a
+            id="crypto"
+            class=${this.currentPage === 'crypto'
+              ? 'chosen mid'
+              : 'inchosen mid'}
+            href="crypto"
+            @click=${() => (this.currentPage = 'crypto')}
+            >${this.language ? 'Crypto$' : 'クリプト¥'}</a
+          >
+          <a
+            id="civil"
+            class=${this.currentPage === 'civil'
+              ? 'chosen mid'
+              : 'inchosen mid'}
+            href="civil"
+            @click=${() => (this.currentPage = 'civil')}
+            >${this.language ? 'Civil' : '土木'}</a
+          >
+        </div>
+      </div>
       <main>
         <div id="outlet"></div>
       </main>
