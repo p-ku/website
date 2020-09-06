@@ -1,6 +1,7 @@
 import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
 import './crypto-demo.js';
+import './civil-demo.js';
 import { Router } from '@vaadin/router';
 
 export class WebSite extends LitElement {
