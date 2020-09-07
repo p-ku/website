@@ -7,16 +7,31 @@ import { Router } from '@vaadin/router';
 export class WebSite extends LitElement {
   @property({ type: String }) page = 'home';
   @property({ type: String }) title = '';
-  @property({ type: String }) activeTab = '';
+  @property({ type: String }) activeTab = '/';
   @property({ type: Boolean }) smallScreen = false;
   @property({ type: Boolean }) language = true;
-  @property({ type: String }) currentPage = 'home';
+  @property({ type: String }) currentPage = '/';
+  @property({ type: String }) lang = '';
 
   constructor() {
     super();
-    this.activeTab =
-      location.pathname === '/' ? 'home' : location.pathname.replace('/', '');
+    /*     this.activeTab =
+      location.pathname === '/' ? 'home' : location.pathname.replace('/', ''); */
+    if (location.pathname.includes('?p=/')) {
+      this.currentPage = location.pathname.replace('https://p-ku.com/?p=/', '');
+    } else {
+      this.currentPage = location.pathname.replace('https://p-ku.com/', '');
+    }
   }
+
+  /*     if (location.pathname.endsWith('jp/crypto')) {
+      this.currentPage = 'crypto';
+    } else if (location.pathname.endsWith('jp/civil')) {
+      this.currentPage = 'civil';
+    } else if (location.pathname.endsWith('jp')) {
+      this.currentPage = 'home';
+    }
+  } */
 
   firstUpdated() {
     const outlet = this.shadowRoot?.getElementById('outlet');
@@ -25,6 +40,9 @@ export class WebSite extends LitElement {
       { path: '/', component: 'home-page' },
       { path: '/crypto', component: 'crypto-demo' },
       { path: '/civil', component: 'civil-demo' },
+      { path: '/jp/', component: 'home-page' },
+      { path: '/jp/crypto', component: 'crypto-demo' },
+      { path: '/jp/civil', component: 'civil-demo' },
       {
         path: '(.*)',
         redirect: '/',
@@ -35,9 +53,29 @@ export class WebSite extends LitElement {
     ]);
   }
 
-  switchRoute(route = 'home') {
+  switchPage(destination = '/') {
+    /*     if (this.language) {
+      this.currentPage = destination;
+    } else { */
+    this.currentPage = this.lang.concat(destination);
+    console.log(this.currentPage);
+  }
+  /*   switchRoute(route = 'home') {
     this.activeTab = route;
     Router.go(`/${route}`);
+  } */
+
+  switchLanguage() {
+    this.language = !this.language;
+    if (this.currentPage.includes('jp')) {
+      this.currentPage = this.currentPage.replace('/jp/', '/');
+      this.lang = '';
+    } else {
+      this.currentPage = '/jp' + this.currentPage;
+      this.lang = '/jp';
+    }
+    console.log(this.currentPage);
+    return;
   }
 
   static styles = css`
@@ -266,18 +304,19 @@ export class WebSite extends LitElement {
       justify-content: center;
       align-items: center;
       text-align: center;
+      text-decoration: none;
     }
-    .japanese {
+    .ja {
       color: var(--white);
       background-color: var(--japan);
       border-color: var(--white);
     }
-    .japanese:hover {
+    .ja:hover {
       background-color: var(--redm1);
       transition-duration: 0.1s;
       border-color: var(--white);
     }
-    .japanese:active {
+    .ja:active {
       background-color: var(--redm2);
       transition-duration: 0.1s;
       border-color: var(--white);
@@ -300,37 +339,35 @@ export class WebSite extends LitElement {
           <div id="navleft">
             <a
               id="home"
-              href=""
-              class=${this.currentPage === 'home' ? 'athome' : ''}
-              @click=${() => (this.currentPage = 'home')}
+              href=${this.lang.concat('/')}
+              class=${this.currentPage === '/' ? 'athome' : ''}
+              @click=${() => this.switchPage('/')}
               >ピ-クu</a
             >
             <div id="sbears">
               <span
                 id="sbear1"
-                class=${this.currentPage === 'home' ? 'athome' : ''}
-                @click=${() => (this.currentPage = 'home')}
+                class=${this.currentPage === '/' ? 'athome' : ''}
                 >ʕ •ᴥ• ʔ
               </span>
               <span
                 id="sbear2"
-                class=${this.currentPage === 'home' ? 'athome' : ''}
-                @click=${() => (this.currentPage = 'home')}
+                class=${this.currentPage === '/' ? 'athome' : ''}
                 >&#9673; &#9678;
               </span>
             </div>
           </div>
           <div id="navright">
             <span id="demotitle">${this.language ? 'demo' : 'デモ'}</span>
-            <div
-              class=${this.language ? 'english lang' : 'japanese lang'}
+            <a
+              href=${this.currentPage}
+              class=${this.lang.replace('/', '') + 'lang'}
               @click=${() => {
-                this.language = !this.language;
-                return false;
+                this.switchLanguage();
               }}
             >
               JP
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -338,26 +375,26 @@ export class WebSite extends LitElement {
         <div id="demobar">
           <a
             id="crypto"
-            class=${this.currentPage === 'crypto'
+            class=${this.currentPage.endsWith('crypto')
               ? 'chosen mid'
               : 'inchosen mid'}
-            href="crypto"
-            @click=${() => (this.currentPage = 'crypto')}
+            href=${this.lang.concat('/crypto')}
+            @click=${() => this.switchPage('/crypto')}
             >${this.language ? 'Crypto$' : 'クリプト¥'}</a
           >
           <a
             id="civil"
-            class=${this.currentPage === 'civil'
+            class=${this.currentPage.endsWith('civil')
               ? 'chosen mid'
               : 'inchosen mid'}
-            href="civil"
-            @click=${() => (this.currentPage = 'civil')}
+            href=${this.lang.concat('/civil')}
+            @click=${() => this.switchPage('/civil')}
             >${this.language ? 'Civil' : '土木'}</a
           >
         </div>
       </div>
       <main>
-        <div id="outlet"></div>
+        <div id="outlet" language></div>
       </main>
       <div id="footer">
         <div id="footleft">
