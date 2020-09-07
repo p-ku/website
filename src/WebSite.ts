@@ -32,9 +32,7 @@ export class WebSite extends LitElement {
       this.lang = '';
       this.buttonDec = 'jpen';
     }
-    console.log(this.currentPage);
     this.switchRoute(this.currentPage);
-    console.log(this.buttonDec);
   }
 
   /*     if (location.pathname.endsWith('jp/crypto')) {
@@ -76,7 +74,6 @@ export class WebSite extends LitElement {
       this.currentPage = destination;
     } else { */
     this.currentPage = this.lang.concat(destination);
-    console.log(this.currentPage);
   }
   /*   switchRoute(route = 'home') {
     this.activeTab = route;
@@ -94,7 +91,6 @@ export class WebSite extends LitElement {
       this.lang = '/jp';
       this.buttonDec = 'jp jpen';
     }
-    console.log(this.currentPage);
     return;
   }
 
@@ -384,7 +380,6 @@ export class WebSite extends LitElement {
               class=${this.buttonDec}
               @click=${() => {
                 this.switchLanguage();
-                console.log(this.lang);
               }}
             >
               JP

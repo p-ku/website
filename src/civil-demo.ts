@@ -1,7 +1,19 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 /* import '@google/model-viewer';
  */
 class CivilDemo extends LitElement {
+  @property({ type: String }) lang = '';
+  @property({ type: Boolean }) english = true;
+
+  firstUpdated() {
+    if (location.pathname.includes('jp')) {
+      this.english = false;
+      this.lang = '/jp';
+    } else {
+      this.english = true;
+      this.lang = '';
+    }
+  }
   static styles = css`
     /* Transform the page into a 2-column grid */
     #holder {
@@ -21,7 +33,7 @@ class CivilDemo extends LitElement {
 
   render() {
     return html`
-      <span>hello</span>
+      <span>${this.english ? 'hello?' : 'こんにちは?'}</span>
       <body>
         <div id="holder">
           <div id="text">

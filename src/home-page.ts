@@ -1,6 +1,17 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 
 class MainPage extends LitElement {
+  @property({ type: String }) lang = '';
+  @property({ type: Boolean }) english = true;
+  firstUpdated() {
+    if (location.pathname.includes('jp')) {
+      this.english = false;
+      this.lang = '/jp';
+    } else {
+      this.english = true;
+      this.lang = '';
+    }
+  }
   static styles = css`
     .logo > svg {
       margin-top: 72px;
@@ -18,7 +29,7 @@ class MainPage extends LitElement {
   `;
 
   render() {
-    return html` <h1>My app</h1> `;
+    return html` <h1>${this.english ? 'App?' : 'アプリ?'}</h1> `;
   }
 }
 
