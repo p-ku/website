@@ -64,30 +64,6 @@ export class WebSite extends LitElement {
     ]);
   }
 
-  /*   watchForHover() {
-    // lastTouchTime is used for ignoring emulated mousemove events
-    let lastTouchTime = new Date();
-
-    function enableHover() {
-      if (Date.now() - lastTouchTime.getTime() < 500) return;
-      document.body.classList.add('hasHover');
-    }
-
-    function disableHover() {
-      document.body.classList.remove('hasHover');
-    }
-
-    function updateLastTouchTime() {
-      lastTouchTime = new Date();
-    }
-
-    document.addEventListener('touchstart', updateLastTouchTime, true);
-    document.addEventListener('touchstart', disableHover, true);
-    document.addEventListener('mousemove', enableHover, true);
-
-    enableHover();
-  } */
-
   switchRoute(route = '/') {
     this.activeTab = route;
     Router.go(`${route}`);
