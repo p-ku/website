@@ -1,6 +1,6 @@
 import { LitElement, html, css, property } from 'lit-element';
-/* import '@google/model-viewer';
- */
+import '@google/model-viewer';
+
 class CivilDemo extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
@@ -29,6 +29,12 @@ class CivilDemo extends LitElement {
       text-align: center;
       margin: 0px 45px;
     }
+
+    model-viewer {
+      width: 500px;
+      height: 500px;
+      outline: none;
+    }
   `;
 
   render() {
@@ -45,14 +51,14 @@ class CivilDemo extends LitElement {
             </h1>
             <h1 class="sample-text">You can also zoom in the model!</h1>
           </div>
-          <div id="model">
-            <!--             <model-viewer
-              src="./Astronaut.gltf"
+          <div>
+            <model-viewer
+              src="../archive/Astronaut.gltf"
               alt="A 3D model of a robot"
               auto-rotate=""
               camera-controls=""
               background-color="#455A64"
-            ></model-viewer> -->
+            ></model-viewer>
           </div>
         </div>
       </body>

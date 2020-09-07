@@ -1,5 +1,4 @@
 import { LitElement, html, css, property } from 'lit-element';
-import { WebSite } from './WebSite.js';
 
 class CryptoDemo extends LitElement {
   @property({ type: String }) lang = '';

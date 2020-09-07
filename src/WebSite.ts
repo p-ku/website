@@ -102,7 +102,7 @@ export class WebSite extends LitElement {
       align-items: center;
       justify-content: flex-start;
       font-size: calc(10px + 2vmin);
-      max-width: 100vw;
+      max-width: 960px;
       margin: 0 auto;
       text-align: center;
     }
@@ -220,6 +220,8 @@ export class WebSite extends LitElement {
     #footer {
       font-size: calc(12px + 0.5vmin);
       align-items: center;
+      position: absolute;
+      bottom: 0;
     }
 
     #footer a {
