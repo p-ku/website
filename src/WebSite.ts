@@ -124,6 +124,8 @@ export class WebSite extends LitElement {
     span::selection,
     div::selection {
       background: transparent;
+      color: transparent;
+      outline: none;
     }
 
     #navbar {
