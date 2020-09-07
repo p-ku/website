@@ -15,53 +15,39 @@ class CivilDemo extends LitElement {
     }
   }
   static styles = css`
-    /* Transform the page into a 2-column grid */
-    #holder {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      height: 100%;
+    :host {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      max-width: 960px;
+      max-height: 100%;
     }
 
-    /* The left grid contains the text and occupies 50% of the available space */
-    #text {
-      align-self: center;
-      justify-self: center;
-      text-align: center;
-      margin: 0px 45px;
+    .column {
+      width: 100vw;
+      height: calc(100vh - var(--navbar-height) - var(--demobar-height));
     }
 
     model-viewer {
-      width: 500px;
-      height: 500px;
-      outline: none;
+      --poster-color: transparent;
     }
   `;
 
   render() {
     return html`
-      <span>${this.english ? 'hello?' : 'こんにちは?'}</span>
-      <body>
-        <div id="holder">
-          <div id="text">
-            <h1 class="sample-text">
-              Play around with the model on the right!
-            </h1>
-            <h1 class="sample-text">
-              Just watch it rotate on its own or do it yourself with the mouse
-            </h1>
-            <h1 class="sample-text">You can also zoom in the model!</h1>
-          </div>
-          <div>
-            <model-viewer
-              src="../archive/Astronaut.gltf"
-              alt="A 3D model of a robot"
-              auto-rotate=""
-              camera-controls=""
-              background-color="#455A64"
-            ></model-viewer>
-          </div>
-        </div>
-      </body>
+      <div class="column">
+        <p>Play around with the model on the right!</p>
+        <p>Just watch it rotate on its own or do it yourself with the mouse</p>
+        <p>You can also zoom in the model!</p>
+      </div>
+      <model-viewer
+        class="column"
+        src="../archive/Astronaut.gltf"
+        alt="A 3D model of a robot"
+        loading="eager"
+        auto-rotate=""
+        camera-controls=""
+      ></model-viewer>
     `;
   }
 }

@@ -111,20 +111,10 @@ export class WebSite extends LitElement {
       flex-grow: 1;
     }
 
-    @keyframes shiny {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
     a::selection,
     span::selection,
     div::selection {
       background: transparent;
-      color: transparent;
       outline: none;
     }
 
@@ -265,22 +255,19 @@ export class WebSite extends LitElement {
 
     #sbear1 {
       display: flex;
-      color: #33efe2cc;
-      font-size: 50%;
+      color: #80efe2;
       text-decoration: none;
       font-size: calc(var(--navbar-height) / 3);
       cursor: default;
       font-weight: 900;
       width: max-content;
-
       position: absolute;
       opacity: 1;
     }
 
     #sbear2 {
       display: flex;
-      color: #33efe2cc;
-      font-size: 50%;
+      color: #80efe2;
       text-decoration: none;
       font-size: calc(var(--navbar-height) / 3);
       cursor: default;
@@ -288,11 +275,10 @@ export class WebSite extends LitElement {
       z-index: 10;
       width: max-content;
       opacity: 0;
-      transition-duration: 0.9s;
     }
 
     #sbear2:hover {
-      transition-duration: 0.9s;
+      transition-duration: 0.3s;
       opacity: 1;
     }
 
@@ -300,11 +286,6 @@ export class WebSite extends LitElement {
       color: #570f73;
     }
 
-    .jpen:hover {
-      color: var(--white);
-      transition-duration: 0.1s;
-      background-color: var(--redp2);
-    }
     .jpen:active {
       background-color: var(--redp1);
     }
@@ -327,6 +308,11 @@ export class WebSite extends LitElement {
       text-align: center;
       text-decoration: none;
     }
+    .jpen:hover {
+      color: var(--white);
+      transition-duration: 0.1s;
+      background-color: var(--redp2);
+    }
     .jp:link,
     .jp:visited {
       color: var(--white);
@@ -345,6 +331,11 @@ export class WebSite extends LitElement {
     }
 
     @media (hover: none) {
+      .jpen:hover {
+        color: var(--white);
+        transition-duration: 0.1s;
+        background-color: var(--redp2);
+      }
       .jpen:link,
       .jpen:visited {
         display: flex;
@@ -402,7 +393,8 @@ export class WebSite extends LitElement {
               <span
                 id="sbear2"
                 class=${this.currentPage === '/' ? 'athome' : ''}
-                >&#9673; &#9678;
+              >
+                &#9673; &#9679;
               </span>
             </div>
           </div>
