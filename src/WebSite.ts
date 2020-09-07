@@ -9,19 +9,34 @@ export class WebSite extends LitElement {
   @property({ type: String }) title = '';
   @property({ type: String }) activeTab = '/';
   @property({ type: Boolean }) smallScreen = false;
-  @property({ type: Boolean }) language = true;
+  @property({ type: Boolean }) english = true;
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
+  @property({ type: String }) buttonDec = 'jp lang';
+  @property({ type: String }) activeCrypto = 'mid';
+  @property({ type: String }) activeCivil = 'mid';
 
   constructor() {
     super();
     /*     this.activeTab =
       location.pathname === '/' ? 'home' : location.pathname.replace('/', ''); */
     if (location.pathname.includes('?p=/')) {
-      this.currentPage = location.pathname.replace('https://p-ku.com/?p=/', '');
+      this.currentPage = location.pathname.replace('https://p-ku.com/?p=', '');
     } else {
-      this.currentPage = location.pathname.replace('https://p-ku.com/', '');
+      this.currentPage = location.pathname.replace('https://p-ku.com', '');
     }
+    if (this.currentPage.includes('jp')) {
+      this.english = false;
+      this.lang = '/jp';
+      this.buttonDec = 'jp jpen';
+    } else {
+      this.english = true;
+      this.lang = '';
+      this.buttonDec = 'jpen';
+    }
+    console.log(this.currentPage);
+    this.switchRoute(this.currentPage);
+    console.log(this.buttonDec);
   }
 
   /*     if (location.pathname.endsWith('jp/crypto')) {
@@ -53,8 +68,13 @@ export class WebSite extends LitElement {
     ]);
   }
 
+  switchRoute(route = '/') {
+    this.activeTab = route;
+    Router.go(`${route}`);
+  }
+
   switchPage(destination = '/') {
-    /*     if (this.language) {
+    /*     if (this.english) {
       this.currentPage = destination;
     } else { */
     this.currentPage = this.lang.concat(destination);
@@ -66,13 +86,15 @@ export class WebSite extends LitElement {
   } */
 
   switchLanguage() {
-    this.language = !this.language;
+    this.english = !this.english;
     if (this.currentPage.includes('jp')) {
       this.currentPage = this.currentPage.replace('/jp/', '/');
       this.lang = '';
+      this.buttonDec = 'jpen';
     } else {
       this.currentPage = '/jp' + this.currentPage;
       this.lang = '/jp';
+      this.buttonDec = 'jp jpen';
     }
     console.log(this.currentPage);
     return;
@@ -280,16 +302,16 @@ export class WebSite extends LitElement {
       color: #570f73;
     }
 
-    .lang:hover {
+    .jpen:hover {
       color: var(--white);
       transition-duration: 0.1s;
       background-color: var(--redp2);
     }
-    .lang:active {
+    .jpen:active {
       background-color: var(--redp1);
     }
 
-    .lang {
+    .jpen {
       display: flex;
       color: var(--redm3);
       border: solid;
@@ -306,17 +328,17 @@ export class WebSite extends LitElement {
       text-align: center;
       text-decoration: none;
     }
-    .ja {
+    .jp {
       color: var(--white);
       background-color: var(--japan);
       border-color: var(--white);
     }
-    .ja:hover {
+    .jp:hover {
       background-color: var(--redm1);
       transition-duration: 0.1s;
       border-color: var(--white);
     }
-    .ja:active {
+    .jp:active {
       background-color: var(--redm2);
       transition-duration: 0.1s;
       border-color: var(--white);
@@ -358,12 +380,13 @@ export class WebSite extends LitElement {
             </div>
           </div>
           <div id="navright">
-            <span id="demotitle">${this.language ? 'demo' : 'デモ'}</span>
+            <span id="demotitle">${this.english ? 'demo' : 'デモ'}</span>
             <a
               href=${this.currentPage}
-              class=${this.lang.replace('/', '') + 'lang'}
+              class=${this.buttonDec}
               @click=${() => {
                 this.switchLanguage();
+                console.log(this.lang);
               }}
             >
               JP
@@ -380,7 +403,7 @@ export class WebSite extends LitElement {
               : 'inchosen mid'}
             href=${this.lang.concat('/crypto')}
             @click=${() => this.switchPage('/crypto')}
-            >${this.language ? 'Crypto$' : 'クリプト¥'}</a
+            >${this.english ? 'Crypto$' : 'クリプト¥'}</a
           >
           <a
             id="civil"
@@ -389,12 +412,12 @@ export class WebSite extends LitElement {
               : 'inchosen mid'}
             href=${this.lang.concat('/civil')}
             @click=${() => this.switchPage('/civil')}
-            >${this.language ? 'Civil' : '土木'}</a
+            >${this.english ? 'Civil' : '土木'}</a
           >
         </div>
       </div>
       <main>
-        <div id="outlet" language></div>
+        <div id="outlet"></div>
       </main>
       <div id="footer">
         <div id="footleft">
@@ -403,7 +426,7 @@ export class WebSite extends LitElement {
             target="_blank"
             rel="noopener noreferrer"
             href="https://github.com/p-ku/website"
-            >${this.language ? 'Source Code' : 'ソースコード'}</a
+            >${this.english ? 'Source Code' : 'ソースコード'}</a
           >
         </div>
         <div id="footright">
