@@ -20,11 +20,9 @@ export class WebSite extends LitElement {
     super();
     /*     this.activeTab =
       location.pathname === '/' ? 'home' : location.pathname.replace('/', ''); */
-    if (location.pathname.includes('?p=/')) {
-      this.currentPage = location.pathname.replace('https://p-ku.com/?p=', '');
-    } else {
-      this.currentPage = location.pathname.replace('https://p-ku.com', '');
-    }
+
+    this.currentPage = location.pathname.replace('https://p-ku.com', '');
+
     if (this.currentPage.includes('jp')) {
       this.english = false;
       this.lang = '/jp';
