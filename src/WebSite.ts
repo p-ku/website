@@ -45,7 +45,6 @@ export class WebSite extends LitElement {
   } */
 
   firstUpdated() {
-    this.watchForHover();
     const outlet = this.shadowRoot?.getElementById('outlet');
     const router = new Router(outlet);
     router.setRoutes([
@@ -65,7 +64,7 @@ export class WebSite extends LitElement {
     ]);
   }
 
-  watchForHover() {
+  /*   watchForHover() {
     // lastTouchTime is used for ignoring emulated mousemove events
     let lastTouchTime = new Date();
 
@@ -87,7 +86,7 @@ export class WebSite extends LitElement {
     document.addEventListener('mousemove', enableHover, true);
 
     enableHover();
-  }
+  } */
 
   switchRoute(route = '/') {
     this.activeTab = route;
@@ -334,7 +333,8 @@ export class WebSite extends LitElement {
       background-color: var(--redp1);
     }
 
-    .jpen {
+    .jpen:link,
+    .jpen:visited {
       display: flex;
       color: var(--redm3);
       border: solid;
@@ -351,7 +351,8 @@ export class WebSite extends LitElement {
       text-align: center;
       text-decoration: none;
     }
-    .jp {
+    .jp:link,
+    .jp:visited {
       color: var(--white);
       background-color: var(--japan);
       border-color: var(--white);
@@ -365,6 +366,33 @@ export class WebSite extends LitElement {
       background-color: var(--redm2);
       transition-duration: 0.1s;
       border-color: var(--white);
+    }
+
+    @media (hover: none) {
+      .jpen:link,
+      .jpen:visited {
+        display: flex;
+        color: var(--redm3);
+        border: solid;
+        border-color: var(--redm3);
+        cursor: pointer;
+        border-radius: 50%;
+        width: calc(var(--navbar-height) / 1.5);
+        height: calc(var(--navbar-height) / 1.5);
+        background-color: #00000000;
+        font-size: calc(var(--navbar-height) / 3);
+        font-weight: 700;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        text-decoration: none;
+      }
+      .jp:link,
+      .jp:visited {
+        color: var(--white);
+        background-color: var(--japan);
+        border-color: var(--white);
+      }
     }
 
     @keyframes app-logo-spin {
