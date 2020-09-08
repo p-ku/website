@@ -24,7 +24,7 @@ class CivilDemo extends LitElement {
     }
 
     .column {
-      width: 100vw;
+      width: 50vw;
       height: calc(100vh - var(--navbar-height) - var(--demobar-height));
     }
 
