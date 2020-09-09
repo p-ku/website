@@ -13,6 +13,9 @@ class MainPage extends LitElement {
     }
   }
   static styles = css`
+    :host {
+      color: #321e00;
+    }
     .logo > svg {
       margin-top: 72px;
       animation: app-logo-spin infinite 20s linear;

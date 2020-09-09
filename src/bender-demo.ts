@@ -1,5 +1,4 @@
 import { LitElement, html, css, property } from 'lit-element';
-import '@google/model-viewer';
 
 class CivilDemo extends LitElement {
   @property({ type: String }) lang = '';
@@ -40,14 +39,6 @@ class CivilDemo extends LitElement {
         <p>Just watch it rotate on its own or do it yourself with the mouse</p>
         <p>You can also zoom in the model!</p>
       </div>
-      <model-viewer
-        class="column"
-        src="../archive/Astronaut.gltf"
-        alt="A 3D model of a robot"
-        loading="eager"
-        auto-rotate=""
-        camera-controls=""
-      ></model-viewer>
     `;
   }
 }
