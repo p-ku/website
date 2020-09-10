@@ -16,10 +16,7 @@ class ContactForm extends LitElement {
     :host {
       color: #321e00;
     }
-    .logo > svg {
-      margin-top: 72px;
-      animation: app-logo-spin infinite 20s linear;
-    }
+
     .bearnecessities {
       opacity: 0;
       position: absolute;
@@ -47,9 +44,9 @@ class ContactForm extends LitElement {
       netlify-honeypot="email"
       data-netlify="true"
     >
-      <label class="ohnohoney" for="email"></label>
+      <label class="bearnecessities" for="email"></label>
       <input
-        class="ohnohoney"
+        class="bearnecessities"
         autocomplete="off"
         type="email"
         id="email"
@@ -57,10 +54,13 @@ class ContactForm extends LitElement {
         placeholder="Your e-mail here"
       />
       <p>
-        <label>Message: <textarea name="message"></textarea></label>
+        <label
+          >${this.english ? 'Message' : 'メッセージ'}:
+          <textarea name="message"></textarea>
+        </label>
       </p>
       <p>
-        <button type="submit">Send</button>
+        <button type="submit">${this.english ? 'Send' : '送る'}</button>
       </p>
     </form> `;
   }

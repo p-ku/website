@@ -40,7 +40,6 @@ export class WebSite extends LitElement {
       { path: '/jp/crypto', component: 'crypto-demo' },
       { path: '/jp/bender', component: 'bender-demo' },
       { path: '/jp/contact', component: 'contact-form' },
-
       {
         path: '(.*)',
         redirect: '/',
@@ -170,6 +169,7 @@ export class WebSite extends LitElement {
       border-bottom: solid #00000000 2px;
       flex: 0.4;
       width: 4em;
+      min-width: max-content;
       z-index: 3;
       align-self: flex-end;
     }
@@ -221,11 +221,14 @@ export class WebSite extends LitElement {
     .jp:link,
     .jp:visited {
       color: var(--white);
-      background-color: var(--japan);
+
+      background-color: var(--redm3);
       border-color: var(--white);
+
     }
     .jp:hover {
-      background-color: var(--redm3);
+      color: var(--white);
+
       transition-duration: 0.1s;
       border-color: var(--white);
     }
@@ -286,6 +289,7 @@ export class WebSite extends LitElement {
             width: 20vw;  cursor: pointer;
       
           }
+
           .open {
             display: flex;
             background-color: var(--demobar);
@@ -319,37 +323,8 @@ export class WebSite extends LitElement {
             display: none;
           }
 
-
-    @media (hover: none) {
-
-      .jpen:link,
-      .jpen:visited {
-        color: var(--redm3);
-        border: solid var(--redm3);
-        cursor: pointer;
-        border-radius: 50%;
-        width: calc(var(--navbar-height) / 1.5);
-        height: calc(var(--navbar-height) / 1.5);
-        background-color: #00000000;
-        font-size: calc(var(--navbar-height) / 3);
-        font-weight: 700;
-        text-decoration: none;
-        line-height: calc(var(--navbar-height) / 1.5);
-      }
-      .jp:link,
-      .jp:visited {
-        color: var(--white);
-        background-color: var(--japan);
-        border-color: var(--white);
-      }
-      #footer {
-        display: flex;
-        font-size: var(--footer-font-size);
-        width: 100%;
-        max-width: 480px;
-        min-height: calc(2 * var(--footer-font-size));
-      }
-    }
+/*     @media (hover: none) {
+    } */
   `;
 
   render() {
@@ -371,7 +346,12 @@ export class WebSite extends LitElement {
             >
           </div>
           <div id="navcenter">
-            <div id="demotitle" @click=${() => (this.isOpen = !this.isOpen)}>
+            <div
+              id="demotitle"
+              @click=${() => {
+                this.isOpen = !this.isOpen;
+              }}
+            >
               <span>${this.english ? 'demo' : 'デモ'}</span>
               <div class=${this.isOpen ? 'open closed' : 'closed'}>
                 <a
@@ -412,7 +392,12 @@ export class WebSite extends LitElement {
               id="mail"
               class=${this.currentPage.endsWith('contact') ? 'chosen' : ''}
               href=${this.lang.concat('/contact')}
-              @click=${() => this.switchPage('/contact')}
+              @click=${() => {
+                this.switchPage('/contact');
+                if (this.isOpen) {
+                  this.isOpen = !this.isOpen;
+                }
+              }}
             >
               &#9993;</a
             >
