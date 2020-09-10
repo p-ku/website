@@ -9,6 +9,7 @@ export class WebSite extends LitElement {
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
   @property({ type: String }) buttonDec = 'jp lang';
+  @property({ type: Boolean }) isOpen = false;
 
   constructor() {
     super();
@@ -87,18 +88,19 @@ export class WebSite extends LitElement {
     #navbar,
     #navspace,
     #navright,
-    #navleft {
+    #navleft,
+    #navcenter {
       display: flex;
       height: var(--navbar-height);
       z-index: 2;
-      overflow: hidden;
+      overflow-y: visible;
       align-items: center;
       align-content: center;
       white-space: nowrap;
     }
     #navbar {
       background-image: linear-gradient(45deg, var(--navbar), #683e00);
-      box-shadow: 0px 0px 5px 1px var(--black);
+      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
       justify-content: center;
       width: 100vw;
     }
@@ -110,101 +112,82 @@ export class WebSite extends LitElement {
       max-width: 960px;
       justify-content: space-between;
     }
-    #navright {
-      justify-content: flex-end;
-      /*       min-width: calc(2.2 * var(--navbar-height));
- */
-      width: 40vw;
-    }
     #navleft {
       font-size: var(--navbar-height);
       justify-content: flex-start;
-      width: 100vw;
-      overflow: visible;
+  
+      width: 0%;
+      min-width: max-content;
+    }
+    #navcenter {
+      justify-content: center;
+      flex-grow: 1;
+    }
+    #navright {
+      justify-content: flex-end;
+      width: 0%;
+      min-width: max-content;
     }
 
     #home {
       color: var(--home);
       text-decoration: none;
       font-weight: 600;
-      font-size: 70%;
-      margin-right: 10%;
-      align-self: flex-start;
+      font-size: calc(var(--navbar-height) / 1.2);
     }
+
     #home:hover {
-      color: var(--home);
+      color: #fbd743;
+      transition-duration: 0.1s;
     }
+
+    #demobar,
     #demotitle {
-      background-color: var(--demobar);
-      align-self: flex-end;
-      color: var(--demo-text);
-      cursor: default;
-      font-weight: 700;
-      font-size: calc(var(--demobar-height) / 1.5);
-      height: calc(var(--demobar-height) - 3px);
-      border-radius: calc(var(--navbar-height) / 8) 0 0 0;
-      border: solid var(--demobar) 3px;
-      border-top: solid var(--demobar) 6px;
-      align-self: flex-end;
-      text-align: bottom;
-    }
-    #demobar {
       display: flex;
       color: var(--demobar);
       height: calc(var(--demobar-height) + 3px);
       align-self: flex-end;
-      justify-content: space-around;
-      border: solid var(--demobar);
+      justify-content: space-evenly;
+      border: solid var(--demobar) 3px;
       border-bottom: 0;
-      border-radius: 0 calc(var(--navbar-height) / 8) 0 0;
+      border-radius: 0 calc(var(--navbar-height) / 4) 0 0;
       flex-grow: 0.6;
+      min-width: calc(var(--navbar-height) * 4);
+      border-left: 0;
+      overflow-y: visible;
     }
-    #demobar a {
-      color: var(--demobar);
+    #demobar a,
+    #demotitle span{
+      color: var(--demotitle);
       text-decoration: none;
       font-weight: 600;
       font-size: calc(var(--demobar-height) / 1.5);
+      border-bottom: solid #00000000 2px;
+      flex: 0.4;
+      width: 4em;
+      z-index: 3;
       align-self: flex-end;
-      border-bottom: solid #00000000 3px;
-      height: calc(var(--demobar-height) - 3px);
     }
-
     #demobar a.chosen {
       color: var(--demo-chosen);
-      border-bottom: solid var(--demobar) 3px;
-      transition-duration: 0.1s;
+      border-bottom: solid var(--demobar) 2px;
     }
     #demobar a:hover:not(.chosen) {
       color: var(--white);
       transition-duration: 0.1s;
     }
-    #sbears {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      align-self: flex-end;
-      /*       border-bottom: dashed #fffde8; */
-      margin-right: 15%;
-    }
-    #sbear1,
-    #sbear2 {
-      display: flex;
-      color: #fffde8;
-      text-decoration: none;
-      font-size: calc(var(--navbar-height) / 3);
+    #demotitle {
+      background-color: var(--demobar);
+      color: var(--demo-text);
       cursor: default;
-      font-weight: 900;
+      height: calc(var(--demobar-height) + 3px);
+      border-radius: calc(var(--navbar-height) / 4) 0 0 0;
+      min-width: calc(var(--demobar-height) * 2.5);
+      flex-grow: 0;
+      border-right: 0;
+      position: relative;
     }
 
-    #sbear2 {
-      opacity: 0;
-      position: relative;
-      right: 0;
-    }
-    #sbear2:hover {
-      transition-duration: 0.3s;
-      opacity: 1;
-    }
     .jpen:active {
       background-color: var(--redp1);
     }
@@ -256,7 +239,58 @@ export class WebSite extends LitElement {
       width: 50%;
       align-self: flex-start;
     }
+
+.closed {
+  display: none;
+}
+
+    @media screen and (max-width: 450px)  {
+          #demotitle {
+      display: flex;
+      background-color: #00000000;
+      color: var(--demobar);
+      border-radius: calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4) 0 0;
+      border-right: solid 3px;
+      border-left: solid 3px;
+      width: 20vw;  cursor: pointer;
+ 
+    }
+      .open {
+  display: flex;
+  background-color: var(--demobar);
+  width: calc(20vw + 6px);
+  box-shadow: 1px 3px 4px 0px rgba(0,0,0,0.5);
+  z-index: 40;
+  position: absolute;
+  top: 100%;
+flex-wrap: wrap;
+border-radius: 0 0 calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4);
+height: 15vh;
+    }
+
+    .open a {
+      color: var(--demo-text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: calc(var(--demobar-height) / 1.5);
+      width: 100%;
+      flex-grow: 1;
+      border: none;
+      align-self: center;
+      text-align: center;
+ }
+
+    .open a.chosen {
+      color: var(--demo-chosen);
+      
+      border: none;
+    }
+    #demobar {display: none;
+    }
+
+
     @media (hover: none) {
+      
       .jpen:hover {
         color: var(--white);
         transition-duration: 0.1s;
@@ -301,17 +335,42 @@ export class WebSite extends LitElement {
               id="home"
               href=${this.lang.concat('/')}
               class=${this.currentPage === '/' ? 'athome' : ''}
-              @click=${() => this.switchPage('/')}
+              @click=${() => {
+                this.switchPage('/');
+                if (this.isOpen) {
+                  this.isOpen = !this.isOpen;
+                }
+              }}
               >ピ-クu</a
             >
-            <span id="demotitle">${this.english ? 'demos' : 'デモ'}</span>
+          </div>
+          <div id="navcenter">
+            <div id="demotitle" @click=${() => (this.isOpen = !this.isOpen)}>
+              <span>${this.english ? 'demo' : 'デモ'}</span>
+              <div class=${this.isOpen ? 'open closed' : 'closed'}>
+                <a
+                  id="bender"
+                  class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
+                  href=${this.lang.concat('/bender')}
+                  @click=${() => this.switchPage('/bender')}
+                  >${this.english ? 'bender' : 'ベンダー'}</a
+                >
+                <a
+                  id="crypto"
+                  class=${this.currentPage.endsWith('crypto') ? 'chosen' : ''}
+                  href=${this.lang.concat('/crypto')}
+                  @click=${() => this.switchPage('/crypto')}
+                  >${this.english ? 'crypto' : 'クリプト'}</a
+                >
+              </div>
+            </div>
             <div id="demobar">
               <a
                 id="bender"
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
                 href=${this.lang.concat('/bender')}
                 @click=${() => this.switchPage('/bender')}
-                >${this.english ? 'bender' : '土木'}</a
+                >${this.english ? 'bender' : 'ベンダー'}</a
               >
               <a
                 id="crypto"
@@ -323,30 +382,28 @@ export class WebSite extends LitElement {
             </div>
           </div>
           <div id="navright">
-            <div id="sbears">
-              <span
-                id="sbear1"
-                class=${this.currentPage === '/' ? 'athome' : ''}
-                >ʕ •ᴥ• ʔ</span
-              >
-              <!--               <span
-                id="sbear2"
-                class=${this.currentPage === '/' ? 'athome' : ''}
-                >&#9673; &#x25CF;
-              </span> -->
-            </div>
             <a
               href=${this.currentPage}
               class=${this.buttonDec}
               @click=${() => {
                 this.switchLanguage();
+                if (this.isOpen) {
+                  this.isOpen = !this.isOpen;
+                }
               }}
               >JP</a
             >
           </div>
         </div>
       </div>
-      <main>
+      <main
+        @click=${() => {
+          this.switchPage('/');
+          if (this.isOpen) {
+            this.isOpen = !this.isOpen;
+          }
+        }}
+      >
         <div id="outlet"></div>
       </main>
       <div id="footer">

@@ -20,7 +20,11 @@ class CryptoDemo extends LitElement {
       return false;
     }
   } */
-  static styles = css``;
+  static styles = css`
+    :host {
+      color: #321e00;
+    }
+  `;
 
   render() {
     return html` <h1>${this.english ? 'Crypto?' : 'クリプト?'}</h1> `;
