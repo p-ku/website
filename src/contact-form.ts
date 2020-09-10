@@ -20,6 +20,15 @@ class ContactForm extends LitElement {
       margin-top: 72px;
       animation: app-logo-spin infinite 20s linear;
     }
+    .bearnecessities {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0;
+      width: 0;
+      z-index: -1;
+    }
 
     @keyframes app-logo-spin {
       from {
@@ -32,32 +41,28 @@ class ContactForm extends LitElement {
   `;
 
   render() {
-    return html`
-      <form name="contact" method="POST" data-netlify="true" action="/404">
-        <input type="hidden" name="form-name" value="contact" />
-        <p>
-          <label>Your Name: <input type="text" name="name" /></label>
-        </p>
-        <p>
-          <label>Your Email: <input type="email" name="email" /></label>
-        </p>
-        <p>
-          <label
-            >Your Role:
-            <select name="role[]" multiple>
-              <option value="leader">Leader</option>
-              <option value="follower">Follower</option>
-            </select></label
-          >
-        </p>
-        <p>
-          <label>Message: <textarea name="message"></textarea></label>
-        </p>
-        <p>
-          <button type="submit">Send</button>
-        </p>
-      </form>
-    `;
+    return html`<form
+      name="contact"
+      method="POST"
+      netlify-honeypot="email"
+      data-netlify="true"
+    >
+      <label class="ohnohoney" for="email"></label>
+      <input
+        class="ohnohoney"
+        autocomplete="off"
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Your e-mail here"
+      />
+      <p>
+        <label>Message: <textarea name="message"></textarea></label>
+      </p>
+      <p>
+        <button type="submit">Send</button>
+      </p>
+    </form> `;
   }
 }
 

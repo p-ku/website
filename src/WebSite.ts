@@ -277,47 +277,47 @@ export class WebSite extends LitElement {
 
     @media screen and (max-width: 450px)  {
           #demotitle {
-      display: flex;
-      background-color: #00000000;
-      color: var(--demobar);
-      border-radius: calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4) 0 0;
-      border-right: solid 3px;
-      border-left: solid 3px;
-      width: 20vw;  cursor: pointer;
- 
-    }
-      .open {
-  display: flex;
-  background-color: var(--demobar);
-  width: calc(20vw + 6px);
-  box-shadow: 1px 3px 4px 0px rgba(0,0,0,0.5);
-  z-index: 40;
-  position: absolute;
-  top: 100%;
-flex-wrap: wrap;
-border-radius: 0 0 calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4);
-height: 15vh;
-    }
-
-    .open a {
-      color: var(--demo-text);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: calc(var(--demobar-height) / 1.5);
-      width: 100%;
-      flex-grow: 1;
-      border: none;
-      align-self: center;
-      text-align: center;
- }
-
-    .open a.chosen {
-      color: var(--demo-chosen);
+            display: flex;
+            background-color: #00000000;
+            color: var(--demobar);
+            border-radius: calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4) 0 0;
+            border-right: solid 3px;
+            border-left: solid 3px;
+            width: 20vw;  cursor: pointer;
       
-      border: none;
-    }
-    #demobar {display: none;
-    }
+          }
+          .open {
+            display: flex;
+            background-color: var(--demobar);
+            width: calc(20vw + 6px);
+            box-shadow: 1px 3px 4px 0px rgba(0,0,0,0.5);
+            z-index: 40;
+            position: absolute;
+            top: 100%;
+            flex-wrap: wrap;
+            border-radius: 0 0 calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4);
+            height: 15vh;
+          }
+
+          .open a {
+            color: var(--demo-text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: calc(var(--demobar-height) / 1.5);
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+            align-self: center;
+            text-align: center;
+          }
+
+          .open a.chosen {
+            color: var(--demo-chosen);
+            border: none;
+          }
+          #demobar {
+            display: none;
+          }
 
 
     @media (hover: none) {

@@ -20,7 +20,6 @@
           'Droid Sans Japanese', sans-serif;
         background-color: #fffde8;
         overflow: hidden;
-        /*         --white: #f2f2f2; */
         --white: #fffde8;
         --black: #121212;
 
@@ -67,24 +66,22 @@
 
   <body>
     <web-site></web-site>
-
-    <form name="contact" method="POST" data-netlify="true" action="/404" hidden>
-      <input type="hidden" name="form-name" value="contact" />
-      <p>
-        <label>Your Name: <input type="text" name="name" /></label>
-      </p>
-      <p>
-        <label>Your Email: <input type="email" name="email" /></label>
-      </p>
-      <p>
-        <label
-          >Your Role:
-          <select name="role[]" multiple>
-            <option value="leader">Leader</option>
-            <option value="follower">Follower</option>
-          </select></label
-        >
-      </p>
+    <form
+      name="contact"
+      method="POST"
+      netlify-honeypot="email"
+      data-netlify="true"
+      hidden
+    >
+      <label class="ohnohoney" for="email"></label>
+      <input
+        class="ohnohoney"
+        autocomplete="off"
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Your e-mail here"
+      />
       <p>
         <label>Message: <textarea name="message"></textarea></label>
       </p>
