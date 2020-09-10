@@ -2,6 +2,8 @@ import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
 import './crypto-demo.js';
 import './bender-demo.js';
+import './contact-form.js';
+
 import { Router } from '@vaadin/router';
 
 export class WebSite extends LitElement {
@@ -33,9 +35,12 @@ export class WebSite extends LitElement {
       { path: '/', component: 'home-page' },
       { path: '/crypto', component: 'crypto-demo' },
       { path: '/bender', component: 'bender-demo' },
+      { path: '/contact', component: 'contact-form' },
       { path: '/jp/', component: 'home-page' },
       { path: '/jp/crypto', component: 'crypto-demo' },
       { path: '/jp/bender', component: 'bender-demo' },
+      { path: '/jp/contact', component: 'contact-form' },
+
       {
         path: '(.*)',
         redirect: '/',
@@ -114,7 +119,7 @@ export class WebSite extends LitElement {
     }
     #navleft {
       font-size: var(--navbar-height);
-      justify-content: flex-start;
+      justify-content: space-between;
   
       width: 0%;
       min-width: max-content;
@@ -132,7 +137,7 @@ export class WebSite extends LitElement {
     #home {
       color: var(--home);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
       font-size: calc(var(--navbar-height) / 1.2);
     }
 
@@ -152,7 +157,7 @@ export class WebSite extends LitElement {
       border-bottom: 0;
       border-radius: 0 calc(var(--navbar-height) / 4) 0 0;
       flex-grow: 0.6;
-      min-width: calc(var(--navbar-height) * 4);
+      min-width: calc(var(--navbar-height) * 3);
       border-left: 0;
       overflow-y: visible;
     }
@@ -171,6 +176,8 @@ export class WebSite extends LitElement {
     #demobar a.chosen {
       color: var(--demo-chosen);
       border-bottom: solid var(--demobar) 2px;
+      transition-duration: 0.1s;
+
     }
     #demobar a:hover:not(.chosen) {
       color: var(--white);
@@ -210,7 +217,6 @@ export class WebSite extends LitElement {
     .jpen:hover {
       color: var(--white);
       transition-duration: 0.1s;
-      background-color: var(--redp2);
     }
     .jp:link,
     .jp:visited {
@@ -219,14 +225,39 @@ export class WebSite extends LitElement {
       border-color: var(--white);
     }
     .jp:hover {
-      background-color: var(--redm1);
+      background-color: var(--redm3);
       transition-duration: 0.1s;
       border-color: var(--white);
     }
-    .jp:active {
-      background-color: var(--redm2);
+
+    #mail {
+      color: #9df5ee;
+      font-size: calc(var(--navbar-height));
+      margin-right: calc(2 *
+              (var(--navbar-height) - (var(--navbar-height) / 1.5)) / 2 - 3px
+            );
+      font-weight: 900;
+      text-decoration: none;
+      text-align: center;
+      align-self: center;
+      align-content: center;
+      vertical-align: center;
+      height: calc(var(--navbar-height) - 4px);
+      line-height: calc(var(--navbar-height));
+      cursor: pointer;
+      border-bottom: solid #00000000 2px;
+      border-top: solid #00000000 2px;
+    }
+    #mail:hover {
       transition-duration: 0.1s;
-      border-color: var(--white);
+      color: var(--white);
+      }
+
+    #mail.chosen {
+      color: var(--demo-chosen);
+      border-bottom: solid #9df5ee 2px;
+      border-top: solid #00000000 2px;
+
     }
     #footer {
       display: flex;
@@ -290,12 +321,7 @@ height: 15vh;
 
 
     @media (hover: none) {
-      
-      .jpen:hover {
-        color: var(--white);
-        transition-duration: 0.1s;
-        background-color: var(--redp2);
-      }
+
       .jpen:link,
       .jpen:visited {
         color: var(--redm3);
@@ -382,6 +408,14 @@ height: 15vh;
             </div>
           </div>
           <div id="navright">
+            <a
+              id="mail"
+              class=${this.currentPage.endsWith('contact') ? 'chosen' : ''}
+              href=${this.lang.concat('/contact')}
+              @click=${() => this.switchPage('/contact')}
+            >
+              &#9993;</a
+            >
             <a
               href=${this.currentPage}
               class=${this.buttonDec}

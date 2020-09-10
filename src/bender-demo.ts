@@ -20,6 +20,7 @@ class CivilDemo extends LitElement {
       justify-content: space-between;
       max-width: 960px;
       max-height: 100%;
+      color: #321e00;
     }
 
     .column {
