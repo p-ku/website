@@ -5,6 +5,9 @@
 ## system files
 .DS_Store
 
+## key
+.asc
+
 ## npm
 /node_modules/
 /npm-debug.log
@@ -22,3 +25,9 @@
 
 # models
 /archive/
+
+## env variables
+.env
+
+# mess
+.ignore

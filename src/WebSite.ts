@@ -3,7 +3,6 @@ import './home-page.js';
 import './crypto-demo.js';
 import './bender-demo.js';
 import './contact-form.js';
-
 import { Router } from '@vaadin/router';
 
 export class WebSite extends LitElement {
@@ -119,8 +118,7 @@ export class WebSite extends LitElement {
     #navleft {
       font-size: var(--navbar-height);
       justify-content: space-between;
-  
-      width: 0%;
+
       min-width: max-content;
     }
     #navcenter {
@@ -129,7 +127,6 @@ export class WebSite extends LitElement {
     }
     #navright {
       justify-content: flex-end;
-      width: 0%;
       min-width: max-content;
     }
 
@@ -202,7 +199,7 @@ export class WebSite extends LitElement {
     .jpen:link,
     .jpen:visited {
       color: var(--redm3);
-      border: solid var(--redm3);
+      border: solid var(--redm3) 3px;
       cursor: pointer;
       border-radius: 50%;
       width: calc(var(--navbar-height) / 1.5);
@@ -214,22 +211,14 @@ export class WebSite extends LitElement {
       line-height: calc(var(--navbar-height) / 1.5);
       min-width: calc(var(--navbar-height) / 1.5);
     }
-    .jpen:hover {
+    .jpen:hover, .jp:hover {
       color: var(--white);
       transition-duration: 0.1s;
     }
     .jp:link,
     .jp:visited {
       color: var(--white);
-
-      background-color: var(--redm3);
-      border-color: var(--white);
-
-    }
-    .jp:hover {
-      color: var(--white);
-
-      transition-duration: 0.1s;
+      background-color: var(--japan-red);
       border-color: var(--white);
     }
 
@@ -272,59 +261,56 @@ export class WebSite extends LitElement {
     .footercolumn {
       width: 50%;
       align-self: flex-start;
+      text-align: center;
     }
 
-.closed {
-  display: none;
-}
+    .closed {
+      display: none;
+    }
 
     @media screen and (max-width: 450px)  {
-          #demotitle {
-            display: flex;
-            background-color: #00000000;
-            color: var(--demobar);
-            border-radius: calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4) 0 0;
-            border-right: solid 3px;
-            border-left: solid 3px;
-            width: 20vw;  cursor: pointer;
-      
-          }
+      #demotitle {
+        display: flex;
+        background-color: #00000000;
+        color: var(--demobar);
+        border-radius: calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4) 0 0;
+        border-right: solid 3px;
+        border-left: solid 3px;
+        width: 20vw;  cursor: pointer;
+      }
 
-          .open {
-            display: flex;
-            background-color: var(--demobar);
-            width: calc(20vw + 6px);
-            box-shadow: 1px 3px 4px 0px rgba(0,0,0,0.5);
-            z-index: 40;
-            position: absolute;
-            top: 100%;
-            flex-wrap: wrap;
-            border-radius: 0 0 calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4);
-            height: 15vh;
-          }
+      .open {
+        display: flex;
+        background-color: var(--demobar);
+        width: calc(20vw + 6px);
+        box-shadow: 1px 3px 4px 0px rgba(0,0,0,0.5);
+        z-index: 40;
+        position: absolute;
+        top: 100%;
+        flex-wrap: wrap;
+        border-radius: 0 0 calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4);
+        height: 15vh;
+      }
 
-          .open a {
-            color: var(--demo-text);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: calc(var(--demobar-height) / 1.5);
-            width: 100%;
-            flex-grow: 1;
-            border: none;
-            align-self: center;
-            text-align: center;
-          }
+      .open a {
+        color: var(--demo-text);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: calc(var(--demobar-height) / 1.5);
+        width: 100%;
+        flex-grow: 1;
+        border: none;
+        align-self: center;
+        text-align: center;
+      }
 
-          .open a.chosen {
-            color: var(--demo-chosen);
-            border: none;
-          }
-          #demobar {
-            display: none;
-          }
-
-/*     @media (hover: none) {
-    } */
+      .open a.chosen {
+        color: var(--demo-chosen);
+        border: none;
+      }
+      #demobar {
+        display: none;
+      }
   `;
 
   render() {
@@ -417,7 +403,6 @@ export class WebSite extends LitElement {
       </div>
       <main
         @click=${() => {
-          this.switchPage('/');
           if (this.isOpen) {
             this.isOpen = !this.isOpen;
           }
@@ -432,9 +417,7 @@ export class WebSite extends LitElement {
           target="_blank"
           rel="noopener noreferrer"
           href="https://github.com/p-ku/website"
-          >${this.english
-            ? 'Website Source Code'
-            : 'ウェブサイトのソースコード'}</a
+          >${this.english ? 'Source' : 'ソース'}</a
         >
         <a class="footercolumn" id="email">contact@p-ku.com</a>
       </div>
