@@ -73,17 +73,26 @@ export class WebSite extends LitElement {
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      font-size: calc(10px + 2vmin);
       max-width: 960px;
       margin: 0 auto;
       text-align: center;
-    }
-    main {
       flex-grow: 1;
     }
-    a::selection,
-    span::selection,
-    div::selection {
+#outlet, #outlet :only-child {
+  display: flex;
+  flex-direction: column;
+      flex-grow: 1;
+      max-width: 960px;
+      width: 100%;
+      min-height: 100%;
+align-self: stretch;
+    }
+    a {color: #ef8127;}
+    a::selection {color: var(--white); background-color: #ef8127;}
+
+    #navbar a::selection,
+    #navbar span::selection,
+    #navbar div::selection {
       background: transparent;
       outline: none;
     }
@@ -139,7 +148,6 @@ export class WebSite extends LitElement {
 
     #home:hover {
       color: #fbd743;
-      transition-duration: 0.1s;
     }
 
     #demobar,
@@ -173,12 +181,11 @@ export class WebSite extends LitElement {
     #demobar a.chosen {
       color: var(--demo-chosen);
       border-bottom: solid var(--demobar) 2px;
-      transition-duration: 0.1s;
+
 
     }
     #demobar a:hover:not(.chosen) {
       color: var(--white);
-      transition-duration: 0.1s;
     }
     #demotitle {
       background-color: var(--demobar);
@@ -213,7 +220,6 @@ export class WebSite extends LitElement {
     }
     .jpen:hover, .jp:hover {
       color: var(--white);
-      transition-duration: 0.1s;
     }
     .jp:link,
     .jp:visited {
@@ -241,7 +247,6 @@ export class WebSite extends LitElement {
       border-top: solid #00000000 2px;
     }
     #mail:hover {
-      transition-duration: 0.1s;
       color: var(--white);
       }
 
@@ -251,23 +256,39 @@ export class WebSite extends LitElement {
       border-top: solid #00000000 2px;
 
     }
+
+
+/*     #headshot {
+  width: 100%;
+  height: 400px;
+  background-image: url('../headshot.jpg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position:center;
+
+  border: 1px solid red;
+  z-index: 0;
+} */
     #footer {
       display: flex;
       font-size: var(--footer-font-size);
+      height: calc(2 * var(--footer-font-size));
       width: 100%;
       max-width: 480px;
-      min-height: calc(2 * var(--footer-font-size));
+      min-height: 10vh;
     }
+
     .footercolumn {
       width: 50%;
-      align-self: flex-start;
-      text-align: center;
-    }
+      align-self: center;
+ }
 
     .closed {
       display: none;
     }
+    @media screen and (min-width: 960px)  {
 
+    }
     @media screen and (max-width: 450px)  {
       #demotitle {
         display: flex;
@@ -401,25 +422,31 @@ export class WebSite extends LitElement {
           </div>
         </div>
       </div>
-      <main
+      <div
+        id="outlet"
         @click=${() => {
           if (this.isOpen) {
             this.isOpen = !this.isOpen;
           }
         }}
-      >
-        <div id="outlet"></div>
-      </main>
+      ></div>
       <div id="footer">
-        <a
-          class="footercolumn"
-          id="source"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/p-ku/website"
-          >${this.english ? 'Source' : 'ソース'}</a
-        >
-        <a class="footercolumn" id="email">contact@p-ku.com</a>
+        <div class="footercolumn">
+          <a
+            class="footercolumn"
+            id="source"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/p-ku/website"
+            target="_blank"
+            >${this.english ? 'source' : 'ソース'}</a
+          >
+        </div>
+        <div class="footercolumn">
+          <a class="footercolumn" href="mailto:contact@p-ku.com" id="email"
+            >contact@p-ku.com</a
+          >
+        </div>
       </div>
     `;
   }

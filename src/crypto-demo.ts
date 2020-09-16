@@ -13,21 +13,27 @@ class CryptoDemo extends LitElement {
       this.lang = '';
     }
   }
-  /*  detectLanguage() {
-    if (location.pathname.startsWith('/jp')) {
-      return true;
-    } else {
-      return false;
-    }
-  } */
+
   static styles = css`
     :host {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      max-width: 960px;
+      max-height: 100%;
       color: #321e00;
+    }
+    h2 {
+      line-height: 1em;
+      text-align: left;
+      margin-left: var(--navbar-height);
     }
   `;
 
   render() {
-    return html` <h1>${this.english ? 'Crypto?' : 'クリプト?'}</h1> `;
+    return html`
+      <h2>${this.english ? 'crypto, coming soon' : 'クリプト、近刊'}</h2>
+    `;
   }
 }
 

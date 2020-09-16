@@ -20,6 +20,11 @@
           'Droid Sans Japanese', sans-serif;
         background-color: #fffde8;
         overflow: hidden;
+        --footer-font-size: calc(12px + 0.5vmin);
+        --primary-font-size: clamp(16px, calc(10px + 2vmin), 30px);
+
+        font-size: var(--primary-font-size);
+
         --white: #fffde8;
         --black: #121212;
 
@@ -55,10 +60,16 @@
         --demo-chosen: var(--white);
         --demo-shadow: var(--black);
         --demo-chosen-shadow: #f4bbdf;
-        --primary-font-size: calc(10px + 2vmin);
-        --footer-font-size: calc(12px + 0.5vmin);
+
         --navbar-height: calc(36px + 2vmin);
         --demobar-height: calc(var(--navbar-height) / 1.9);
+        color: var(--navbar);
+
+        background-image: url('../headshot.jpg');
+        background-repeat: no-repeat;
+        background-size: auto calc(100% - var(--navbar-height) * 3);
+        background-position: right
+          calc(0.5 * (100% - var(--navbar-height) * 1.5)) bottom;
       }
     </style>
     <title>ピ-クu</title>
@@ -72,10 +83,9 @@
     name="contact"
     method="POST"
     netlify-honeypot="email"
-    data-netlify="true"
     netlify
     hidden
   >
-    <textarea name="message" id="messageInput" type="hidden"></textarea>
+    <input name="visitorMessage" id="pgp" type="hidden" />
   </form>
 </html>

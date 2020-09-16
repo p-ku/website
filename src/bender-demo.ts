@@ -1,6 +1,6 @@
 import { LitElement, html, css, property } from 'lit-element';
 
-class CivilDemo extends LitElement {
+class BenderDemo extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
 
@@ -28,20 +28,17 @@ class CivilDemo extends LitElement {
       height: calc(100vh - var(--navbar-height) - var(--demobar-height));
     }
 
-    model-viewer {
-      --poster-color: transparent;
+    h2 {
+      line-height: 1em;
+      text-align: left;
+      margin-left: var(--navbar-height);
     }
   `;
 
   render() {
     return html`
-      <div class="column">
-        <p>Play around with the model on the right!</p>
-        <p>Just watch it rotate on its own or do it yourself with the mouse</p>
-        <p>You can also zoom in the model!</p>
-      </div>
+      <h2>${this.english ? 'bender, coming soon' : 'ベンダー、近刊'}</h2>
     `;
   }
 }
-
-customElements.define('civil-demo', CivilDemo);
+customElements.define('bender-demo', BenderDemo);
