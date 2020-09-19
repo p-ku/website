@@ -1,11 +1,12 @@
 import { css, html, LitElement, property } from 'lit-element';
 import * as openpgp from 'openpgp';
-import { render } from 'lit-html';
+
+import { Router } from '@vaadin/router';
 
 class ContactForm extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
-  @property({ attribute: false }) entooltip = html` Encrypted with
+  @property({ attribute: false }) entooltip = html`Encrypted with
     <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank"
       >PGP</a
     >
@@ -33,6 +34,17 @@ class ContactForm extends LitElement {
       this.lang = '';
     }
     this.shadowRoot.getElementById('messageInput').focus();
+
+    const contactoutlet = this.shadowRoot?.getElementById('contactoutlet');
+    const contactrouter = new Router(contactoutlet);
+    contactrouter.setRoutes([
+      { path: '/contact/success', component: 'contact-form' },
+      { path: '/jp/contact', component: 'contact-form' },
+      {
+        path: '(.*)',
+        redirect: '/',
+      },
+    ]);
   }
 
   async encryptor() {
@@ -77,6 +89,8 @@ TComQBkFSpoM
       height: 100%;
       color: #321e00;
       flex-grow: 1;
+      align-items: center;
+      margin: 0 auto;
     }
 
     h2::selection {
@@ -99,9 +113,9 @@ TComQBkFSpoM
     }
 
     h2 {
-      line-height: 1em;
+      line-height: 1rem;
       text-align: left;
-      margin-left: var(--navbar-height);
+      margin-left: 4rem;
       justify-self: flex-start;
     }
     #col {
@@ -121,16 +135,14 @@ TComQBkFSpoM
       overflow: auto;
       height: 55vh;
       width: calc(100% - (var(--navbar-height) / 2));
-      border: solid #321e005e 3px;
-
-      border-radius: calc(var(--navbar-height) / 4)
-        calc(var(--navbar-height) / 4) 0 calc(var(--navbar-height) / 4);
-      padding: calc(var(--navbar-height) / 4);
+      border: solid #321e0078 3px;
+      border-radius: 1rem 1rem 0 1rem;
+      padding: 1rem;
       font-family: inherit;
       color: var(--navbar);
       background: rgba(255, 253, 232, 0.8);
       flex-grow: 1;
-      font-size: inherit;
+      font-size: 1rem;
       /*       box-shadow: 0px 0px 5px 1px inset;
  */
     }
@@ -146,37 +158,42 @@ TComQBkFSpoM
       width: 100%;
       position: relative;
       top: -1px;
-      right: -6px;
     }
 
     button {
       background-color: var(--demobar);
-      height: calc(var(--demobar-height) + 3px);
-      min-width: calc(var(--demobar-height) * 2.5);
+      height: 1.7rem;
       align-self: right;
-      background-color: #00000000;
+      background-color: rgba(255, 253, 232, 0.8);
       color: #00b2b0;
-      border-radius: 0 0 calc(var(--navbar-height) / 4)
-        calc(var(--navbar-height) / 4);
+      border-radius: 0 0 1rem 1rem;
       border: solid 3px #00b2b0;
       border-top: none;
-      width: 15%;
+      width: 4rem;
       min-width: max-content;
       justify-content: right;
       align-items: right;
       position: relative;
       font-weight: 600;
-      font-size: calc(var(--demobar-height) / 1.5);
+      font-size: 1rem;
       cursor: pointer;
+    }
+    #space {
+      height: 2.5rem;
     }
 
     .tooltip {
       text-decoration: underline dotted;
     }
     #tips {
-      font-size: var(--footer-font-size);
+      display: flex;
+      font-size: 1rem;
       cursor: default;
+      align-content: flex-end;
+      align-items: flex-end;
+      height: 1.3rem;
     }
+
     .infodot {
       text-decoration: none;
     }
@@ -190,16 +207,15 @@ TComQBkFSpoM
 
     .tooltiptext {
       visibility: hidden;
-      width: clamp(240px, 30vw, 320px);
+      width: clamp(240px, 30vw, 480px);
       background-color: var(--navbar);
       color: var(--white);
       text-align: center;
       padding: 5px;
       border-radius: 6px 6px 6px 0;
       position: absolute;
-      z-index: 1;
-      bottom: calc(2 * var(--footer-font-size) + 5px);
-      left: calc(var(--footer-font-size) / 2);
+      bottom: 2rem;
+      left: 0.4rem;
     }
     #tips:hover .tooltiptext {
       visibility: visible;
@@ -226,17 +242,50 @@ TComQBkFSpoM
   get contact() {
     return this.shadowRoot?.getElementById('contact');
   }
+  /* 
+  handleSubmit() {
+    this.encryptor().then(encrypted => {
+      (this.pgp as HTMLInputElement).value = encrypted;
+    });
+    const encode = (data: {
+      [x: string]: string | number | boolean;
+      'form-name'?: string;
+      visitorMessage?: string;
+    }) => {
+      return Object.keys(data)
+        .map(
+          key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+        )
+        .join('&');
+    };
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode({
+        'form-name': 'contact',
+        visitorMessage: (this.pgp as HTMLInputElement).value,
+      }),
+    })
+      .then(() => Router.go('/contact/success'))
+      .catch(error => alert(error));
+  } */
 
   render() {
     return html`
       <div id="col">
-        <h2>${this.english ? 'Send a message.' : 'メッセージを送って。'}</h2>
+        <h2>
+          ${this.english
+            ? 'Send an encrypted* message.'
+            : 'メッセージを送って。'}
+        </h2>
         <form
           id="contact"
           name="contact"
           method="POST"
           netlify-honeypot="email"
           netlify
+          action="/success"
         >
           <input type="hidden" name="form-name" value="contact" />
           <label class="bearnecessities"><input name="email" /></label>
@@ -252,15 +301,16 @@ TComQBkFSpoM
         ></textarea>
         <div id="buttonfoot">
           <div id="tips">
-            <span class="infodot">🛈 </span>
-            <span class="tooltip">
-              ${this.english ? this.entooltip : this.jptooltip}</span
+            <span class="infodot">*</span
+            ><span class="tooltip"
+              >${this.english ? this.entooltip : this.jptooltip}</span
             >
           </div>
           <button @click=${this.sendMessage}>
             ${this.english ? 'send' : '送る'}
           </button>
         </div>
+        <div id="space"></div>
       </div>
     `;
   }

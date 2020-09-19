@@ -24,7 +24,6 @@ export class WebSite extends LitElement {
       this.lang = '';
       this.buttonDec = 'jpen';
     }
-    this.switchRoute(this.currentPage);
   }
 
   firstUpdated() {
@@ -46,9 +45,6 @@ export class WebSite extends LitElement {
     ]);
   }
 
-  switchRoute(route = '/') {
-    Router.go(`${route}`);
-  }
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
   }
@@ -73,22 +69,33 @@ export class WebSite extends LitElement {
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      max-width: 960px;
       margin: 0 auto;
       text-align: center;
       flex-grow: 1;
+      animation: fade-in-animation 0.5s ease-out;
+      background-color: #fffde8;;
+
+
+    }
+
+    @keyframes fade-in-animation {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 #outlet, #outlet :only-child {
   display: flex;
   flex-direction: column;
       flex-grow: 1;
-      max-width: 960px;
       width: 100%;
       min-height: 100%;
 align-self: stretch;
     }
     a {color: #ef8127;}
-    a::selection {color: var(--white); background-color: #ef8127;}
+    a::selection {color: #fffde8; background-color: #ef8127;}
 
     #navbar a::selection,
     #navbar span::selection,
@@ -96,192 +103,206 @@ align-self: stretch;
       background: transparent;
       outline: none;
     }
-
+    #topper,
     #navbar,
     #navspace,
     #navright,
     #navleft,
     #navcenter {
-      display: flex;
-      height: var(--navbar-height);
-      z-index: 2;
-      overflow-y: visible;
+      display: inline-flex;
+      height: 2.5rem;
       align-items: center;
       align-content: center;
       white-space: nowrap;
+      justify-content: center;
+      z-index: 2;
+      overflow-y: visible;
+min-height: 64px;
     }
+/* #topper {
+  width: 100%;
+  height: 2rem;
+  color: #FFC342;
+} */
     #navbar {
       background-image: linear-gradient(45deg, var(--navbar), #683e00);
       box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
-      justify-content: center;
-      width: 100vw;
+      width: 100%;
+      height: 2.5rem;
+      position: sticky; top: 0;
+      justify-content: space-between;
+      flex-direction: column;
+      flex-wrap: wrap;
+
     }
     #navspace {
-      padding: calc(
-        (var(--navbar-height) - (var(--navbar-height) / 1.5)) / 2 - 3px
-      );
-      width: 100vw;
-      max-width: 960px;
       justify-content: space-between;
-    }
-    #navleft {
-      font-size: var(--navbar-height);
-      justify-content: space-between;
-
-      min-width: max-content;
+flex-direction: row;
+width: 100%;
     }
     #navcenter {
-      justify-content: center;
-      flex-grow: 1;
+      flex: 1 1 auto;
     }
-    #navright {
-      justify-content: flex-end;
-      min-width: max-content;
+
+    #navleft, #navright {
+      font-size: 2rem;
+      flex: 0.4 1 auto;
     }
 
     #home {
-      color: var(--home);
+      display: inline-flex;
+      box-sizing: border-box;
+      color: #FFC342;
       text-decoration: none;
+      text-align: left;
+      align-content: center;
+      align-self: center;
+      align-items: center;
+      min-width: 48px;
       font-weight: 700;
-      font-size: calc(var(--navbar-height) / 1.2);
-    }
+      height: 100%;
+line-height: 100%;    
 
+
+}
     #home:hover {
-      color: #fbd743;
+      color: #ffdb49;
     }
 
+#demobar {
+}
     #demobar,
     #demotitle {
       display: flex;
       color: var(--demobar);
-      height: calc(var(--demobar-height) + 3px);
       align-self: flex-end;
-      justify-content: space-evenly;
+      justify-content: center;
       border: solid var(--demobar) 3px;
-      border-bottom: 0;
-      border-radius: 0 calc(var(--navbar-height) / 4) 0 0;
-      flex-grow: 0.6;
-      min-width: calc(var(--navbar-height) * 3);
+      border-bottom: none;
+      border-radius: 0 1rem 0 0;
       border-left: 0;
       overflow-y: visible;
+      height: 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      max-width: 960px;
+      width: 11rem;
+    align-items: center;
+    min-height: 48px;
     }
-    #demobar a,
-    #demotitle span{
+    #demotitle::after {
+      content: ":";
+    }
+    #demobar a
+{
+  display: flex;
+  justify-content:center;
+  align-items: center;
+      box-sizing: border-box;
       color: var(--demotitle);
       text-decoration: none;
-      font-weight: 600;
-      font-size: calc(var(--demobar-height) / 1.5);
-      border-bottom: solid #00000000 2px;
-      flex: 0.4;
-      width: 4em;
-      min-width: max-content;
-      z-index: 3;
-      align-self: flex-end;
+      border-bottom: solid #00000000 3px;
+      border-top: solid #00000000 3px;
+      width: 50%;
+      height: 100%;
     }
     #demobar a.chosen {
       color: var(--demo-chosen);
-      border-bottom: solid var(--demobar) 2px;
-
+      border-bottom: dashed var(--demobar) 3px;
+      border-top: solid #00000000 3px;
 
     }
     #demobar a:hover:not(.chosen) {
-      color: var(--white);
+      color: #fffde8;
     }
     #demotitle {
       background-color: var(--demobar);
       color: var(--demo-text);
       cursor: default;
-      height: calc(var(--demobar-height) + 3px);
-      border-radius: calc(var(--navbar-height) / 4) 0 0 0;
-      min-width: calc(var(--demobar-height) * 2.5);
-      flex-grow: 0;
+      border-radius: 1rem 0 0 0;
       border-right: 0;
-      position: relative;
-    }
+width: 4rem;
 
-    .jpen:active {
-      background-color: var(--redp1);
+    }
+     #langspace {
+      display: flex;
+      height: 2.5rem;
+      align-content: center;
+      text-align: center;
+      align-items: center;
+      align-self: center;
+      min-width: 2.5rem;
+justify-content: center;
+flex: 1 1 2.5rem;
     }
 
     .jpen:link,
     .jpen:visited {
-      color: var(--redm3);
-      border: solid var(--redm3) 3px;
+      box-sizing: border-box;
+      display: flex;
+      color: #eb737b;
+      border: solid #eb737b 3px;
       cursor: pointer;
       border-radius: 50%;
-      width: calc(var(--navbar-height) / 1.5);
-      height: calc(var(--navbar-height) / 1.5);
+      height: 1.5rem;
+      width: 1.5rem;
       background-color: #00000000;
-      font-size: calc(var(--navbar-height) / 3);
+      font-size: 1rem;
       font-weight: 700;
+      align-items: center;
       text-decoration: none;
-      line-height: calc(var(--navbar-height) / 1.5);
-      min-width: calc(var(--navbar-height) / 1.5);
+      justify-content: center;
+      min-width: 48px;
+      min-height: 48px;
     }
     .jpen:hover, .jp:hover {
-      color: var(--white);
+      color: #fffde8;
     }
     .jp:link,
     .jp:visited {
-      color: var(--white);
-      background-color: var(--japan-red);
-      border-color: var(--white);
+      color: #fffde8;
+      background-color: #ef3341;
+      border-color: #fffde8;
     }
 
-    #mail {
-      color: #9df5ee;
-      font-size: calc(var(--navbar-height));
-      margin-right: calc(2 *
-              (var(--navbar-height) - (var(--navbar-height) / 1.5)) / 2 - 3px
-            );
+    #mail, #source {
+      display: flex;
+      color: #FFC342;
+      box-sizing: border-box;
+      font-size: 1.9rem;
       font-weight: 900;
       text-decoration: none;
       text-align: center;
       align-self: center;
       align-content: center;
       vertical-align: center;
-      height: calc(var(--navbar-height) - 4px);
-      line-height: calc(var(--navbar-height));
+      justify-content: center;
+      align-items: center;
+      height: 100%;
       cursor: pointer;
-      border-bottom: solid #00000000 2px;
-      border-top: solid #00000000 2px;
+      border-bottom: solid #00000000 3px;
+      border-top: solid #00000000 3px;
+      min-width: 48px;
+      flex: 1 1 2.5rem;
     }
-    #mail:hover {
-      color: var(--white);
-      }
+    #source {
+      color: #9df5ee;
+      font-size: 1.2rem;
+    }
+    #mail:hover, #source:hover {
+      color: #fffde8;
+    }
+
 
     #mail.chosen {
-      color: var(--demo-chosen);
-      border-bottom: solid #9df5ee 2px;
-      border-top: solid #00000000 2px;
-
+      color: #fffde8;
+      border-bottom: dashed #FFC342 3px;
     }
-
-
-/*     #headshot {
-  width: 100%;
-  height: 400px;
-  background-image: url('../headshot.jpg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position:center;
-
-  border: 1px solid red;
-  z-index: 0;
-} */
-    #footer {
-      display: flex;
-      font-size: var(--footer-font-size);
-      height: calc(2 * var(--footer-font-size));
-      width: 100%;
-      max-width: 480px;
-      min-height: 10vh;
+    #home.chosen {
+      border-bottom: dashed #FFC342 3px;
     }
-
-    .footercolumn {
-      width: 50%;
-      align-self: center;
- }
+    #down {
+    display:none;}
 
     .closed {
       display: none;
@@ -289,41 +310,94 @@ align-self: stretch;
     @media screen and (min-width: 960px)  {
 
     }
-    @media screen and (max-width: 450px)  {
+    @media screen and (max-width: 840px)  {
+
+.jpen:hover {
+      color: #eb737b;
+    }
+     .jp:hover {
+color: #fffde8;
+    }
+    #home {
+      display: inline-flex;
+      font-size: 2rem;
+
+    }
+
+    #demotitle.chosen {
+border-bottom: dashed var(--demobar) 3px;
+      border-top: solid #00000000 3px;
+    }
+
+
+#mail:hover, #home:hover {
+  color: #FFC342;
+}
+#source:hover {
+      color: #9df5ee;
+    }
+
       #demotitle {
+        box-sizing: border-box;
         display: flex;
+        flex-direction: row;
         background-color: #00000000;
         color: var(--demobar);
-        border-radius: calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4) 0 0;
-        border-right: solid 3px;
-        border-left: solid 3px;
-        width: 20vw;  cursor: pointer;
+        border: none;
+        cursor: pointer;
+        align-self: center;
+        align-items: center;
+        height: 100%;
+        min-width: fit-content;
+        line-height: 100%;
+        border-bottom: solid #00000000 3px;
+        border-top: solid #00000000 3px;
+        font-size: 1rem;
+        width: 4rem;
       }
 
+       #demotitle::after {
+        content: '▾';
+       }
+
       .open {
-        display: flex;
+        display: inline-flex;
+        box-sizing: border-box;
         background-color: var(--demobar);
-        width: calc(20vw + 6px);
-        box-shadow: 1px 3px 4px 0px rgba(0,0,0,0.5);
-        z-index: 40;
+        box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.3);
         position: absolute;
         top: 100%;
-        flex-wrap: wrap;
-        border-radius: 0 0 calc(var(--navbar-height) / 4) calc(var(--navbar-height) / 4);
-        height: 15vh;
+        right: 0;
+        height: 3rem;
+        width: 100%;
+        align-self: center;
+        text-align: center;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        min-height: 64px;
       }
 
       .open a {
+        display: flex;
         color: var(--demo-text);
         text-decoration: none;
         font-weight: 600;
-        font-size: calc(var(--demobar-height) / 1.5);
-        width: 100%;
-        flex-grow: 1;
+        width: 50%;
         border: none;
         align-self: center;
         text-align: center;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+
+        vertical-align: center;
+        -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10+ and Edge */
+  user-select: none; /* Standard syntax */
+height: 100%;
       }
+
 
       .open a.chosen {
         color: var(--demo-chosen);
@@ -332,6 +406,7 @@ align-self: stretch;
       #demobar {
         display: none;
       }
+
   `;
 
   render() {
@@ -342,7 +417,6 @@ align-self: stretch;
             <a
               id="home"
               href=${this.lang.concat('/')}
-              class=${this.currentPage === '/' ? 'athome' : ''}
               @click=${() => {
                 this.switchPage('/');
                 if (this.isOpen) {
@@ -355,11 +429,15 @@ align-self: stretch;
           <div id="navcenter">
             <div
               id="demotitle"
+              class=${this.currentPage.endsWith('bender') ||
+              this.currentPage.endsWith('crypto')
+                ? 'chosen'
+                : ''}
               @click=${() => {
                 this.isOpen = !this.isOpen;
               }}
             >
-              <span>${this.english ? 'demo' : 'デモ'}</span>
+              ${this.english ? 'demo' : 'デモ'}
               <div class=${this.isOpen ? 'open closed' : 'closed'}>
                 <a
                   id="bender"
@@ -394,7 +472,20 @@ align-self: stretch;
               >
             </div>
           </div>
+
           <div id="navright">
+            <a
+              id="source"
+              href="https://github.com/p-ku"
+              target="_blank"
+              @click=${() => {
+                if (this.isOpen) {
+                  this.isOpen = !this.isOpen;
+                }
+              }}
+              >&lt;/&gt;</a
+            >
+
             <a
               id="mail"
               class=${this.currentPage.endsWith('contact') ? 'chosen' : ''}
@@ -405,20 +496,21 @@ align-self: stretch;
                   this.isOpen = !this.isOpen;
                 }
               }}
+              >➤</a
             >
-              &#9993;</a
-            >
-            <a
-              href=${this.currentPage}
-              class=${this.buttonDec}
-              @click=${() => {
-                this.switchLanguage();
-                if (this.isOpen) {
-                  this.isOpen = !this.isOpen;
-                }
-              }}
-              >JP</a
-            >
+            <div id="langspace">
+              <a
+                href=${this.currentPage}
+                class=${this.buttonDec}
+                @click=${() => {
+                  this.switchLanguage();
+                  if (this.isOpen) {
+                    this.isOpen = !this.isOpen;
+                  }
+                }}
+                >JP</a
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -430,24 +522,6 @@ align-self: stretch;
           }
         }}
       ></div>
-      <div id="footer">
-        <div class="footercolumn">
-          <a
-            class="footercolumn"
-            id="source"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://github.com/p-ku/website"
-            target="_blank"
-            >${this.english ? 'source' : 'ソース'}</a
-          >
-        </div>
-        <div class="footercolumn">
-          <a class="footercolumn" href="mailto:contact@p-ku.com" id="email"
-            >contact@p-ku.com</a
-          >
-        </div>
-      </div>
     `;
   }
 }

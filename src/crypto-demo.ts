@@ -22,6 +22,7 @@ class CryptoDemo extends LitElement {
       max-width: 960px;
       max-height: 100%;
       color: #321e00;
+      margin: 0 auto;
     }
     h2 {
       line-height: 1em;
