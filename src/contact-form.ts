@@ -6,9 +6,12 @@ import { Router } from '@vaadin/router';
 class ContactForm extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
-  @property({ attribute: false }) entooltip = html`Encrypted with
-    <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank"
-      >PGP</a
+  @property({ type: Object }) saved = this.messageInput;
+
+  @property({ attribute: false }) entooltip = html`Encrypted with&nbsp;
+
+    <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">
+      PGP</a
     >
     <span class="tooltiptext"
       >Messages are encrypted client-side with PGP using my public key. The
@@ -19,7 +22,7 @@ class ContactForm extends LitElement {
     >`;
   @property()
   jptooltip = html`<a href="https://ja.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank"
-      >PGP</a
+      >&#65328;&#65319;&#65328;</a
     >で暗号化<span class="tooltiptext"
       >メッセージはPGPでクライアント側で暗号化されます。受信トレイに届いたメッセージは簡単に復号化できます。これはおそらくあなたの電子メールクライアントよりも安全です！あなたが私を信頼する限り。</span
     ></span
@@ -34,7 +37,7 @@ class ContactForm extends LitElement {
       this.lang = '';
     }
     this.shadowRoot.getElementById('messageInput').focus();
-
+    /* 
     const contactoutlet = this.shadowRoot?.getElementById('contactoutlet');
     const contactrouter = new Router(contactoutlet);
     contactrouter.setRoutes([
@@ -44,7 +47,7 @@ class ContactForm extends LitElement {
         path: '(.*)',
         redirect: '/',
       },
-    ]);
+    ]); */
   }
 
   async encryptor() {
@@ -131,11 +134,12 @@ TComQBkFSpoM
       flex-grow: 1;
     }
     textarea {
+      box-sizing: border-box;
       resize: none;
       overflow: auto;
-      height: 55vh;
-      width: calc(100% - (var(--navbar-height) / 2));
-      border: solid #321e0078 3px;
+      height: 100%;
+      width: 100%;
+      border: solid #321e00 3px;
       border-radius: 1rem 1rem 0 1rem;
       padding: 1rem;
       font-family: inherit;
@@ -147,11 +151,6 @@ TComQBkFSpoM
  */
     }
 
-    textarea:active {
-      /*       box-shadow: 0px 0px 5px 1px #00b2b0 inset;
- */
-      border: outset #00b2af76;
-    }
     #buttonfoot {
       display: inline-flex;
       justify-content: space-between;
@@ -165,9 +164,9 @@ TComQBkFSpoM
       height: 1.7rem;
       align-self: right;
       background-color: rgba(255, 253, 232, 0.8);
-      color: #00b2b0;
+      color: var(--navbar);
       border-radius: 0 0 1rem 1rem;
-      border: solid 3px #00b2b0;
+      border: solid 3px var(--navbar);
       border-top: none;
       width: 4rem;
       min-width: max-content;
@@ -181,19 +180,16 @@ TComQBkFSpoM
     #space {
       height: 2.5rem;
     }
-
-    .tooltip {
-      text-decoration: underline dotted;
-    }
     #tips {
       display: flex;
       font-size: 1rem;
       cursor: default;
-      align-content: flex-end;
-      align-items: flex-end;
-      height: 1.3rem;
+      height: 1.7rem;
     }
-
+    .tooltip {
+      display: inline-flex;
+      text-decoration: underline dotted;
+    }
     .infodot {
       text-decoration: none;
     }
@@ -207,7 +203,7 @@ TComQBkFSpoM
 
     .tooltiptext {
       visibility: hidden;
-      width: clamp(240px, 30vw, 480px);
+      width: calc(100% - 1.25rem);
       background-color: var(--navbar);
       color: var(--white);
       text-align: center;
@@ -215,7 +211,7 @@ TComQBkFSpoM
       border-radius: 6px 6px 6px 0;
       position: absolute;
       bottom: 2rem;
-      left: 0.4rem;
+      left: 0.5rem;
     }
     #tips:hover .tooltiptext {
       visibility: visible;
@@ -242,43 +238,11 @@ TComQBkFSpoM
   get contact() {
     return this.shadowRoot?.getElementById('contact');
   }
-  /* 
-  handleSubmit() {
-    this.encryptor().then(encrypted => {
-      (this.pgp as HTMLInputElement).value = encrypted;
-    });
-    const encode = (data: {
-      [x: string]: string | number | boolean;
-      'form-name'?: string;
-      visitorMessage?: string;
-    }) => {
-      return Object.keys(data)
-        .map(
-          key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
-        )
-        .join('&');
-    };
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encode({
-        'form-name': 'contact',
-        visitorMessage: (this.pgp as HTMLInputElement).value,
-      }),
-    })
-      .then(() => Router.go('/contact/success'))
-      .catch(error => alert(error));
-  } */
 
   render() {
     return html`
       <div id="col">
-        <h2>
-          ${this.english
-            ? 'Send an encrypted* message.'
-            : 'メッセージを送って。'}
-        </h2>
+        <h2>${this.english ? 'Send a message.' : 'メッセージを送って。'}</h2>
         <form
           id="contact"
           name="contact"
@@ -301,7 +265,7 @@ TComQBkFSpoM
         ></textarea>
         <div id="buttonfoot">
           <div id="tips">
-            <span class="infodot">*</span
+            <span class="infodot">★</span
             ><span class="tooltip"
               >${this.english ? this.entooltip : this.jptooltip}</span
             >

@@ -9,7 +9,7 @@ export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
-  @property({ type: String }) buttonDec = 'jp lang';
+  @property({ type: String }) buttonDec = 'en';
   @property({ type: Boolean }) isOpen = false;
 
   constructor() {
@@ -18,11 +18,11 @@ export class WebSite extends LitElement {
     if (this.currentPage.includes('jp')) {
       this.english = false;
       this.lang = '/jp';
-      this.buttonDec = 'jp jpen';
+      this.buttonDec = 'jp';
     } else {
       this.english = true;
       this.lang = '';
-      this.buttonDec = 'jpen';
+      this.buttonDec = 'en';
     }
   }
 
@@ -74,8 +74,8 @@ export class WebSite extends LitElement {
       flex-grow: 1;
       animation: fade-in-animation 0.5s ease-out;
       background-color: #fffde8;;
-
-
+      font-size: calc(10px + 2vmin);
+      font-weight: 700;
     }
 
     @keyframes fade-in-animation {
@@ -86,6 +86,7 @@ export class WebSite extends LitElement {
         opacity: 1;
       }
     }
+
 #outlet, #outlet :only-child {
   display: flex;
   flex-direction: column;
@@ -94,255 +95,223 @@ export class WebSite extends LitElement {
       min-height: 100%;
 align-self: stretch;
     }
-    a {color: #ef8127;}
+
+
     a::selection {color: #fffde8; background-color: #ef8127;}
 
-    #navbar a::selection,
+
+
+    #navbar,
+    #navright,
+    #navleft,
+    #navcenter {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      min-height: 64px;
+      height: 2.5em;
+    }
+
+    #navbar {
+      background-image: linear-gradient(45deg, var(--navbar), #683e00);
+      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
+      min-width: 100%;
+      position: sticky; top: 0;
+    }
+    #navbar * a {
+      display: flex;
+      height: 100%;
+    align-items: center;
+    text-decoration: none;
+    border-bottom: solid #00000000 3px;
+      border-top: solid #00000000 3px;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+
+
+    }    
+    #navbar .linkspace {
+      height: 100%;
+    }
+    
+    #navbar * a::selection,
     #navbar span::selection,
     #navbar div::selection {
       background: transparent;
       outline: none;
     }
-    #topper,
-    #navbar,
-    #navspace,
-    #navright,
-    #navleft,
-    #navcenter {
-      display: inline-flex;
-      height: 2.5rem;
-      align-items: center;
-      align-content: center;
-      white-space: nowrap;
-      justify-content: center;
-      z-index: 2;
-      overflow-y: visible;
-min-height: 64px;
-    }
-/* #topper {
-  width: 100%;
-  height: 2rem;
-  color: #FFC342;
-} */
-    #navbar {
-      background-image: linear-gradient(45deg, var(--navbar), #683e00);
-      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
-      width: 100%;
-      height: 2.5rem;
-      position: sticky; top: 0;
-      justify-content: space-between;
-      flex-direction: column;
-      flex-wrap: wrap;
-
-    }
-    #navspace {
-      justify-content: space-between;
-flex-direction: row;
-width: 100%;
-    }
-    #navcenter {
-      flex: 1 1 auto;
-    }
-
-    #navleft, #navright {
-      font-size: 2rem;
+        #navleft, #navright {
       flex: 0.4 1 auto;
     }
 
-    #home {
-      display: inline-flex;
-      box-sizing: border-box;
-      color: #FFC342;
-      text-decoration: none;
-      text-align: left;
-      align-content: center;
-      align-self: center;
-      align-items: center;
-      min-width: 48px;
-      font-weight: 700;
-      height: 100%;
-line-height: 100%;    
-
-
-}
-    #home:hover {
-      color: #ffdb49;
+    #navcenter {
+      flex: 1 1 auto;
+      align-self: flex-end;
     }
 
-#demobar {
-}
+    .home {
+      font-size: 2em;
+      color: #FFC342;
+      text-decoration: none;
+      min-height: 48px;
+    }
+
+
+
     #demobar,
     #demotitle {
       display: flex;
-      color: var(--demobar);
+      color: #dfabf4;
       align-self: flex-end;
       justify-content: center;
-      border: solid var(--demobar) 3px;
+      border: solid #dfabf4 3px;
       border-bottom: none;
       border-radius: 0 1rem 0 0;
       border-left: 0;
-      overflow-y: visible;
-      height: 2rem;
-      font-size: 1rem;
-      font-weight: 600;
+      height: 66%;
+      font-size: 1.3em;
       max-width: 960px;
-      width: 11rem;
-    align-items: center;
-    min-height: 48px;
+      width: 30vw;
+    }   
+    
+     #demotitle {
+      background-color: #dfabf4;
+      color: #af4ebd;
+      cursor: default;
+      border-radius: 1rem 0 0 0;
+      border-right: 0;
+width: 4em;      
+overflow-y: visible;
+align-items: center;
     }
     #demotitle::after {
       content: ":";
     }
-    #demobar a
-{
-  display: flex;
+
+    #demobar a {
   justify-content:center;
-  align-items: center;
       box-sizing: border-box;
-      color: var(--demotitle);
-      text-decoration: none;
-      border-bottom: solid #00000000 3px;
-      border-top: solid #00000000 3px;
+      color: #dfabf4;
       width: 50%;
-      height: 100%;
     }
+
     #demobar a.chosen {
-      color: var(--demo-chosen);
-      border-bottom: dashed var(--demobar) 3px;
-      border-top: solid #00000000 3px;
-
-    }
-    #demobar a:hover:not(.chosen) {
       color: #fffde8;
+      border-bottom: dashed #dfabf4 3px;
     }
-    #demotitle {
-      background-color: var(--demobar);
-      color: var(--demo-text);
-      cursor: default;
-      border-radius: 1rem 0 0 0;
-      border-right: 0;
-width: 4rem;
 
-    }
-     #langspace {
+
+     .linkspace {
       display: flex;
-      height: 2.5rem;
-      align-content: center;
-      text-align: center;
-      align-items: center;
-      align-self: center;
-      min-width: 2.5rem;
+      min-width: 2.5em;
 justify-content: center;
-flex: 1 1 2.5rem;
+flex: 1 1 2.5em;
     }
 
-    .jpen:link,
-    .jpen:visited {
-      box-sizing: border-box;
+    .linktext {
       display: flex;
-      color: #eb737b;
-      border: solid #eb737b 3px;
-      cursor: pointer;
-      border-radius: 50%;
-      height: 1.5rem;
-      width: 1.5rem;
-      background-color: #00000000;
-      font-size: 1rem;
-      font-weight: 700;
-      align-items: center;
-      text-decoration: none;
-      justify-content: center;
-      min-width: 48px;
-      min-height: 48px;
-    }
-    .jpen:hover, .jp:hover {
-      color: #fffde8;
-    }
-    .jp:link,
-    .jp:visited {
-      color: #fffde8;
-      background-color: #ef3341;
-      border-color: #fffde8;
+opacity: 0;
+font-size: calc(12px + 0.5vmin);
+color: #fffde8;text-decoration: none;
+position: absolute;
+bottom: 0;
+line-height: 2em;
+pointer-events: none;
     }
 
-    #mail, #source {
-      display: flex;
+
+
+    #mail, #source, #jpen {
       color: #FFC342;
-      box-sizing: border-box;
-      font-size: 1.9rem;
-      font-weight: 900;
+      box-sizing: content-box;
       text-decoration: none;
-      text-align: center;
-      align-self: center;
-      align-content: center;
-      vertical-align: center;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      cursor: pointer;
-      border-bottom: solid #00000000 3px;
-      border-top: solid #00000000 3px;
       min-width: 48px;
-      flex: 1 1 2.5rem;
+      width: 100%;
+      flex: 1 1 max(2.5em, 64px);
     }
     #source {
       color: #9df5ee;
-      font-size: 1.2rem;
     }
-    #mail:hover, #source:hover {
-      color: #fffde8;
+     #jpen {
+      color: #eb737b;
     }
-
 
     #mail.chosen {
-      color: #fffde8;
       border-bottom: dashed #FFC342 3px;
     }
-    #home.chosen {
-      border-bottom: dashed #FFC342 3px;
-    }
-    #down {
-    display:none;}
 
-    .closed {
+#jpencircle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: solid #eb737b 3px;
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+font-size: calc(12px + 0.5vmin);
+      background-color: red;
+  background-color: #00000000;
+}
+
+    #jpencircle.jp {
+      color: #fffde8;
+      background-color: #ef3341;
+       border-color: #fffde8;
+    }
+
+    #burger, .closed {
       display: none;
     }
+
+    @media (hover:hover) {
+    #jpen:hover #jpencircle {
+      color: #fffde8;
+    }    
+    .linkspace:hover .linktext{
+opacity: 1;
+    }    
+    #demobar a:hover {
+      color: #fffde8;
+    }    
+    .home:hover {
+      color: #ffdb49;
+    }
+    }
+
     @media screen and (min-width: 960px)  {
 
     }
     @media screen and (max-width: 840px)  {
 
-.jpen:hover {
-      color: #eb737b;
-    }
-     .jp:hover {
-color: #fffde8;
-    }
-    #home {
-      display: inline-flex;
-      font-size: 2rem;
+#navleft {
+  justify-content: flex-start;
+}
+#navcenter {
 
-    }
+}
+      #burger {
+        color: #fffde8;
+        font-size: 2em;
+      }
 
     #demotitle.chosen {
-border-bottom: dashed var(--demobar) 3px;
-      border-top: solid #00000000 3px;
+border-bottom: dashed #dfabf4 3px;
     }
 
 
-#mail:hover, #home:hover {
-  color: #FFC342;
-}
-#source:hover {
-      color: #9df5ee;
+ .linktext{
+opacity: 1;
     }
 
       #demotitle {
         box-sizing: border-box;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         background-color: #00000000;
-        color: var(--demobar);
+        color: #dfabf4;
         border: none;
         cursor: pointer;
         align-self: center;
@@ -352,18 +321,19 @@ border-bottom: dashed var(--demobar) 3px;
         line-height: 100%;
         border-bottom: solid #00000000 3px;
         border-top: solid #00000000 3px;
-        font-size: 1rem;
         width: 4rem;
       }
 
        #demotitle::after {
+         position: absolute;
+bottom: 5%;
         content: '▾';
        }
 
       .open {
         display: inline-flex;
         box-sizing: border-box;
-        background-color: var(--demobar);
+        background-color: #dfabf4;
         box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.3);
         position: absolute;
         top: 100%;
@@ -380,7 +350,7 @@ border-bottom: dashed var(--demobar) 3px;
 
       .open a {
         display: flex;
-        color: var(--demo-text);
+        color: #af4ebd;
         text-decoration: none;
         font-weight: 600;
         width: 50%;
@@ -390,12 +360,11 @@ border-bottom: dashed var(--demobar) 3px;
         align-content: center;
         align-items: center;
         justify-content: center;
-
         vertical-align: center;
         -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10+ and Edge */
-  user-select: none; /* Standard syntax */
-height: 100%;
+        -ms-user-select: none; /* IE 10+ and Edge */
+        user-select: none; /* Standard syntax */
+        height: 100%;
       }
 
 
@@ -412,10 +381,10 @@ height: 100%;
   render() {
     return html`
       <div id="navbar">
-        <div id="navspace">
           <div id="navleft">
+            <a id="burger">≡</a>
             <a
-              id="home"
+              class="home"
               href=${this.lang.concat('/')}
               @click=${() => {
                 this.switchPage('/');
@@ -429,10 +398,12 @@ height: 100%;
           <div id="navcenter">
             <div
               id="demotitle"
-              class=${this.currentPage.endsWith('bender') ||
-              this.currentPage.endsWith('crypto')
-                ? 'chosen'
-                : ''}
+              class=${
+                this.currentPage.endsWith('bender') ||
+                this.currentPage.endsWith('crypto')
+                  ? 'chosen'
+                  : ''
+              }
               @click=${() => {
                 this.isOpen = !this.isOpen;
               }}
@@ -474,54 +445,60 @@ height: 100%;
           </div>
 
           <div id="navright">
-            <a
-              id="source"
-              href="https://github.com/p-ku"
-              target="_blank"
-              @click=${() => {
-                if (this.isOpen) {
-                  this.isOpen = !this.isOpen;
-                }
-              }}
-              >&lt;/&gt;</a
-            >
-
-            <a
-              id="mail"
-              class=${this.currentPage.endsWith('contact') ? 'chosen' : ''}
-              href=${this.lang.concat('/contact')}
-              @click=${() => {
-                this.switchPage('/contact');
-                if (this.isOpen) {
-                  this.isOpen = !this.isOpen;
-                }
-              }}
-              >➤</a
-            >
-            <div id="langspace">
+            <div class="linkspace">
               <a
-                href=${this.currentPage}
-                class=${this.buttonDec}
+                id="source"
+                href="https://github.com/p-ku"
+                target="_blank"
                 @click=${() => {
-                  this.switchLanguage();
                   if (this.isOpen) {
                     this.isOpen = !this.isOpen;
                   }
                 }}
-                >JP</a
+                >&lt;/&gt;</a
+              ><span class='linktext'                 
+              >${this.english ? 'github' : 'ギットハブ'}</span>
+              </div>
+              <div class="linkspace">
+              <a
+                id="mail"
+                class=${this.currentPage.endsWith('contact') ? 'chosen' : ''}
+                href=${this.lang.concat('/contact')}
+                @click=${() => {
+                  this.switchPage('/contact');
+                  if (this.isOpen) {
+                    this.isOpen = !this.isOpen;
+                  }
+                }}
+                >➤</a
               >
+              <span class='linktext'                 
+              >${this.english ? 'contact' : 'コンタクト'}</span></div>
+              <div class="linkspace">
+                <a
+                id="jpen"
+                  href=${this.currentPage}
+                  @click=${() => {
+                    this.switchLanguage();
+                    if (this.isOpen) {
+                      this.isOpen = !this.isOpen;
+                    }
+                  }}
+                  ><div id="jpencircle" class=${this.buttonDec}>JP</div></a
+                >
+              </div>
             </div>
           </div>
-        </div>
+
+        <div
+          id="outlet"
+          @click=${() => {
+            if (this.isOpen) {
+              this.isOpen = !this.isOpen;
+            }
+          }}
+        ></div>
       </div>
-      <div
-        id="outlet"
-        @click=${() => {
-          if (this.isOpen) {
-            this.isOpen = !this.isOpen;
-          }
-        }}
-      ></div>
     `;
   }
 }
