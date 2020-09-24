@@ -72,12 +72,11 @@ export class WebSite extends LitElement {
       margin: 0 auto;
       text-align: center;
       flex-grow: 1;
-      animation: fade-in-animation 0.5s ease-out;
       background-color: #fffde8;
       font-size: calc(10px + 2vmin);
       font-weight: 700;
+      animation: fade-in-animation 0.5s ease;
     }
-
     @keyframes fade-in-animation {
       from {
         opacity: 0;
@@ -86,7 +85,6 @@ export class WebSite extends LitElement {
         opacity: 1;
       }
     }
-
     #outlet,
     #outlet :only-child {
       display: flex;
@@ -445,7 +443,7 @@ export class WebSite extends LitElement {
         border-top: solid #00000000 3px;
         width: 4rem; */
         position: absolute;
-        top: 10%;
+        top: 8%;
         left: 1%;
         transform: rotate(-35deg);
       }
