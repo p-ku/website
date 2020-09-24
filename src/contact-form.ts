@@ -122,7 +122,7 @@ TComQBkFSpoM
     h2 {
       line-height: 1rem;
       text-align: left;
-      margin-left: 4rem;
+      margin-left: 1rem;
       justify-self: flex-start;
     }
     #col {

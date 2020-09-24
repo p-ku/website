@@ -27,7 +27,7 @@ class CryptoDemo extends LitElement {
     h2 {
       line-height: 1em;
       text-align: left;
-      margin-left: var(--navbar-height);
+      margin-left: 1rem;
     }
   `;
 

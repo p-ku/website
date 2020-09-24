@@ -34,8 +34,8 @@ class MainPage extends LitElement {
       color: #321e00;
       align-content: center;
       align-items: center;
-/*       max-height: calc(100vh - max(64px, 2.5rem));
- */      /*       animation: fade-in-animation 0.5s ease-out;
+      /*       max-height: calc(100vh - max(64px, 2.5rem));
+ */ /*       animation: fade-in-animation 0.5s ease-out;
  */
       /*       background: url(headshot.jpg) no-repeat center bottom fixed;
       -webkit-background-size: 100vmin;
@@ -69,17 +69,15 @@ class MainPage extends LitElement {
       margin: 0;
       padding: 0;
       line-height: 150%;
-      margin-top: 0.5em;
-      justify-content: center;
-      margin-left: 1em;
+      margin-top: 0.3em;
     }
     h1 {
-      margin-top: 0.5em;
+      margin-top: 0.3em;
     }
 
     h2 {
       font-size: 1.3em;
-      margin-bottom: 0.5em;
+      margin-bottom: 0.3em;
     }
     p {
       justify-content: flex-start;
@@ -87,7 +85,9 @@ class MainPage extends LitElement {
 
     #topcontainer,
     #bottomcontainer,
-    #imgcontainer {
+    #imgcontainer,
+    #bottomtext,
+    #toptext {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -96,6 +96,13 @@ class MainPage extends LitElement {
     #topcontainer {
       max-width: 960px;
       align-items: flex-start;
+      justify-content: flex-start;
+      align-content: flex-start;
+      flex: 0.5 1 auto;
+    }
+    #toptext {
+      justify-content: flex-start;
+      align-items: flex-start;
     }
 
     #bottomcontainer {
@@ -103,15 +110,17 @@ class MainPage extends LitElement {
       justify-content: space-between;
       justify-self: flex-end;
       align-self: flex-end;
-      min-height: min(50vmax, 75vmin);
-      min-width: min(50vmax, 75vmin);
-      max-width: calc(100vw - ((100vw - 960px) / 2));
+      max-width: calc(100% - ((100% - 960px) / 2));
       flex: 1;
     }
     #bottomtext {
-      max-width: 960px;    }
-      #bottomtext p {text-align: left;}
-/*     #toptext {
+      max-width: 960px;
+      flex: 1;
+    }
+    #bottomtext p {
+      text-align: left;
+    }
+    /*     #toptext {
       align-self: flex-start;
     } */
     #imgcontainer {
@@ -119,7 +128,6 @@ class MainPage extends LitElement {
       height: min(50vmax, 75vmin);
       width: min(50vmax, 75vmin);
       align-self: flex-end;
-    
       margin-right: 1vmin;
       min-height: min(50vmax, 75vmin);
       min-width: min(50vmax, 75vmin);
@@ -133,21 +141,19 @@ class MainPage extends LitElement {
       top: 8px;
       left: 16px;
     } */
-    #footer {
-    }
-    #test {
-      flex: 1;
-      width: 100%;
-    }
-    @keyframes app-logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
+
+    @media screen and (max-width: 960px) {
+      h1,
+      h2,
+      p {
+        margin-left: 1rem;
       }
     }
     @media screen and (max-width: 869px) {
+      #bottomcontainer {
+        flex-direction: column;
+      }
+
       #imgcontainer {
         position: relative;
         height: min(50vmax, 75vmin);
@@ -155,27 +161,39 @@ class MainPage extends LitElement {
         align-self: center;
         margin-right: 0;
       }
-      #bottomcontainer {
-      flex-direction: column;
+      h1,
+      h2,
+      p {
+        margin-right: 1rem;
+      }
     }
   `;
 
   render() {
     return html`
       <div id="topcontainer">
-        <h1>Eric Peek</h1>
-        <h2>Pursuing a career in creation.</h2></div>
+        <div id="toptext">
+        <h1>${this.english ? 'Eric Peek' : 'エリック・ピーク'}</h1>
+        <h2>${
+          this.english
+            ? 'Pursuing a career in creation.'
+            : '創造のキャリアを追求する。'
+        }</h2></div>
+  </div>
       <div id="bottomcontainer">
         <div id="bottomtext">
-          <p>
-            I am driven to create. Despite this, my career path involves little
-            creativity. Now is the time to change course. Enable my
-            transformation, and witness my full potential.
+          <p>${
+            this.english
+              ? 'I am driven to create. Despite this, my current career path involves little creativity. Now is the time to change course. Enable my transformation and witness my full potential.'
+              : '私は創作に駆り立てられます。それにもかかわらず、私の現在のキャリアパスには、ほとんど創造性が含まれていません。今が進路を変える時です。私の変革を可能にし、私の潜在能力を最大限に発揮してください。'
+          }
           </p>
           <p>
-            Software is both ubiquitous and hungry for ingenuity. With that in
-            mind, the solution has become painfully obvious; I must work in
-            software.
+${
+  this.english
+    ? 'Software is both ubiquitous and hungry for ingenuity. With that in mind, the solution has become painfully obvious; I must work in software.'
+    : 'ソフトウェアはユビキタスであり、創意工夫に飢えています。それを念頭に置いて、解決策は痛々しいほど明白になった。ソフトウェアで作業する必要があります。'
+}
           </p>
   </div>
           <div id="imgcontainer">
