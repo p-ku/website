@@ -36,7 +36,9 @@ class ContactForm extends LitElement {
       this.english = true;
       this.lang = '';
     }
-    this.shadowRoot.getElementById('messageInput').focus();
+    this.shadowRoot
+      .getElementById('messageInput')
+      .focus({ preventScroll: true });
     /* 
     const contactoutlet = this.shadowRoot?.getElementById('contactoutlet');
     const contactrouter = new Router(contactoutlet);
@@ -51,6 +53,7 @@ class ContactForm extends LitElement {
   }
 
   async encryptor() {
+    await openpgp.initWorker({ path: 'openpgp.worker.js' });
     const publicKeyArmored = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: OpenPGP.js v4.10.7
 Comment: https://openpgpjs.org
@@ -73,7 +76,7 @@ TComQBkFSpoM
       publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys,
       privateKeys: [],
     });
-
+    await openpgp.destroyWorker();
     return encrypted;
   }
 
@@ -91,7 +94,8 @@ TComQBkFSpoM
       max-width: 960px;
       height: 100%;
       color: #321e00;
-      flex-grow: 1;
+      /*       flex-grow: 1;
+ */
       align-items: center;
       margin: 0 auto;
     }
@@ -125,7 +129,7 @@ TComQBkFSpoM
       display: flex;
       text-align: center;
       margin: 0 auto;
-      justify-content: center;
+      justify-content: flex-start;
       width: 90%;
       height: 100%;
       text-align: center;
@@ -137,7 +141,6 @@ TComQBkFSpoM
       box-sizing: border-box;
       resize: none;
       overflow: auto;
-      height: 100%;
       width: 100%;
       border: solid #321e00 3px;
       border-radius: 1rem 1rem 0 1rem;
@@ -145,8 +148,8 @@ TComQBkFSpoM
       font-family: inherit;
       color: var(--navbar);
       background: rgba(255, 253, 232, 0.8);
-      flex-grow: 1;
       font-size: 1rem;
+      flex: 0.5 1 auto;
       /*       box-shadow: 0px 0px 5px 1px inset;
  */
     }

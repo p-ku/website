@@ -28,7 +28,7 @@ class MainPage extends LitElement {
     :host {
       display: flex;
       flex-direction: row;
-      width: 100vw;
+      width: 100%;
       height: 100%;
       margin: 0 auto;
       color: #321e00;
@@ -45,7 +45,7 @@ class MainPage extends LitElement {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      width: 100vw;
+      width: 100%;
       max-width: 960px;
       max-height: 100%;
       color: #321e00;

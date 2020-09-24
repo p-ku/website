@@ -93,7 +93,7 @@ export class WebSite extends LitElement {
       flex-direction: column;
       flex-grow: 1;
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       align-self: stretch;
     }
 
@@ -112,14 +112,14 @@ export class WebSite extends LitElement {
       justify-content: center;
       min-height: 64px;
       height: 2.5em;
+      white-space: nowrap;
     }
 
     #navbar {
       background-image: linear-gradient(-45deg, #321e00, #683e00);
       box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.5);
       min-width: 100%;
-      position: sticky;
-      top: 0;
+      width: 100%;
       justify-content: space-between;
     }
 
@@ -128,8 +128,6 @@ export class WebSite extends LitElement {
       height: 100%;
       align-items: center;
       text-decoration: none;
-      border-bottom: solid #00000000 3px;
-      border-top: solid #00000000 3px;
       box-sizing: border-box;
       align-items: center;
       justify-content: center;
@@ -156,44 +154,33 @@ export class WebSite extends LitElement {
 
     #navcenter {
       flex: 1 1 auto;
-      align-self: flex-end;
+      flex-direction: column;
+      justify-content: flex-end;
     }
 
     .home {
-      font-size: 2em;
+      font-size: max(1.5em, 38.4px);
       color: #ffc342;
       text-decoration: none;
-      min-height: 48px;
     }
 
-    #demobar,
-    #demotitle {
+    #demobar {
       display: flex;
       color: #dfabf4;
-      align-self: flex-end;
-      justify-content: center;
       border: solid #dfabf4 3px;
       border-bottom: none;
-      border-radius: 0 1rem 0 0;
-      border-left: 0;
-      height: 66%;
-      font-size: 1.2em;
+      border-radius: 1rem 1rem 0 0;
+      height: 55%;
+      font-size: max(25.5px, 1em);
       max-width: 960px;
-      width: 33vw;
+      width: 30vw;
     }
 
-    #demotitle {
-      background-color: #dfabf4;
-      color: #af4ebd;
+    .demotitle {
       cursor: default;
-      border-radius: 1rem 0 0 0;
-      border-right: 0;
-      width: 4em;
-      align-items: center;
-    }
-
-    #demotitle::after {
-      content: ':';
+      border: none;
+      font-size: max(16px, calc(12px + 0.5vmin));
+      color: #dfabf4;
     }
 
     #demobar a {
@@ -202,6 +189,8 @@ export class WebSite extends LitElement {
       color: #dfabf4;
       width: 50%;
       min-width: max-content;
+      border-bottom: solid #00000000 3px;
+      border-top: solid #00000000 3px;
     }
 
     #demobar a.chosen {
@@ -211,7 +200,7 @@ export class WebSite extends LitElement {
 
     .linkspace {
       display: flex;
-      min-width: 2.5em;
+      min-width: max(4.7em, 120.32px);
       justify-content: center;
       flex: 1 1 2.5em;
     }
@@ -219,24 +208,29 @@ export class WebSite extends LitElement {
     .linktext {
       display: flex;
       opacity: 0;
-      font-size: calc(12px + 0.5vmin);
+      width: min-content;
+      font-size: max(16px, calc(12px + 0.5vmin));
+
       color: #fffde8;
       text-decoration: none;
-      position: absolute;
-      bottom: 0;
-      line-height: 2em;
+      /*       position: absolute;
+      top: max(2em, 51.2px); */
       pointer-events: none;
+      justify-content: flex-end;
+      max-width: 0;
+      overflow: hidden;
     }
 
-    .mail,
+    #mail,
     .source,
     #jpen {
       color: #ffc342;
       box-sizing: content-box;
       text-decoration: none;
-      min-width: 48px;
       width: 100%;
-      flex: 1 1 max(2.5em, 64px);
+      flex: 1 1 max(5em, 128px);
+      border-bottom: solid #00000000 3px;
+      border-top: solid #00000000 3px;
     }
     .source {
       color: #9df5ee;
@@ -245,9 +239,49 @@ export class WebSite extends LitElement {
     #jpen {
       color: #eb737b;
     }
-
-    .mail.chosen {
+    /* 
+    #mail.chosen {
       border-bottom: dashed #ffc342 3px;
+    } */
+    #mail.chosen div {
+      width: 85%;
+    }
+    #mail.chosen .linktext {
+      animation: reveal 0.08s ease-out forwards;
+      opacity: 1;
+    }
+    #mail.chosen #mailcircle {
+      border: dashed 3px #ffc342;
+    }
+    #risingsun {
+      display: flex;
+      flex-direction: column;
+      height: max(2.5em, 64px);
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      vertical-align: center;
+    }
+
+    #jpabb {
+      display: flex;
+      flex: 1 0 max(1.5em, 38.4px);
+    }
+    #risingsun .linktext {
+      display: flex;
+      font-size: max(16px, calc(12px + 0.5vmin));
+      color: #fffde8;
+      text-decoration: none;
+      pointer-events: none;
+      justify-content: center;
+      text-align: center;
+      align-content: center;
+      align-items: center;
+      overflow: hidden;
+      width: max(1.5em, 38.4px);
+      opacity: 1;
+      flex: 0 1 0;
+      max-width: 100%;
     }
 
     #jpencircle,
@@ -258,15 +292,22 @@ export class WebSite extends LitElement {
       align-items: center;
       box-sizing: border-box;
       border: solid 3px;
-      border-radius: 50%;
-      width: 2em;
-      height: 2em;
-      font-size: calc(12px + 0.5vmin);
+      border-radius: 2em;
+      width: max(1.5em, 38.4px);
+      height: max(1.5em, 38.4px);
+      font-size: max(16px, calc(12px + 0.5vmin));
       background-color: red;
       background-color: #00000000;
-      min-height: 32px;
-      min-width: 32px;
+      min-height: max(1.5em, 38.4px);
+      min-width: max(1.5em, 38.4px);
+      line-height: max(2.5em, 64px);
+      margin: 0 auto;
+      overflow: hidden;
     }
+
+    /*     #mail:hover #mailcircle::before {
+      content: 'contact';
+    } */
 
     #jpencircle.jp {
       color: #fffde8;
@@ -274,18 +315,61 @@ export class WebSite extends LitElement {
       border-color: #fffde8;
     }
 
+    #jpencircle.jp * #jpabb {
+      flex: 0 1 0;
+      min-height: 0;
+      opacity: 0;
+    }
+    #jpencircle.jp * .linktext {
+      flex: 1 0 max(1.5em, 38.4px);
+      max-width: 100%;
+    }
+    #jpencircle.jp * .linktext {
+      flex: 1 0 max(1.5em, 38.4px);
+      max-width: 100%;
+    }
     #burger,
     .closed {
       display: none;
     }
 
+    @keyframes reveal {
+      from {
+        max-width: 0;
+      }
+      to {
+        max-width: 75%;
+      }
+    }
     @media (hover: hover) {
-      #jpen:hover #jpencircle {
-        color: #fffde8;
+      #mail:hover .linktext,
+      .source:hover .linktext {
+        animation: reveal 0.07s ease-out forwards;
+        opacity: 1;
+      }
+      /*       .linkspace:hover #risingsun {
+        transition: 0.07s ease-out;
+      } */
+      .linkspace:hover #jpabb {
+        transition: 0.06s ease-out;
+        flex: 0 1 0;
+        min-height: 0;
+        opacity: 0;
+      }
+      .linkspace:hover #risingsun > .linktext {
+        flex: 1 0 max(1.5em, 38.4px);
+        transition: 0.06s ease-out;
+        opacity: 1;
+        max-width: 100%;
+      }
+      .linkspace:hover #mailcircle,
+      .linkspace:hover #sourcecircle {
+        width: 85%;
+        transition: 0.06s ease-out;
       }
 
-      .linkspace:hover .linktext {
-        opacity: 1;
+      .linkspace:hover #mail.chosen #mailcircle {
+        transition: none;
       }
 
       #demobar a:hover {
@@ -297,19 +381,19 @@ export class WebSite extends LitElement {
       }
     }
 
-    @media screen and (max-width: 768px) {
-      #navleft,
+    @media screen and (max-width: 869px) {
       #navright {
         flex: none;
       }
+      #navleft {
+        flex-grow: 1;
+      }
+
       #navcenter,
       .linkspace,
       .linktext {
         display: none;
       }
-      /*       #navbar {
-        background-image: linear-gradient(90deg, #321e00, #683e00);
-      } */
 
       #burger {
         color: #fffde8;
@@ -344,8 +428,8 @@ export class WebSite extends LitElement {
         opacity: 1;
       }
 
-      #demotitle {
-        box-sizing: border-box;
+      .demotitle {
+        /*         box-sizing: border-box;
         display: flex;
         flex-direction: column;
         background-color: #00000000;
@@ -359,20 +443,23 @@ export class WebSite extends LitElement {
         line-height: 100%;
         border-bottom: solid #00000000 3px;
         border-top: solid #00000000 3px;
-        width: 4rem;
+        width: 4rem; */
+        position: absolute;
+        top: 6%;
+        left: 1%;
+        transform: rotate(-35deg);
       }
 
       .open {
         background-image: linear-gradient(315deg, #321e00, #683e00);
-
         display: flex;
         flex-direction: row;
         box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.3);
         position: absolute;
-        top: 100%;
+        top: max(2.5em, 64px);
         left: 0;
         width: 100%;
-        height: 6em;
+        height: max(5em, 128px);
         align-self: center;
         text-align: center;
         align-content: center;
@@ -388,13 +475,8 @@ export class WebSite extends LitElement {
         flex: 1 1 50vw;
       }
 
-      #burgerlink {
-      }
       #burgerdemo {
         flex: 1 1 50vw;
-        flex-grow: 1;
-        /*         box-sizing: border-box;
-        border-right: dashed #fffde8 3px; */
         border-radius: 0 32px 0 0;
         background-image: radial-gradient(
           farthest-corner at top left,
@@ -404,62 +486,68 @@ export class WebSite extends LitElement {
       }
 
       #burgerdemo a {
-        color: #321e00;
+        display: flex;
+        color: #af4ebd;
         border: none;
         min-height: 64px;
+        text-align: right;
+        justify-content: flex-end;
       }
 
-      #burgerlink > div {
+      .burgerspace {
         display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: flex-end;
+        align-items: flex-end;
+        align-content: flex-end;
+        text-align: center;
+        border: none;
+        border-bottom: none;
+        border-top: none;
+      }
+      .buttonspace {
+        display: flex;
+        text-align: center;
+        align-self: center;
+        text-align: center;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        width: max(2.5em, 64px);
+        height: max(2.5em, 64px);
       }
 
       .burgertext {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
         flex-grow: 1;
+        text-align: right;
         color: #fffde8;
       }
 
-      #burgerlink a {
-        width: 3em;
-        min-width: 64px;
-        border: none;
-        min-height: 64px;
-        height: 60%;
+      #burgerlink > a span.chosen {
+        border: dashed 3px #ffc342;
       }
-      #burgerlink > div a.chosen {
-        color: #fffde8;
-      }
+
       .chosen #mailcircle {
         background-color: #ffc342;
       }
-      #burgerlink a.burgermail {
-        /*         background-image: radial-gradient(farthest-side at top right, #FFC342, #fffde8);
- */
+      .burgermail {
         color: #ffc342;
       }
 
-      #burgerlink a.burgersource {
+      .burgersource {
         /*         background-image: radial-gradient(farthest-side at bottom right, #9df5ee, #fffde8);
  */
         color: #9df5ee;
       }
 
-      #burgerdemo a.chosen::before {
-        content: '→';
-        left: 0%;
-        position: absolute;
-        font-weight: 900;
-        font-size: 2em;
-      }
-
       #burgerdemo a.chosen::after {
         content: '←';
-        right: 50vw;
         position: absolute;
+        right: 51%;
         font-weight: 900;
         font-size: 2em;
+        color: #af4ebd;
       }
 
       #demobar {
@@ -474,72 +562,73 @@ export class WebSite extends LitElement {
         <div id="burger" @click=${() => {
           this.isOpen = !this.isOpen;
         }}>≡</div>
-                      <div class=${
-                        this.isOpen ? 'open closed' : 'closed'
-                      }                 @click=${() => {
-      if (this.isOpen) {
-        this.isOpen = !this.isOpen;
-      }
-    }}>
-<div id="burgerdemo">
-                <a
-                  class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                  href=${this.lang.concat('/bender')}
-                  @click=${() => this.switchPage('/bender')}
-                  >${this.english ? 'bender' : 'ベンダー'}</a
-                >
-                <a
-                  class=${this.currentPage.endsWith('crypto') ? 'chosen' : ''}
-                  href=${this.lang.concat('/crypto')}
-                  @click=${() => this.switchPage('/crypto')}
-                  >${this.english ? 'crypto' : 'クリプト'}</a
-                >
-              </div>                      
-            <div id="burgerlink">
-              <div>
-            <a class='burgertext' href=${this.lang.concat('/contact')}
-                @click=${() => this.switchPage('/contact')}                
-  >${this.english ? 'contact' : 'コンタクト'}</a>
-              <a
-                class=${
-                  this.currentPage.endsWith('contact')
-                    ? 'burgermail chosen'
-                    : 'burgermail'
+          <div class=${this.isOpen ? 'open closed' : 'closed'}
+              @click=${() => {
+                if (this.isOpen) {
+                  this.isOpen = !this.isOpen;
                 }
-                href=${this.lang.concat('/contact')}
-                @click=${() => this.switchPage('/contact')}
-
-                > <div id="mailcircle">➤</div></a
-              ></div><div>
-              <a class='burgertext' href="https://github.com/p-ku" target="_blank"               
-              >${this.english ? 'github' : 'ギットハブ'}</a>
-                <a
-                class="burgersource"
-                href="https://github.com/p-ku"
-                target="_blank" >              <div id="sourcecircle">&lt;/&gt;</div></a
+              }}>
+            <div id="burgerdemo">
+            <div class="demotitle">${this.english ? 'demo' : 'デモ'}</div>
+              <a
+                class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
+                href=${this.lang.concat('/bender')}
+                @click=${() => this.switchPage('/bender')}
+                >${
+                  this.english ? 'bender' : 'ベンダー'
+                }<span class="buttonspace"></span></a
               >
-              </div>
+              <a
+                class=${this.currentPage.endsWith('crypto') ? 'chosen' : ''}
+                href=${this.lang.concat('/crypto')}
+                @click=${() => this.switchPage('/crypto')}
+                >${
+                  this.english ? 'crypto' : 'クリプト'
+                }<span class="buttonspace"></span></a
+              >
+            </div>                      
+            <div id="burgerlink">
+              <a class="burgerspace"            href=${this.lang.concat(
+                '/contact'
+              )}
+                @click=${() => this.switchPage('/contact')}>
+<span class='burgertext'
+  >${
+    this.english ? 'contact' : 'コンタクト'
+  }</span><span class="buttonspace"><span id="mailcircle"  class=${
+      this.currentPage.endsWith('contact') ? 'burgermail chosen' : 'burgermail'
+    }>➤</span></span>
+  </a><a class="burgerspace" href="https://github.com/p-ku"
+                target="_blank">
+              
+  <span class='burgertext' 
+>${
+      this.english ? 'github' : 'ギットハブ'
+    }</span>            <span class="buttonspace"><span id="sourcecircle" class="burgersource">&lt;/&gt;</span></span>
+  </a>
 
              </div>
           </div>
-        <div id="navleft">
+        <div id="navleft" @click=${() => {
+          if (this.isOpen) {
+            this.isOpen = !this.isOpen;
+          }
+        }}>
 
             <a
               class="home"
               href=${this.lang.concat('/')}
               @click=${() => {
                 this.switchPage('/');
-                if (this.isOpen) {
-                  this.isOpen = !this.isOpen;
-                }
               }}
               >ピ-クu</a
             >
           </div>
           <div id="navcenter">
-            <div id="demotitle">
-              ${this.english ? 'demo' : 'デモ'}
-            </div>
+
+                        <span class="demotitle">${
+                          this.english ? 'demo' : 'デモ'
+                        }</span>
             <div id="demobar">
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
@@ -566,12 +655,13 @@ export class WebSite extends LitElement {
                     this.isOpen = !this.isOpen;
                   }
                 }}
-                >&lt;/&gt;</a
-              ><span class='linktext'                 
-              >${this.english ? 'github' : 'ギットハブ'}</span>
+                ><div id="sourcecircle">&nbsp;&lt;/<span class='linktext'                 
+              >github</span>&gt;&nbsp;</div></a
+              >
               </div>
               <div class="linkspace">
               <a
+              id="mail"
                 class=${
                   this.currentPage.endsWith('contact') ? 'mail chosen' : 'mail'
                 }
@@ -582,21 +672,20 @@ export class WebSite extends LitElement {
                     this.isOpen = !this.isOpen;
                   }
                 }}
-                >➤</a
+                ><div id="mailcircle"><span class='linktext'                 
+              >${this.english ? 'contact' : 'コンタクト'}</span>➤</div></a
               >
-              <span class='linktext'                 
-              >${this.english ? 'contact' : 'コンタクト'}</span></div>
+              </div>
               <div class="linkspace">
                 <a
                 id="jpen"
                   href=${this.currentPage}
                   @click=${() => {
                     this.switchLanguage();
-                    if (this.isOpen) {
-                      this.isOpen = !this.isOpen;
-                    }
                   }}
-                  ><div id="jpencircle" class=${this.buttonDec}>JP</div></a
+                  ><div id="jpencircle" class=${
+                    this.buttonDec
+                  }><div id="risingsun"><span id="jpabb">JP</span><span class='linktext'>日</span></div></div></a
                 >
               </div>
             </div>
