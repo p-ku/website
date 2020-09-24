@@ -445,7 +445,7 @@ export class WebSite extends LitElement {
         border-top: solid #00000000 3px;
         width: 4rem; */
         position: absolute;
-        top: 6%;
+        top: 10%;
         left: 1%;
         transform: rotate(-35deg);
       }

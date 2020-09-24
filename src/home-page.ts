@@ -34,23 +34,25 @@ class MainPage extends LitElement {
       color: #321e00;
       align-content: center;
       align-items: center;
+      max-height: calc(100vh - max(64px, 2.5rem));
+
       /*       background: url(headshot.jpg) no-repeat center bottom fixed;
       -webkit-background-size: 100vmin;
       -moz-background-size: 100vmin;
       -o-background-size: 100vmin;
       background-size: 100vmin; */
     }
-
+    /* 
     #subhost {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       width: 100%;
       max-width: 960px;
-      max-height: 100%;
+      min-height: calc(100vh - 2.5rem);
       color: #321e00;
       margin: 0 auto;
-    }
+    } */
 
     h2 {
       width: 100%;
@@ -60,16 +62,18 @@ class MainPage extends LitElement {
       display: flex;
       flex-direction: column;
       width: 100%;
-      height: calc(100vh - 2.5rem);
     }
 
     #topcontainer {
+      flex: 1 1 auto;
     }
 
     #bottomcontainer {
       position: relative;
-      height: 95vmin;
-      width: 95vmin;
+      height: 70vmin;
+      width: 70vmin;
+      align-self: flex-end;
+      margin-right: 1vmin;
     }
     img {
       height: 100%;
@@ -94,20 +98,13 @@ class MainPage extends LitElement {
         transform: rotate(360deg);
       }
     }
-    @media screen and (max-width: 720px) {
+    @media screen and (max-width: 869px) {
     }
   `;
 
   render() {
     return html`
-      <div id="subhost">
-        <div id="topcontainer">
-          <h2 id="in">
-            ${this.english ? 'Nice to meet you.' : 'はじめまして'}
-          </h2>
-          ${this.english ? this.enintro : this.jpintro}
-        </div>
-      </div>
+      <div id="topcontainer"></div>
       <div id="bottomcontainer">
         <img
           src="headshot-4k.jpg"

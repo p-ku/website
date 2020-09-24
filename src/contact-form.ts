@@ -206,7 +206,7 @@ TComQBkFSpoM
 
     .tooltiptext {
       visibility: hidden;
-      width: calc(100% - 1.25rem);
+      width: 70%;
       background-color: var(--navbar);
       color: var(--white);
       text-align: center;
