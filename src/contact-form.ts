@@ -223,7 +223,7 @@ TComQBkFSpoM
     .tooltip .tooltiptext::after {
       content: ' ';
       position: absolute;
-      top: 100%; /* At the bottom of the tooltip */
+      top: 100%; /* At the bottom of tooltip */
       left: 5px;
       margin-left: -5px;
       border-width: 5px;

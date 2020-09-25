@@ -31,4 +31,5 @@
 
 # mess
 .ignore
-.jpg
+*.jpg
+*.ico

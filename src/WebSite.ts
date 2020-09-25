@@ -245,39 +245,10 @@ export class WebSite extends LitElement {
     #mail.chosen .linktext {
       animation: reveal 0.08s ease-out forwards;
       opacity: 1;
+      color: #ffc342;
     }
     #mail.chosen #mailcircle {
-      border: dashed 0.3em #ffc342;
-    }
-    #risingsun {
-      display: flex;
-      flex-direction: column;
-      height: max(2.5em, 64px);
-      justify-content: center;
-      align-content: center;
-      align-items: center;
-      vertical-align: center;
-    }
-
-    #jpabb {
-      display: flex;
-      flex: 1 0 max(1.5em, 38.4px);
-    }
-    #risingsun .linktext {
-      display: flex;
-      font-size: max(16px, calc(12px + 0.5vmin));
-      color: #fffde8;
-      text-decoration: none;
-      pointer-events: none;
-      justify-content: center;
-      text-align: center;
-      align-content: center;
-      align-items: center;
-      overflow: hidden;
-      width: max(1.5em, 38.4px);
-      opacity: 1;
-      flex: 0 1 0;
-      max-width: 100%;
+      color: #ffc342;
     }
 
     #jpencircle,
@@ -286,24 +257,61 @@ export class WebSite extends LitElement {
       display: flex;
       justify-content: center;
       align-items: center;
+      align-content: center;
+      text-align: center;
       box-sizing: border-box;
-      border: solid 0.3em;
-      border-radius: 2em;
-      width: max(1.5em, 38.4px);
-      height: max(1.5em, 38.4px);
-      font-size: max(16px, calc(12px + 0.5vmin));
+      border: solid 0.25em;
+      border-radius: 2.5em;
+      width: 2.5em;
+      height: 2.5em;
+      font-size: max(16px, 0.6em);
       background-color: red;
       background-color: #00000000;
-      min-height: max(1.5em, 38.4px);
-      min-width: max(1.5em, 38.4px);
-      line-height: max(2.5em, 64px);
+      min-height: 2.5em;
+      min-width: 2.5em;
+      line-height: 2.5em;
       margin: 0 auto;
       overflow: hidden;
+      font-weight: 900;
     }
 
-    /*     #mail:hover #mailcircle::before {
-      content: 'contact';
-    } */
+    #risingsun {
+      display: flex;
+      flex-direction: column;
+      height: max(2.5em, 64px);
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      text-align: center;
+      vertical-align: center;
+    }
+
+    #jpabb {
+      display: flex;
+      flex: 1 0 auto;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      text-align: center;
+      vertical-align: center;
+      color: #eb737b;
+    }
+
+    #risingsun .linktext {
+      display: flex;
+      font-size: max(16px, 1em);
+      color: #fffde8;
+      text-decoration: none;
+      pointer-events: none;
+      justify-content: center;
+      text-align: center;
+      align-content: center;
+      align-items: center;
+      overflow: hidden;
+      width: 100%;
+      opacity: 1;
+      flex: 0 1 0;
+    }
 
     #jpencircle.jp {
       color: #fffde8;
@@ -314,16 +322,13 @@ export class WebSite extends LitElement {
     #jpencircle.jp * #jpabb {
       flex: 0 1 0;
       min-height: 0;
-      opacity: 0;
+      opacity: 1;
     }
     #jpencircle.jp * .linktext {
-      flex: 1 0 max(1.5em, 38.4px);
+      flex: 1 0 2.5em;
       max-width: 100%;
     }
-    #jpencircle.jp * .linktext {
-      flex: 1 0 max(1.5em, 38.4px);
-      max-width: 100%;
-    }
+
     #burger,
     .closed {
       display: none;
@@ -350,10 +355,10 @@ export class WebSite extends LitElement {
         transition: 0.06s ease-out;
         flex: 0 1 0;
         min-height: 0;
-        opacity: 0;
+        opacity: 1;
       }
       .linkspace:hover #risingsun > .linktext {
-        flex: 1 0 max(1.5em, 38.4px);
+        flex: 1 0 2.5em;
         transition: 0.06s ease-out;
         opacity: 1;
         max-width: 100%;
@@ -425,21 +430,6 @@ export class WebSite extends LitElement {
       }
 
       .demotitle {
-        /*         box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        background-color: #00000000;
-        color: #dfabf4;
-        border: none;
-        cursor: pointer;
-        align-self: center;
-        align-items: center;
-        height: 100%;
-        min-width: fit-content;
-        line-height: 100%;
-        border-bottom: solid #00000000 0.15em;
-        border-top: solid #00000000 0.15em;
-        width: 4rem; */
         position: absolute;
         top: 8%;
         left: 1%;
@@ -520,8 +510,8 @@ export class WebSite extends LitElement {
         color: #fffde8;
       }
 
-      #burgerlink > a span.chosen {
-        border: dashed 0.3em #ffc342;
+      .burgertext.chosen {
+        color: #ffc342;
       }
 
       .chosen #mailcircle {
@@ -588,7 +578,9 @@ export class WebSite extends LitElement {
                 '/contact'
               )}
                 @click=${() => this.switchPage('/contact')}>
-<span class='burgertext'
+<span class=${
+      this.currentPage.endsWith('contact') ? 'burgertext chosen' : 'burgertext'
+    }
   >${
     this.english ? 'contact' : 'コンタクト'
   }</span><span class="buttonspace"><span id="mailcircle"  class=${
@@ -600,7 +592,7 @@ export class WebSite extends LitElement {
   <span class='burgertext' 
 >${
       this.english ? 'github' : 'ギットハブ'
-    }</span>            <span class="buttonspace"><span id="sourcecircle" class="burgersource">&lt;/&gt;</span></span>
+    }</span>            <span class="buttonspace"><span id="sourcecircle" class="burgersource">＜＞</span></span>
   </a>
 
              </div>
@@ -651,8 +643,8 @@ export class WebSite extends LitElement {
                     this.isOpen = !this.isOpen;
                   }
                 }}
-                ><div id="sourcecircle">&nbsp;&lt;/<span class='linktext'                 
-              >github</span>&gt;&nbsp;</div></a
+                ><div id="sourcecircle">＜<span class='linktext'                 
+              >github</span>＞</div></a
               >
               </div>
               <div class="linkspace">
