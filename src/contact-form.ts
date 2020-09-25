@@ -142,13 +142,13 @@ TComQBkFSpoM
       resize: none;
       overflow: auto;
       width: 100%;
-      border: solid #321e00 3px;
-      border-radius: 1rem 1rem 0 1rem;
-      padding: 1rem;
+      border: solid #321e00 0.3em;
+      border-radius: 1em 1em 0 1em;
+      padding: 1em;
       font-family: inherit;
       color: var(--navbar);
       background: rgba(255, 253, 232, 0.8);
-      font-size: 1rem;
+      font-size: calc(10px + 2vmin);
       flex: 0.5 1 auto;
       /*       box-shadow: 0px 0px 5px 1px inset;
  */
@@ -164,20 +164,20 @@ TComQBkFSpoM
 
     button {
       background-color: var(--demobar);
-      height: 1.7rem;
+      height: 1.7em;
       align-self: right;
       background-color: rgba(255, 253, 232, 0.8);
       color: var(--navbar);
       border-radius: 0 0 1rem 1rem;
-      border: solid 3px var(--navbar);
+      border: solid 0.3em var(--navbar);
       border-top: none;
-      width: 4rem;
+      width: 4em;
       min-width: max-content;
       justify-content: right;
       align-items: right;
       position: relative;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: calc(10px + 2vmin);
       cursor: pointer;
     }
     #space {
@@ -185,7 +185,7 @@ TComQBkFSpoM
     }
     #tips {
       display: flex;
-      font-size: 1rem;
+      font-size: calc(12px + 0.5vmin);
       cursor: default;
       height: 1.7rem;
     }
@@ -211,9 +211,9 @@ TComQBkFSpoM
       color: var(--white);
       text-align: center;
       padding: 5px;
-      border-radius: 6px 6px 6px 0;
+      border-radius: 2em 2em 2em 0;
       position: absolute;
-      bottom: 2rem;
+      bottom: 5vw;
       left: 0.5rem;
     }
     #tips:hover .tooltiptext {

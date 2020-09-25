@@ -125,10 +125,10 @@ class MainPage extends LitElement {
     } */
     #imgcontainer {
       position: relative;
-      height: min(50vmax, 75vmin);
-      width: min(50vmax, 75vmin);
       align-self: flex-end;
       margin-right: 1vmin;
+      height: min(50vmax, 75vmin);
+      width: min(50vmax, 75vmin);
       min-height: min(50vmax, 75vmin);
       min-width: min(50vmax, 75vmin);
     }
@@ -149,18 +149,16 @@ class MainPage extends LitElement {
         margin-left: 1rem;
       }
     }
-    @media screen and (max-width: 869px) {
+    @media screen and (orientation: portrait) {
       #bottomcontainer {
         flex-direction: column;
       }
 
       #imgcontainer {
-        position: relative;
-        height: min(50vmax, 75vmin);
-        width: min(50vmax, 75vmin);
         align-self: center;
         margin-right: 0;
       }
+
       h1,
       h2,
       p {

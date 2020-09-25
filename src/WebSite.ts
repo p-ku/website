@@ -165,9 +165,9 @@ export class WebSite extends LitElement {
     #demobar {
       display: flex;
       color: #dfabf4;
-      border: solid #dfabf4 3px;
+      border: solid #dfabf4 0.15em;
       border-bottom: none;
-      border-radius: 1rem 1rem 0 0;
+      border-radius: 1em 1em 0 0;
       height: 55%;
       font-size: max(25.5px, 1em);
       max-width: 960px;
@@ -187,13 +187,13 @@ export class WebSite extends LitElement {
       color: #dfabf4;
       width: 50%;
       min-width: max-content;
-      border-bottom: solid #00000000 3px;
-      border-top: solid #00000000 3px;
+      border-bottom: solid #00000000 0.15em;
+      border-top: solid #00000000 0.15em;
     }
 
     #demobar a.chosen {
       color: #fffde8;
-      border-bottom: dashed #dfabf4 3px;
+      border-bottom: dashed #dfabf4 0.15em;
     }
 
     .linkspace {
@@ -227,8 +227,6 @@ export class WebSite extends LitElement {
       text-decoration: none;
       width: 100%;
       flex: 1 1 max(5em, 128px);
-      border-bottom: solid #00000000 3px;
-      border-top: solid #00000000 3px;
     }
     .source {
       color: #9df5ee;
@@ -239,7 +237,7 @@ export class WebSite extends LitElement {
     }
     /* 
     #mail.chosen {
-      border-bottom: dashed #ffc342 3px;
+      border-bottom: dashed #ffc342 0.15em;
     } */
     #mail.chosen div {
       width: 85%;
@@ -249,7 +247,7 @@ export class WebSite extends LitElement {
       opacity: 1;
     }
     #mail.chosen #mailcircle {
-      border: dashed 3px #ffc342;
+      border: dashed 0.3em #ffc342;
     }
     #risingsun {
       display: flex;
@@ -289,7 +287,7 @@ export class WebSite extends LitElement {
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      border: solid 3px;
+      border: solid 0.3em;
       border-radius: 2em;
       width: max(1.5em, 38.4px);
       height: max(1.5em, 38.4px);
@@ -439,8 +437,8 @@ export class WebSite extends LitElement {
         height: 100%;
         min-width: fit-content;
         line-height: 100%;
-        border-bottom: solid #00000000 3px;
-        border-top: solid #00000000 3px;
+        border-bottom: solid #00000000 0.15em;
+        border-top: solid #00000000 0.15em;
         width: 4rem; */
         position: absolute;
         top: 8%;
@@ -475,7 +473,7 @@ export class WebSite extends LitElement {
 
       #burgerdemo {
         flex: 1 1 50vw;
-        border-radius: 0 32px 0 0;
+        border-radius: 0 2em 0 0;
         background-image: radial-gradient(
           farthest-corner at top left,
           #fffde8,
@@ -523,7 +521,7 @@ export class WebSite extends LitElement {
       }
 
       #burgerlink > a span.chosen {
-        border: dashed 3px #ffc342;
+        border: dashed 0.3em #ffc342;
       }
 
       .chosen #mailcircle {
