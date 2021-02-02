@@ -70,17 +70,20 @@ class MainPage extends LitElement {
       padding: 0;
       line-height: 150%;
       margin-top: 0.3em;
+      text-align: left;
     }
     h1 {
-      margin-top: 0.3em;
+      font-weight: 900;
     }
 
     h2 {
-      font-size: 1.3em;
+      font-size: calc(18px + 1vmin);
       margin-bottom: 0.3em;
     }
     p {
       justify-content: flex-start;
+      font-size: calc(16px + 0.5vmin);
+      font-weight: 500;
     }
 
     #topcontainer,
@@ -106,14 +109,15 @@ class MainPage extends LitElement {
     }
 
     #bottomcontainer {
-      flex-direction: row;
+      flex-direction: column;
       justify-content: space-between;
       justify-self: flex-end;
       align-self: flex-end;
+      align-items: center;
       max-width: calc(100% - ((100% - 960px) / 2));
       flex: 1;
     }
-    #bottomtext {
+    .bottomtext {
       max-width: 960px;
       flex: 1;
     }
@@ -125,13 +129,13 @@ class MainPage extends LitElement {
     } */
     #imgcontainer {
       position: relative;
-      align-self: flex-end;
-      margin-right: 1vmin;
-      height: min(50vmax, 75vmin);
-      width: min(50vmax, 75vmin);
-      min-height: min(50vmax, 75vmin);
-      min-width: min(50vmax, 75vmin);
+      justify-self: center;
+      height: 96vw;
+      width: 96vw;
+      max-height: 960px;
+      max-width: 960px;
     }
+
     img {
       height: 100%;
       width: 100%;
@@ -142,28 +146,15 @@ class MainPage extends LitElement {
       left: 16px;
     } */
 
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width: 1080px) {
       h1,
       h2,
       p {
         margin-left: 1rem;
+        margin-right: 1rem;
       }
     }
     @media screen and (orientation: portrait) {
-      #bottomcontainer {
-        flex-direction: column;
-      }
-
-      #imgcontainer {
-        align-self: center;
-        margin-right: 0;
-      }
-
-      h1,
-      h2,
-      p {
-        margin-right: 1rem;
-      }
     }
   `;
 
@@ -176,23 +167,25 @@ class MainPage extends LitElement {
           this.english
             ? 'Pursuing a career in creation.'
             : '創造のキャリアを追求する。'
-        }</h2></div>
-  </div>
-      <div id="bottomcontainer">
-        <div id="bottomtext">
-          <p>${
-            this.english
-              ? 'I am driven to create. Despite this, my current career path involves little creativity. Now is the time to change course. Enable my transformation and witness my full potential.'
-              : '私は創作に駆り立てられます。それにもかかわらず、私の現在のキャリアパスには、ほとんど創造性が含まれていません。今が進路を変える時です。私の変革を可能にし、私の潜在能力を最大限に発揮してください。'
-          }
-          </p>
-          <p>
+        }</h2></div>        <div class="bottomtext">
+        <p>${
+          this.english
+            ? 'I am driven to create. Despite this, my current career path involves little creativity. Now is the time to change course. Enable my transformation and witness my full potential.'
+            : '私は創作に駆り立てられます。それにもかかわらず、私の現在のキャリアパスには、ほとんど創造性が含まれていません。今が進路を変える時です。私の変革を可能にし、私の潜在能力を最大限に発揮してください。'
+        }
+        </p>
+        <p>
 ${
   this.english
     ? 'Software is both ubiquitous and hungry for ingenuity. With that in mind, the solution has become painfully obvious; I must work in software.'
     : 'ソフトウェアはユビキタスであり、創意工夫に飢えています。それを念頭に置いて、解決策は痛々しいほど明白になった。ソフトウェアで作業する必要があります。'
 }
-          </p>
+        </p>
+</div>
+  </div>
+      <div id="bottomcontainer">
+        <div class="bottomtext">
+
   </div>
           <div id="imgcontainer">
             <img
@@ -204,7 +197,7 @@ ${
                 headshot-4k.jpg  2160w,
                 headshot-4k.jpg
               "
-              sizes="70vmin"
+              sizes="96vw"
             />
           </div>
         </div>

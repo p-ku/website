@@ -217,6 +217,7 @@ export class WebSite extends LitElement {
       justify-content: flex-end;
       max-width: 0;
       overflow: hidden;
+      font-size: max(16px, 1em);
     }
 
     #mail,
@@ -264,7 +265,6 @@ export class WebSite extends LitElement {
       border-radius: 2.5em;
       width: 2.5em;
       height: 2.5em;
-      font-size: max(16px, 0.6em);
       background-color: red;
       background-color: #00000000;
       min-height: 2.5em;
@@ -272,7 +272,7 @@ export class WebSite extends LitElement {
       line-height: 2.5em;
       margin: 0 auto;
       overflow: hidden;
-      font-weight: 900;
+      font-size: max(16px, 0.6em);
     }
 
     #risingsun {
@@ -311,6 +311,7 @@ export class WebSite extends LitElement {
       width: 100%;
       opacity: 1;
       flex: 0 1 0;
+      font-weight: 900;
     }
 
     #jpencircle.jp {
