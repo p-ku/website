@@ -25,11 +25,6 @@ class BenderDemo extends LitElement {
     this.camera,
     (this.renderer.domElement as unknown) as HTMLElement
   );
-  @property({ attribute: false }) color = new THREE.Color(
-    1,
-    this.camera.position.z,
-    0
-  );
 
   constructor() {
     super();
@@ -46,7 +41,8 @@ class BenderDemo extends LitElement {
       this.lang = '';
     }
     this.init();
-    this.camera.position.z = 13;
+    this.camera.position.set(0, 5, 13); // Set position like this
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     this.animator();
   }
@@ -84,22 +80,32 @@ class BenderDemo extends LitElement {
       tw = 0.1;
 
     const shape = new THREE.Shape();
-    shape.moveTo(-b / 2, 0 - h / 2);
-    shape.lineTo(b / 2, 0 - h / 2);
+    shape.moveTo(-b / 2, -h / 2);
+    shape.lineTo(b / 2, -h / 2);
     shape.lineTo(b / 2, tf - h / 2);
     shape.lineTo(tw / 2, tf - h / 2);
-    shape.lineTo(tw / 2, h - tf - h / 2);
-    shape.lineTo(b / 2, h - tf - h / 2);
-    shape.lineTo(b / 2, h - h / 2);
-    shape.lineTo(-b / 2, h - h / 2);
-    shape.lineTo(-b / 2, h - tf - h / 2);
-    shape.lineTo(-tw / 2, h - tf - h / 2);
+    /*     shape.lineTo(tw / 2, -0.1);
+    shape.lineTo(tw / 2, 0.1); */
+    shape.lineTo(tw / 2, h / 2 - tf);
+    shape.lineTo(b / 2, h / 2 - tf);
+    shape.lineTo(b / 2, h / 2);
+    shape.lineTo(-b / 2, h / 2);
+    shape.lineTo(-b / 2, h / 2 - tf);
+    shape.lineTo(-tw / 2, h / 2 - tf);
+    /*     shape.lineTo(-tw / 2, 0.1);
+    shape.lineTo(-tw / 2, -0.1); */
+
     shape.lineTo(-tw / 2, tf - h / 2);
     shape.lineTo(-b / 2, tf - h / 2);
-    shape.lineTo(-b / 2, 0 - h / 2);
+    shape.lineTo(-b / 2, -h / 2);
+    const midcurve = new THREE.Vector3(
+      0,
+      -3 * Math.tan((this.angle * Math.PI) / 360),
+      0
+    );
     const curve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(-3, 0, 0),
-      new THREE.Vector3(0, -3 * Math.tan((this.angle * Math.PI) / 360), 0),
+      midcurve,
       new THREE.Vector3(3, 0, 0)
     );
     const uvtest = THREE.ExtrudeGeometry.WorldUVGenerator;
@@ -111,100 +117,151 @@ class BenderDemo extends LitElement {
       UVGenerator: uvtest,
     };
 
-    const phongmat = new THREE.MeshPhongMaterial({
+    /*     const phongmat = new THREE.MeshPhongMaterial({
       color: 0xff0000,
       polygonOffset: true,
       polygonOffsetFactor: 1, // positive value pushes polygon further away
       polygonOffsetUnits: 1,
-    });
+    }); */
     const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    const material = new THREE.MeshBasicMaterial({
-      color: 'red',
-    });
-
-    /*     for (let i = 0; i < geometry.faces.length; i++) {
-      const face = geometry.faces[i];
-      face.color.setRGB(i / 1024, 0, 0);
-    } */
-    const maxvec = new THREE.Vector3(0, this.angle / 70, 1);
-    const minvec = new THREE.Vector3(0, -this.angle / 70, -1);
 
     for (let i = 0; i < geometry.faces.length; i++) {
       const face = geometry.faces[i];
-      face.color.setRGB(
-        geometry.vertices[face.a].x,
-        geometry.vertices[face.b].y,
-        geometry.vertices[face.c].z
-      );
+      if (this.angle > 0) {
+        /*         for (let j = 0; j < 3; j++) { */
+        if (
+          geometry.vertices[face.a].y >
+          curve.getPoint((geometry.vertices[face.a].x + 3) / 6).y
+        ) {
+          face.vertexColors[0] = new THREE.Color(
+            this.angle / 240 + 0.1,
+            0.1,
+            this.angle / 240 + 0.1
+          );
+        } else {
+          face.vertexColors[0] = new THREE.Color(
+            0.1,
+            this.angle / 240 + 0.1,
+            this.angle / 240 + 0.1
+          );
+        }
+        if (
+          geometry.vertices[face.b].y >
+          curve.getPoint((geometry.vertices[face.b].x + 3) / 6).y
+        ) {
+          face.vertexColors[1] = new THREE.Color(
+            this.angle / 240 + 0.1,
+            0.1,
+            this.angle / 240 + 0.1
+          );
+        } else {
+          face.vertexColors[1] = new THREE.Color(
+            0.1,
+            this.angle / 240 + 0.1,
+            this.angle / 240 + 0.1
+          );
+        }
+        if (
+          geometry.vertices[face.c].y >
+          curve.getPoint((geometry.vertices[face.c].x + 3) / 6).y
+        ) {
+          face.vertexColors[2] = new THREE.Color(
+            this.angle / 240 + 0.1,
+            0.1,
+            this.angle / 240 + 0.1
+          );
+        } else {
+          face.vertexColors[2] = new THREE.Color(
+            0.1,
+            this.angle / 240 + 0.1,
+            this.angle / 240 + 0.1
+          );
+        }
+      } else {
+        if (
+          geometry.vertices[face.a].y >
+          curve.getPoint((geometry.vertices[face.a].x + 3) / 6).y
+        ) {
+          face.vertexColors[0] = new THREE.Color(
+            0.1,
+            -this.angle / 240 + 0.1,
+            -this.angle / 240 + 0.1
+          );
+        } else {
+          face.vertexColors[0] = new THREE.Color(
+            -this.angle / 240 + 0.1,
+            0.1,
+            -this.angle / 240 + 0.1
+          );
+        }
+        if (
+          geometry.vertices[face.b].y >
+          curve.getPoint((geometry.vertices[face.b].x + 3) / 6).y
+        ) {
+          face.vertexColors[1] = new THREE.Color(
+            0.1,
+            -this.angle / 240 + 0.1,
+            -this.angle / 240 + 0.1
+          );
+        } else {
+          face.vertexColors[1] = new THREE.Color(
+            -this.angle / 240 + 0.1,
+            0.1,
+            -this.angle / 240 + 0.1
+          );
+        }
+        if (
+          geometry.vertices[face.c].y >
+          curve.getPoint((geometry.vertices[face.c].x + 3) / 6).y
+        ) {
+          face.vertexColors[2] = new THREE.Color(
+            0.1,
+            -this.angle / 240 + 0.1,
+            -this.angle / 240 + 0.1
+          );
+        } else {
+          face.vertexColors[2] = new THREE.Color(
+            -this.angle / 240 + 0.1,
+            0.1,
+            -this.angle / 240 + 0.1
+          );
+        }
+      }
     }
-    const material2 = new THREE.MeshBasicMaterial({
-      wireframe: true,
-      color: 'black',
-    });
-    const material3 = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+
+    const material1 = new THREE.MeshPhongMaterial({
       vertexColors: true,
-    });
-    const edges = new THREE.EdgesGeometry(geometry);
-    const linmaterial = new THREE.LineBasicMaterial({
-      color: 0x000000,
-      linewidth: 4,
+      polygonOffset: true,
+      polygonOffsetFactor: -0.6, // positive value pushes polygon further away
+      polygonOffsetUnits: 1,
     });
 
-    const wireframe = new THREE.LineSegments(edges, linmaterial);
-    geometry.computeBoundingBox();
-
-    const trymaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        color1: {
-          value: new THREE.Color('red'),
-        },
-        color2: {
-          value: new THREE.Color('purple'),
-        },
-        bboxMin: {
-          value: minvec,
-        },
-        bboxMax: {
-          value: maxvec,
-        },
-      },
-      vertexShader: `
-    uniform vec3 bboxMin;
-    uniform vec3 bboxMax;
-  
-    varying vec2 vUv;
-
-    void main() {
-      vUv.y = (position.y - bboxMin.y) / (bboxMax.y - bboxMin.y);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-    }
-  `,
-      fragmentShader: `
-    uniform vec3 color1;
-    uniform vec3 color2;
-  
-    varying vec2 vUv;
-    
-    void main() {
-      
-      gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
-    }
-  `,
-    });
-    const mesh = new THREE.Mesh(geometry, trymaterial);
+    const mesh = new THREE.Mesh(geometry, material1);
     this.scene.add(mesh);
-    const color = 0xffffff;
-    const intensity = 1;
-    const amintensity = 0.2;
+    const color = 0xfffde8;
+    const intensity = 0.5;
+    const amintensity = 0.5;
 
     const light = new THREE.DirectionalLight(color, intensity);
+    const light2 = new THREE.DirectionalLight(color, intensity);
     const amlight = new THREE.AmbientLight(color, amintensity);
+    const hemlight = new THREE.HemisphereLight(0xffffff, color, intensity);
 
-    light.position.set(10, 10, 0);
-    light.target.position.set(-5, 0, 0);
-    this.scene.add(light, amlight);
+    light.position.set(0, 0, 5);
+    light.target.position.set(0, 0, 0);
+    light2.position.set(0, 0, -5);
+    light2.target.position.set(0, 0, 0);
+
+    this.scene.add(light, light2, amlight, hemlight);
     this.scene.add(light.target);
+    this.scene.add(light2.target);
+
+    const edges = new THREE.EdgesGeometry(geometry);
+    const mesh2 = new THREE.LineSegments(
+      edges,
+      new THREE.LineBasicMaterial({ color: 0x000000 })
+    );
+    this.scene.add(mesh2);
   }
 
   animator() {
