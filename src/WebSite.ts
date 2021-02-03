@@ -127,7 +127,6 @@ export class WebSite extends LitElement {
       align-items: center;
       text-decoration: none;
       box-sizing: border-box;
-      align-items: center;
       justify-content: center;
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10+ and Edge */
@@ -171,7 +170,7 @@ export class WebSite extends LitElement {
       height: 55%;
       font-size: max(25.5px, 1em);
       max-width: 960px;
-      width: 30vw;
+      width: 18vw;
     }
 
     .demotitle {
@@ -185,7 +184,7 @@ export class WebSite extends LitElement {
       justify-content: center;
       box-sizing: border-box;
       color: #dfabf4;
-      width: 50%;
+      width: 100%;
       min-width: max-content;
       border-bottom: solid #00000000 0.15em;
       border-top: solid #00000000 0.15em;
@@ -208,7 +207,6 @@ export class WebSite extends LitElement {
       opacity: 0;
       width: min-content;
       font-size: max(16px, calc(12px + 0.5vmin));
-
       color: #fffde8;
       text-decoration: none;
       /*       position: absolute;
@@ -269,7 +267,6 @@ export class WebSite extends LitElement {
       background-color: #00000000;
       min-height: 2.5em;
       min-width: 2.5em;
-      line-height: 2.5em;
       margin: 0 auto;
       overflow: hidden;
       font-size: max(16px, 0.6em);
@@ -556,23 +553,15 @@ export class WebSite extends LitElement {
                 }
               }}>
             <div id="burgerdemo">
-            <div class="demotitle">${this.english ? 'demo' : 'デモ'}</div>
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
                 href=${this.lang.concat('/bender')}
                 @click=${() => this.switchPage('/bender')}
                 >${
-                  this.english ? 'bender' : 'ベンダー'
+                  this.english ? 'demo' : 'デモ'
                 }<span class="buttonspace"></span></a
               >
-              <a
-                class=${this.currentPage.endsWith('crypto') ? 'chosen' : ''}
-                href=${this.lang.concat('/crypto')}
-                @click=${() => this.switchPage('/crypto')}
-                >${
-                  this.english ? 'crypto' : 'クリプト'
-                }<span class="buttonspace"></span></a
-              >
+
             </div>                      
             <div id="burgerlink">
               <a class="burgerspace"            href=${this.lang.concat(
@@ -614,22 +603,12 @@ export class WebSite extends LitElement {
             >
           </div>
           <div id="navcenter">
-
-                        <span class="demotitle">${
-                          this.english ? 'demo' : 'デモ'
-                        }</span>
             <div id="demobar">
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
                 href=${this.lang.concat('/bender')}
                 @click=${() => this.switchPage('/bender')}
-                >${this.english ? 'bender' : 'ベンダー'}</a
-              >
-              <a
-                class=${this.currentPage.endsWith('crypto') ? 'chosen' : ''}
-                href=${this.lang.concat('/crypto')}
-                @click=${() => this.switchPage('/crypto')}
-                >${this.english ? 'crypto' : 'クリプト'}</a
+                >${this.english ? 'demo' : 'デモ'}</a
               >
             </div>
           </div>

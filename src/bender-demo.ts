@@ -10,6 +10,8 @@ class BenderDemo extends LitElement {
   @property({ type: Boolean }) english = true;
   @property({ attribute: false }) angle = 0;
   @property({ attribute: false }) scene = new THREE.Scene();
+  @property({ attribute: false }) scene2 = new THREE.Scene();
+
   @property({ attribute: false }) camera = new THREE.PerspectiveCamera(
     33,
     window.innerWidth / window.innerHeight,
@@ -20,10 +22,16 @@ class BenderDemo extends LitElement {
   @property({ attribute: false }) renderer = new WebGLRenderer({
     antialias: true,
   });
-
+  @property({ attribute: false }) renderer2 = new WebGLRenderer({
+    antialias: true,
+  });
   @property({ attribute: false }) controls = new OrbitControls(
     this.camera,
     (this.renderer.domElement as unknown) as HTMLElement
+  );
+  @property({ attribute: false }) controls2 = new OrbitControls(
+    this.camera,
+    (this.renderer2.domElement as unknown) as HTMLElement
   );
 
   constructor() {
@@ -33,6 +41,16 @@ class BenderDemo extends LitElement {
     window.addEventListener('resize', this.handleResize);
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
+    this.controls.minAzimuthAngle = -Math.PI / 4;
+    this.controls.maxAzimuthAngle = Math.PI / 4;
+    this.controls.minPolarAngle = Math.PI / 3;
+    this.controls.maxPolarAngle = (2 * Math.PI) / 3;
+    this.controls2.enablePan = false;
+    this.controls2.enableZoom = false;
+    this.controls2.minAzimuthAngle = -Math.PI / 4;
+    this.controls2.maxAzimuthAngle = Math.PI / 4;
+    this.controls2.minPolarAngle = Math.PI / 3;
+    this.controls2.maxPolarAngle = (2 * Math.PI) / 3;
     if (location.pathname.includes('jp')) {
       this.english = false;
       this.lang = '/jp';
@@ -40,8 +58,26 @@ class BenderDemo extends LitElement {
       this.english = true;
       this.lang = '';
     }
+    const geo = new THREE.PlaneGeometry(2, 2, 1);
+    const mat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color('rgb(0, 255, 0)'),
+      opacity: 0.1,
+      transparent: true,
+      side: THREE.DoubleSide,
+    });
+    const plane = new THREE.Mesh(geo, mat);
+    const planeEdge = new THREE.EdgesGeometry(geo);
+    const planemesh = new THREE.LineSegments(
+      planeEdge,
+      new THREE.LineBasicMaterial({ color: 0x000000 })
+    );
+    plane.rotateY(-Math.PI / 2);
+    planeEdge.rotateY(-Math.PI / 2);
+
+    this.scene2.add(plane);
+    this.scene2.add(planemesh);
     this.init();
-    this.camera.position.set(0, 5, 13); // Set position like this
+    this.camera.position.set(0, 3, 4.5); // Set position like this
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     this.animator();
@@ -51,62 +87,117 @@ class BenderDemo extends LitElement {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(
       Math.min(window.innerWidth / 2, window.innerHeight / 2),
+      Math.min(window.innerWidth / 3, window.innerHeight / 3)
+    );
+    this.renderer2.setSize(
+      Math.min(window.innerWidth / 2, window.innerHeight / 2),
       Math.min(window.innerWidth / 2, window.innerHeight / 2)
     );
   };
 
   init() {
     this.scene.background = new THREE.Color(0xfffde8);
+    this.scene2.background = new THREE.Color(0xfffde8);
 
     /*    this.controls.target.set(0, 0, 0);
     this.controls.update(); */
 
-    this.camera.aspect = 1;
+    this.camera.aspect = 3 / 2;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(
       Math.min(window.innerWidth / 2, window.innerHeight / 2),
-      Math.min(window.innerWidth / 2, window.innerHeight / 2)
+      Math.min(window.innerWidth / 3, window.innerHeight / 3)
     );
-
+    this.renderer2.setSize(
+      Math.min(window.innerWidth / 2, window.innerHeight / 2),
+      Math.min(window.innerWidth / 3, window.innerHeight / 3)
+    );
     this.shadowRoot
       .getElementById('main')
       .appendChild(this.renderer.domElement);
+    this.shadowRoot
+      .getElementById('main')
+      .appendChild(this.renderer2.domElement);
+
     this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.renderer2.outputEncoding = THREE.sRGBEncoding;
+
     //
 
-    const h = 2,
+    const h = 1,
       b = 1,
       tf = 0.1,
       tw = 0.1;
+    if (this.angle != 0) {
+      const graphTopGeo = new THREE.PlaneGeometry(1, this.angle / 60, 1);
+
+      if (this.angle > 0) {
+        const mat2 = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('rgb(255, 100, 255)'),
+          side: THREE.DoubleSide,
+        });
+        const plane3 = new THREE.Mesh(graphTopGeo, mat2);
+        const planeEdge3 = new THREE.EdgesGeometry(graphTopGeo);
+        const planeMesh3 = new THREE.LineSegments(
+          planeEdge3,
+          new THREE.LineBasicMaterial({ color: 0x000000 })
+        );
+        planeEdge3.rotateY(-Math.PI / 2);
+        planeEdge3.rotateZ(-Math.PI / 2);
+        planeEdge3.translate(this.angle / 120, h / 2, 0);
+        plane3.rotateY(-Math.PI / 2);
+        plane3.rotateX(-Math.PI / 2);
+        plane3.translateY(this.angle / 120);
+        plane3.translateZ(h / 2);
+
+        this.scene2.add(plane3);
+        this.scene2.add(planeMesh3);
+      } else {
+        const mat2 = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('rgb(100, 255, 255)'),
+          side: THREE.DoubleSide,
+        });
+        const plane3 = new THREE.Mesh(graphTopGeo, mat2);
+        const planeEdge3 = new THREE.EdgesGeometry(graphTopGeo);
+        const planeMesh3 = new THREE.LineSegments(
+          planeEdge3,
+          new THREE.LineBasicMaterial({ color: 0x000000 })
+        );
+        planeEdge3.rotateY(-Math.PI / 2);
+        planeEdge3.rotateZ(-Math.PI / 2);
+        planeEdge3.translate(this.angle / 120, h / 2, 0);
+        plane3.rotateY(-Math.PI / 2);
+        plane3.rotateX(-Math.PI / 2);
+        plane3.translateY(this.angle / 120);
+        plane3.translateZ(h / 2);
+
+        this.scene2.add(plane3, planeMesh3);
+      }
+    }
 
     const shape = new THREE.Shape();
     shape.moveTo(-b / 2, -h / 2);
     shape.lineTo(b / 2, -h / 2);
     shape.lineTo(b / 2, tf - h / 2);
     shape.lineTo(tw / 2, tf - h / 2);
-    /*     shape.lineTo(tw / 2, -0.1);
-    shape.lineTo(tw / 2, 0.1); */
     shape.lineTo(tw / 2, h / 2 - tf);
     shape.lineTo(b / 2, h / 2 - tf);
     shape.lineTo(b / 2, h / 2);
     shape.lineTo(-b / 2, h / 2);
     shape.lineTo(-b / 2, h / 2 - tf);
     shape.lineTo(-tw / 2, h / 2 - tf);
-    /*     shape.lineTo(-tw / 2, 0.1);
-    shape.lineTo(-tw / 2, -0.1); */
-
     shape.lineTo(-tw / 2, tf - h / 2);
     shape.lineTo(-b / 2, tf - h / 2);
     shape.lineTo(-b / 2, -h / 2);
     const midcurve = new THREE.Vector3(
       0,
-      -3 * Math.tan((this.angle * Math.PI) / 360),
+      -1.5 * Math.tan((this.angle * Math.PI) / 360),
       0
     );
     const curve = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(-3, 0, 0),
+      new THREE.Vector3(-1.5, 0, 0),
       midcurve,
-      new THREE.Vector3(3, 0, 0)
+      new THREE.Vector3(1.5, 0, 0)
     );
     const uvtest = THREE.ExtrudeGeometry.WorldUVGenerator;
 
@@ -117,12 +208,6 @@ class BenderDemo extends LitElement {
       UVGenerator: uvtest,
     };
 
-    /*     const phongmat = new THREE.MeshPhongMaterial({
-      color: 0xff0000,
-      polygonOffset: true,
-      polygonOffsetFactor: 1, // positive value pushes polygon further away
-      polygonOffsetUnits: 1,
-    }); */
     const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
     for (let i = 0; i < geometry.faces.length; i++) {
@@ -232,7 +317,7 @@ class BenderDemo extends LitElement {
     const material1 = new THREE.MeshPhongMaterial({
       vertexColors: true,
       polygonOffset: true,
-      polygonOffsetFactor: -0.6, // positive value pushes polygon further away
+      polygonOffsetFactor: -1, // positive value pushes polygon further away
       polygonOffsetUnits: 1,
     });
 
@@ -240,7 +325,7 @@ class BenderDemo extends LitElement {
     this.scene.add(mesh);
     const color = 0xfffde8;
     const intensity = 0.5;
-    const amintensity = 0.5;
+    const amintensity = 1;
 
     const light = new THREE.DirectionalLight(color, intensity);
     const light2 = new THREE.DirectionalLight(color, intensity);
@@ -261,32 +346,27 @@ class BenderDemo extends LitElement {
       edges,
       new THREE.LineBasicMaterial({ color: 0x000000 })
     );
+
     this.scene.add(mesh2);
   }
 
   animator() {
-    /*     let count = 0;
-    const time = performance.now() / 1000;
-
-     this.scene.traverse(function (child) {
-      child.rotation.x = count + time / 3;
-      child.rotation.z = count + time / 4;
-
-      count++;
-    }); */
     this.renderer.render(this.scene, this.camera);
+    this.renderer2.render(this.scene2, this.camera);
 
     requestAnimationFrame(() => {
       this.animator();
     });
-    /*     this.controls.update();
-     */
   }
 
   onChange() {
     for (let i = this.scene.children.length - 1; i >= 0; i--) {
       const obj = this.scene.children[i];
       this.scene.remove(obj);
+    }
+    for (let i = this.scene2.children.length; i > 1; i--) {
+      const obj2 = this.scene2.children[i];
+      this.scene2.remove(obj2);
     }
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
     this.init();
@@ -308,11 +388,21 @@ class BenderDemo extends LitElement {
       width: 50vw;
       height: calc(100vh - var(--navbar-height) - var(--demobar-height));
     }
-
+    /* 
     h2 {
       line-height: 1em;
       text-align: left;
       margin-left: 1rem;
+    } */
+    h1,
+    h2,
+    p {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      line-height: 150%;
+      margin-top: 0.3em;
+      text-align: left;
     }
     #main {
       display: flex;
@@ -366,6 +456,7 @@ class BenderDemo extends LitElement {
     return html`
       <div id="main">
         <h2>${this.english ? 'bender' : 'ベンダー'}</h2>
+        <p>${this.english ? 'give it a moment' : 'ベンダー'}</p>
 
         <input
           type="range"
@@ -377,6 +468,7 @@ class BenderDemo extends LitElement {
           @input=${this.onChange}
         />
       </div>
+      <div id="graph"></div>
     `;
   }
 }
