@@ -81,13 +81,7 @@ class BenderDemo extends LitElement {
       this.english = true;
       this.lang = '';
     }
-    const geo = new THREE.PlaneGeometry(1.7, 1.7, 1);
-    const mat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color('rgb(0, 255, 0)'),
-      opacity: 0.1,
-      transparent: true,
-      side: THREE.DoubleSide,
-    });
+
     const sectionMat = new THREE.MeshBasicMaterial({
       color: new THREE.Color(0.2, 0.2, 0.2),
       polygonOffset: true,
@@ -95,7 +89,13 @@ class BenderDemo extends LitElement {
       polygonOffsetUnits: 1,
       side: THREE.DoubleSide,
     });
-
+    const geo = new THREE.PlaneGeometry(1.7, 1.7, 1);
+    const mat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color('rgb(255, 255, 255)'),
+      opacity: 0.4,
+      transparent: true,
+      side: THREE.DoubleSide,
+    });
     const plane = new THREE.Mesh(geo, mat);
     const planeEdge = new THREE.EdgesGeometry(geo);
     const planemesh = new THREE.LineSegments(
@@ -365,11 +365,12 @@ if (this.angle > 0) {
       /*         this.graphShapes(0.2,0,0,0,Math.PI/2,0,-0.05,0,-0.05,0.4,-0.5,0.4,-0.5,0.5,0.5,0.5,0.5,0.4,0.05,0.4,0.05,0,-0.05,0);
        */
     }
-
+    const length = 2;
+    const midCurve = (-length / 2) * Math.tan((this.angle * Math.PI) / 360);
     const curve = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(-1, 0, 0),
-      new THREE.Vector3(0, -1 * Math.tan((this.angle * Math.PI) / 360), 0),
-      new THREE.Vector3(1, 0, 0)
+      new THREE.Vector3(-length / 2, 0, 0),
+      new THREE.Vector3(0, midCurve, 0),
+      new THREE.Vector3(length / 2, 0, 0)
     );
     const uvtest = THREE.ExtrudeGeometry.WorldUVGenerator;
 
@@ -510,16 +511,38 @@ if (this.angle > 0) {
     const amlight2 = amlight1.clone();
     const hemlight2 = hemlight1.clone();
 
-    this.scene.add(light1, amlight1, hemlight1);
-    this.scene2.add(light2, amlight2, hemlight2);
-
     const edges = new THREE.EdgesGeometry(geometry);
     const mesh2 = new THREE.LineSegments(
       edges,
       new THREE.LineBasicMaterial({ color: 0x000000 })
     );
+    /*     const sectionGeo = new THREE.ShapeGeometry(this.section);
+    const sectionEdge = new THREE.EdgesGeometry(sectionGeo);
+    const sectionLine = new THREE.LineSegments(
+      sectionEdge,
+      new THREE.LineBasicMaterial({ color: 0x000000,
+        linewidth:2})
+    );
+    sectionLine.rotateY(-Math.PI / 2);
+    sectionLine.translateY(midCurve/2); 
 
-    this.scene.add(mesh2);
+     const geo = new THREE.PlaneGeometry(1.7, 1.7, 1);
+    const mat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color('rgb(0, 255, 0)'),
+      opacity: 0.1,
+      transparent: true,
+      side: THREE.DoubleSide,
+    });
+    const plane = new THREE.Mesh(geo, mat);
+    const planeEdge = new THREE.EdgesGeometry(geo);
+    const planemesh = new THREE.LineSegments(
+      planeEdge,
+      new THREE.LineBasicMaterial({ color: 0x000000 })
+    );
+    plane.rotateY(-Math.PI / 2);
+    planeEdge.rotateY(-Math.PI / 2); */
+    this.scene.add(mesh2, light1, amlight1, hemlight1);
+    this.scene2.add(light2, amlight2, hemlight2);
   }
 
   animator() {
