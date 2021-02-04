@@ -473,8 +473,11 @@ export class WebSite extends LitElement {
         color: #af4ebd;
         border: none;
         min-height: 64px;
-        text-align: right;
+        text-align: center;
         justify-content: flex-end;
+        align-content: center;
+
+        font-size: 2em;
       }
 
       .burgerspace {
@@ -489,6 +492,7 @@ export class WebSite extends LitElement {
         border-bottom: none;
         border-top: none;
       }
+
       .buttonspace {
         display: flex;
         text-align: center;
@@ -500,7 +504,9 @@ export class WebSite extends LitElement {
         width: max(2.5em, 64px);
         height: max(2.5em, 64px);
       }
-
+      #burgerdemo a > .buttonspace {
+        width: max(1.25em, 32px);
+      }
       .burgertext {
         flex-grow: 1;
         text-align: right;
@@ -524,14 +530,14 @@ export class WebSite extends LitElement {
         color: #9df5ee;
       }
 
-      #burgerdemo a.chosen::after {
+      /*       #burgerdemo a.chosen::after {
         content: '←';
         position: absolute;
         right: 51%;
         font-weight: 900;
         font-size: 2em;
         color: #af4ebd;
-      }
+      } */
 
       #demobar {
         display: none;

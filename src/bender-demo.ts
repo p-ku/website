@@ -60,16 +60,20 @@ class BenderDemo extends LitElement {
     window.addEventListener('resize', this.handleResize);
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
+    this.controls.enableDamping = true;
     this.controls.minAzimuthAngle = -Math.PI / 4;
     this.controls.maxAzimuthAngle = Math.PI / 4;
     this.controls.minPolarAngle = Math.PI / 3;
     this.controls.maxPolarAngle = (2 * Math.PI) / 3;
     this.controls2.enablePan = false;
     this.controls2.enableZoom = false;
+    this.controls2.enableDamping = true;
     this.controls2.minAzimuthAngle = -Math.PI / 4;
     this.controls2.maxAzimuthAngle = Math.PI / 4;
     this.controls2.minPolarAngle = Math.PI / 3;
     this.controls2.maxPolarAngle = (2 * Math.PI) / 3;
+    /*     this.controls.target.set(-0.5,0,0)
+    this.controls2.target.set(-0.5,0,0) */
     if (location.pathname.includes('jp')) {
       this.english = false;
       this.lang = '/jp';
@@ -77,7 +81,7 @@ class BenderDemo extends LitElement {
       this.english = true;
       this.lang = '';
     }
-    const geo = new THREE.PlaneGeometry(2, 2, 1);
+    const geo = new THREE.PlaneGeometry(1.7, 1.7, 1);
     const mat = new THREE.MeshBasicMaterial({
       color: new THREE.Color('rgb(0, 255, 0)'),
       opacity: 0.1,
@@ -126,7 +130,7 @@ class BenderDemo extends LitElement {
 
     this.scene2.add(plane, sectionLine, planemesh, sectionMesh);
     this.init();
-    this.camera.position.set(2, 2, 4.5); // Set position like this
+    this.camera.position.set(2, 2, 3.2); // Set position like this
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     this.animator();
@@ -135,12 +139,14 @@ class BenderDemo extends LitElement {
   handleResize = () => {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(
-      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
-      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
+      /*       Math.min(window.innerWidth / 1.4, window.innerHeight / 1.4),
+      Math.min(window.innerWidth / 2.1, window.innerHeight / 2.1) */
+      window.innerHeight / 2.55,
+      window.innerHeight / 3.06
     );
     this.renderer2.setSize(
-      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
-      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
+      window.innerHeight / 2.55,
+      window.innerHeight / 3.06
     );
   };
 
@@ -148,15 +154,12 @@ class BenderDemo extends LitElement {
     this.scene.background = new THREE.Color(0xfffde8);
     this.scene2.background = new THREE.Color(0xfffde8);
 
-    this.camera.aspect = 3 / 2;
+    this.camera.aspect = 3 / 2.5;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(
-      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
-      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
-    );
+    this.renderer.setSize(window.innerHeight / 2.55, window.innerHeight / 3.06);
     this.renderer2.setSize(
-      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
-      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
+      window.innerHeight / 2.55,
+      window.innerHeight / 3.06
     );
     this.shadowRoot
       .getElementById('beam')
@@ -520,12 +523,13 @@ if (this.angle > 0) {
   }
 
   animator() {
-    this.renderer.render(this.scene, this.camera);
-    this.renderer2.render(this.scene2, this.camera);
-
     requestAnimationFrame(() => {
       this.animator();
     });
+    this.controls.update();
+    this.controls2.update();
+    this.renderer.render(this.scene, this.camera);
+    this.renderer2.render(this.scene2, this.camera);
   }
 
   onChange() {
@@ -539,7 +543,6 @@ if (this.angle > 0) {
     }
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
     this.init();
-    this.animator();
   }
 
   graphPlanes(trans1: number, trans2: number) {
@@ -656,68 +659,99 @@ if (this.angle > 0) {
       margin-top: 0;
       margin-bottom: 0;
       min-width: 4em;
-      text-align: left;
+      margin-left: 0.5em;
+      text-align: center;
+      writing-mode: vertical-lr;
     }
     #main {
       display: flex;
       flex-direction: row;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       max-width: 100%;
       max-height: 100%;
       color: #321e00;
       margin: 0;
     }
-    .cols,
-    #slidertext {
+    .colleft {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      max-width: 10em;
+      align-content: center;
+      flex: 0.5, 0.5, 0.5;
     }
-    .cols p {
-      text-align: left;
-    }
-    .cols {
+    .colright {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
       flex: 0.5;
     }
-
-    #slidertext {
-      width: 20%;
+    p {
+      max-width: 80vw;
+      align-self: center;
     }
+    /*     .cols {
+      flex: 0.5;
+    } */
+
+    /*     #slidertext {
+      width: 20%;
+      height: 100%;
+      flex-direction: row;
+    } */
 
     svg {
       display: flex;
     }
+
+    .slider-wrapper {
+      width: 32px;
+      height: 50vh;
+      padding: 0;
+    }
+
     .slider {
       display: flex;
       -webkit-appearance: none;
-      width: 15px;
-      height: 30vmin;
-      border-radius: 5px;
+      width: 50vh;
+      height: 32px;
+      border-radius: 14px;
       background: #ffc342;
       outline: none;
       -webkit-transition: 0.2s;
       transition: opacity 0.2s;
+      transform-origin: 25vh 25vh;
+      transform: rotate(-90deg);
+      align-items: center;
+      align-content: center;
+      justify-content: center;
     }
 
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 25px;
-      height: 25px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: #321e00;
       cursor: pointer;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
     }
 
     .slider::-moz-range-thumb {
-      width: 25px;
-      height: 25px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: #321e00;
       cursor: pointer;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
     }
   `;
 
@@ -729,32 +763,32 @@ if (this.angle > 0) {
     return html`
       <h2>${this.english ? 'bender' : 'ベンダー'}</h2>
       <div id="main">
-        <div class="cols">
+        <div class="colleft">
           <div id="beam"></div>
           <div id="graph"></div>
         </div>
-        <div class="cols">
-          <div id="slidertext">
-            <h3>${this.english ? 'Give it a moment.' : 'トルクをかける。'}</h3>
+        <div class="colright">
+          <label for="myRange">${this.english ? 'bend' : '曲げる'}</label>
 
+          <div class="slider-wrapper">
             <input
               type="range"
-              orient="vertical"
               min="-60"
               max="60"
               value="0"
+              step="1"
               class="slider"
               id="myRange"
               @input=${this.onChange}
             />
           </div>
-          <p>
-            ${this.english
-              ? 'The plot shows internal forces: tension is on the right in pink, and compression is on the left in blue.'
-              : 'プロットは内力を示しています。張力は右側にピンク色で、圧縮は左側に青色で示されています。'}
-          </p>
         </div>
       </div>
+      <p>
+        ${this.english
+          ? 'The plot shows internal forces: tension to the right in pink, and compression to the left in blue.'
+          : 'プロットは内力を示しています。右側の張力はピンク色で、左側の圧縮は青色で示されています。'}
+      </p>
     `;
   }
 }
