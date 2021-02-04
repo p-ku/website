@@ -135,12 +135,12 @@ class BenderDemo extends LitElement {
   handleResize = () => {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(
-      Math.min(window.innerWidth / 2, window.innerHeight / 2),
-      Math.min(window.innerWidth / 3, window.innerHeight / 3)
+      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
+      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
     );
     this.renderer2.setSize(
-      Math.min(window.innerWidth / 2, window.innerHeight / 2),
-      Math.min(window.innerWidth / 2, window.innerHeight / 2)
+      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
+      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
     );
   };
 
@@ -151,18 +151,18 @@ class BenderDemo extends LitElement {
     this.camera.aspect = 3 / 2;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(
-      Math.min(window.innerWidth / 2, window.innerHeight / 2),
-      Math.min(window.innerWidth / 3, window.innerHeight / 3)
+      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
+      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
     );
     this.renderer2.setSize(
-      Math.min(window.innerWidth / 2, window.innerHeight / 2),
-      Math.min(window.innerWidth / 3, window.innerHeight / 3)
+      Math.min(window.innerWidth / 2.2, window.innerHeight / 2.2),
+      Math.min(window.innerWidth / 3.3, window.innerHeight / 3.3)
     );
     this.shadowRoot
-      .getElementById('main')
+      .getElementById('beam')
       .appendChild(this.renderer.domElement);
     this.shadowRoot
-      .getElementById('main')
+      .getElementById('graph')
       .appendChild(this.renderer2.domElement);
 
     this.renderer.outputEncoding = THREE.sRGBEncoding;
@@ -364,9 +364,9 @@ if (this.angle > 0) {
     }
 
     const curve = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(-1.5, 0, 0),
-      new THREE.Vector3(0, -1.5 * Math.tan((this.angle * Math.PI) / 360), 0),
-      new THREE.Vector3(1.5, 0, 0)
+      new THREE.Vector3(-1, 0, 0),
+      new THREE.Vector3(0, -1 * Math.tan((this.angle * Math.PI) / 360), 0),
+      new THREE.Vector3(1, 0, 0)
     );
     const uvtest = THREE.ExtrudeGeometry.WorldUVGenerator;
 
@@ -631,56 +631,75 @@ if (this.angle > 0) {
     :host {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: flex-start;
       max-width: 100%;
       max-height: 100%;
       color: #321e00;
       margin: 0 auto;
     }
 
-    .column {
-      width: 50vw;
-      height: calc(100vh - var(--navbar-height) - var(--demobar-height));
-    }
-    /* 
-    h2 {
-      line-height: 1em;
-      text-align: left;
-      margin-left: 1rem;
-    } */
     h1,
     h2,
-    p {
+    h3 p {
       display: flex;
       margin: 0;
       padding: 0;
       line-height: 150%;
+      justify-content: center;
+      margin-top: 0;
+    }
+
+    h2 {
       margin-top: 0.3em;
+    }
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0;
+      min-width: 4em;
       text-align: left;
     }
     #main {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
       max-width: 100%;
       max-height: 100%;
       color: #321e00;
-      margin: 0 auto;
+      margin: 0;
     }
+    .cols,
+    #slidertext {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 10em;
+    }
+    .cols p {
+      text-align: left;
+    }
+    .cols {
+      flex: 0.5;
+    }
+
+    #slidertext {
+      width: 20%;
+    }
+
     svg {
       display: flex;
     }
     .slider {
+      display: flex;
       -webkit-appearance: none;
-      width: 100%;
-      height: 15px;
+      width: 15px;
+      height: 30vmin;
       border-radius: 5px;
       background: #ffc342;
       outline: none;
       -webkit-transition: 0.2s;
       transition: opacity 0.2s;
-      margin-bottom: 15px;
     }
 
     .slider::-webkit-slider-thumb {
@@ -708,21 +727,34 @@ if (this.angle > 0) {
 
   render() {
     return html`
+      <h2>${this.english ? 'bender' : 'ベンダー'}</h2>
       <div id="main">
-        <h2>${this.english ? 'bender' : 'ベンダー'}</h2>
-        <p>${this.english ? 'give it a moment' : 'ベンダー'}</p>
+        <div class="cols">
+          <div id="beam"></div>
+          <div id="graph"></div>
+        </div>
+        <div class="cols">
+          <div id="slidertext">
+            <h3>${this.english ? 'Give it a moment.' : 'トルクをかける。'}</h3>
 
-        <input
-          type="range"
-          min="-60"
-          max="60"
-          value="0"
-          class="slider"
-          id="myRange"
-          @input=${this.onChange}
-        />
+            <input
+              type="range"
+              orient="vertical"
+              min="-60"
+              max="60"
+              value="0"
+              class="slider"
+              id="myRange"
+              @input=${this.onChange}
+            />
+          </div>
+          <p>
+            ${this.english
+              ? 'The plot shows internal forces: tension is on the right in pink, and compression is on the left in blue.'
+              : 'プロットは内力を示しています。張力は右側にピンク色で、圧縮は左側に青色で示されています。'}
+          </p>
+        </div>
       </div>
-      <div id="graph"></div>
     `;
   }
 }

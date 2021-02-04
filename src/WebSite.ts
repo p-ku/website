@@ -1,6 +1,5 @@
 import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
-import './crypto-demo.js';
 import './bender-demo.js';
 import './contact-form.js';
 import { Router } from '@vaadin/router';
