@@ -450,6 +450,7 @@ planeGeoms[1].translate(0,0,1); */
       };
 
       this.pos[i].renderOrder = 1.1;
+      this.pos[i].translateX(0.001);
 
       /*   this.clipObjects[i].add( this.stencilGroup[i] );
        */ poGroups[i].add(this.pos[i]);
@@ -462,7 +463,7 @@ planeGeoms[1].translate(0,0,1); */
         roughness: 0.75,
         clippingPlanes: [this.clipPlanes[i][0]],
         clipShadows: true,
-        /*   polygonOffset: true,
+        /*          polygonOffset: true,
   polygonOffsetFactor: -1, // positive value pushes polygon further away
   polygonOffsetUnits: 1,
   side: THREE.DoubleSide, */
@@ -474,7 +475,7 @@ planeGeoms[1].translate(0,0,1); */
       }
       graphMesh[i] = new THREE.Mesh(graphGeos[i], this.graphMat[i]);
       graphMesh[i].renderOrder = 6;
-      graphMesh[i].translateX(0.0001);
+      graphMesh[i].translateX(0.001);
     }
 
     this.clipObjects[0].add(this.stencilGroup[0]);
@@ -494,8 +495,8 @@ planeGeoms[1].translate(0,0,1); */
     this.camera.position.set(2, 2, 3.2); // Set position like this
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     this.graphScene.add(
-      plotPlaneMesh,
-      sectionLine,
+      /*       plotPlaneMesh,
+       */ sectionLine,
       plotPlaneLines /* , sectionMesh */
     );
   }
@@ -555,14 +556,24 @@ planeGeoms[1].translate(0,0,1); */
 
   newBend() {
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
-    this.graphMat[0].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(-1, this.angle / 30, 0)),
-      new THREE.Plane(new THREE.Vector3(1, 0, 0)),
-    ];
-    this.graphMat[1].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
-      new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
-    ];
+
+    if (this.angle == 0) {
+      this.graphMat[0].visible = false;
+      this.pos[0].visible = false;
+    } else {
+      this.graphMat[0].visible = true;
+      this.pos[0].visible = true;
+
+      this.graphMat[0].clippingPlanes = [
+        new THREE.Plane(new THREE.Vector3(-1, this.angle / 30, 0), 0.001),
+        new THREE.Plane(new THREE.Vector3(1, 0, 0)),
+      ];
+      this.graphMat[1].clippingPlanes = [
+        new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
+        new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
+      ];
+    }
+
     /*  this.planeGeoms[0].rotateX((Math.PI/4)*this.angle/60);
      */ this.mat0[0].clippingPlanes = [
       new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
@@ -570,7 +581,6 @@ planeGeoms[1].translate(0,0,1); */
     this.mat1[0].clippingPlanes = [
       new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
     ];
-
     this.pos[0].quaternion.setFromAxisAngle(
       new THREE.Vector3(0, 0, 1),
       Math.atan(-this.angle / 30)
@@ -580,8 +590,8 @@ planeGeoms[1].translate(0,0,1); */
 
     /* this.pos[0].quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(-1,this.angle/30,0));
      */ this.pos[0].rotateY(Math.PI / 2);
-
-    const curve = new THREE.QuadraticBezierCurve3(
+    /*      this.pos[0].translateX(0.0001);
+     */ const curve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(-this.beamLength / 2, 0, 0),
       new THREE.Vector3(
         0,
@@ -805,8 +815,8 @@ planeGeoms[1].translate(0,0,1); */
           <div class="slider-wrapper">
             <input
               type="range"
-              min="-60"
-              max="60"
+              min="-59"
+              max="59"
               value="0"
               step="1"
               class="slider"
