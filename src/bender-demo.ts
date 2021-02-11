@@ -71,22 +71,6 @@ class BenderDemo extends LitElement {
     new THREE.MeshStandardMaterial(),
     new THREE.MeshStandardMaterial(),
   ];
-  /*      @property({ attribute: false }) compMat = new THREE.MeshPhongMaterial({
-    color: new THREE.Color(0.2, 0.5, 0.5),
-    polygonOffset: true,
-    polygonOffsetFactor: -1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    side: THREE.DoubleSide,
-     clippingPlanes: this.compClip,
-  });
-   @property({ attribute: false }) tensMat = new THREE.MeshPhongMaterial({
-    color: new THREE.Color(0.5, 0.2, 0.5),
-    polygonOffset: true,
-    polygonOffsetFactor: -1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    side: THREE.DoubleSide,
-    clippingPlanes: this.tensClip,
-     }); */
 
   @property({ attribute: false }) compFrontMat = new THREE.MeshBasicMaterial();
   @property({ attribute: false }) compBackMat = new THREE.MeshBasicMaterial();
@@ -202,47 +186,6 @@ class BenderDemo extends LitElement {
     );
   };
 
-  /* initStencilMaterials(back: THREE.MeshBasicMaterial,front: THREE.MeshBasicMaterial,plane: THREE.MeshNormalMaterial) {
-		// PASS 1
-    // everywhere that the back faces are visible (clipped region) the stencil
-    // buffer is incremented by 1.
-		back = new THREE.MeshBasicMaterial();
-    back.depthWrite = false;
-    back.depthTest = false;
-    back.colorWrite = false;
-    back.stencilWrite = true;
-    back.stencilFunc = THREE.AlwaysStencilFunc;
-    back.side = THREE.BackSide;
-    back.stencilFail = THREE.IncrementWrapStencilOp;
-    back.stencilZFail = THREE.IncrementWrapStencilOp;
-    back.stencilZPass = THREE.IncrementWrapStencilOp;
-
-		// PASS 2
-    // everywhere that the front faces are visible the stencil
-    // buffer is decremented back to 0.
-    front = new THREE.MeshBasicMaterial();
-    front.depthWrite = false;
-    front.depthTest = false;
-    front.colorWrite = false;
-    front.stencilWrite = true;
-    front.stencilFunc = THREE.AlwaysStencilFunc;
-    front.side = THREE.FrontSide;
-    front.stencilFail = THREE.DecrementWrapStencilOp;
-    front.stencilZFail = THREE.DecrementWrapStencilOp;
-    front.stencilZPass = THREE.DecrementWrapStencilOp;
-
-		// PASS 3
-    // draw the plane everywhere that the stencil buffer != 0, which will
-    // only be in the clipped region where back faces are visible.
-    plane = new THREE.MeshNormalMaterial();
-		plane.stencilWrite = true;
-    plane.stencilRef = 0;
-    plane.stencilFunc = THREE.NotEqualStencilFunc;
-    plane.stencilFail = THREE.ReplaceStencilOp;
-    plane.stencilZFail = THREE.ReplaceStencilOp;
-    plane.stencilZPass = THREE.ReplaceStencilOp;
-} */
-
   init() {
     this.renderer2.localClippingEnabled = true;
     window.addEventListener('resize', this.handleResize);
@@ -275,40 +218,7 @@ class BenderDemo extends LitElement {
     this.shadowRoot
       .getElementById('graph')
       .appendChild(this.renderer2.domElement);
-    /*  this.renderer2.sortObjects = false;
-     */
-    /*this.initStencilMaterials(this.compFrontMat,this.compBackMat,this.compPlaneMat);
-this.initStencilMaterials(this.tensFrontMat,this.tensBackMat,this.tensPlaneMat);
- this.compFrontMat.clippingPlanes = this.compClip;
-this.compBackMat.clippingPlanes = this.compClip;
-this.tensFrontMat.clippingPlanes = this.tensClip;
-this.tensBackMat.clippingPlanes = this.tensClip;
 
-		// Add the front face stencil
-		const compFrontMesh = new THREE.Mesh(this.compGeo, this.compFrontMat);
-		const tensFrontMesh = new THREE.Mesh(this.tensGeo, this.tensFrontMat);
-
-
-    // Add the back face stencil
-		const compBackMesh = new THREE.Mesh(this.compGeo, this.compBackMat);
-		const tensBackMesh = new THREE.Mesh(this.tensGeo, this.tensBackMat);
-
-    // Add the plane
-    const compPlaneGeom = new THREE.PlaneBufferGeometry();
-    this.compPlaneMesh = new THREE.Mesh(compPlaneGeom, this.compPlaneMat);
-     this.compPlaneMesh.scale.setScalar(100);
-    this.compClip[0].coplanarPoint(this.compPlaneMesh.position);
-    this.compPlaneMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), new THREE.Vector3(-1,0,0));
-    this.compPlaneMesh.renderOrder = 1;
-    const tensPlaneGeom = new THREE.PlaneBufferGeometry();
-    this.tensPlaneMesh = new THREE.Mesh(tensPlaneGeom, this.tensPlaneMat);
-     this.tensPlaneMesh.scale.setScalar(100);
-     this.tensClip[0].coplanarPoint(this.tensPlaneMesh.position);
-    this.tensPlaneMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), new THREE.Vector3(1,0,0));
-    this.tensPlaneMesh.renderOrder = 2;
-
-    this.graphScene.add(compFrontMesh,tensFrontMesh,compBackMesh,tensBackMesh,this.compPlaneMesh,this.tensPlaneMesh);
- */
     const color = 0xfffde8;
     const intensity = 0.5;
     const amintensity = 1;
@@ -392,7 +302,6 @@ this.compMesh.renderOrder = 4; */
     const graphMesh = [];
     const planeMats = [];
     const poGroups = [new THREE.Group(), new THREE.Group()];
-    const pos = [new THREE.Mesh(), new THREE.Mesh()];
 
     const compGeo = new THREE.ExtrudeGeometry(this.section, {
       depth: 1,
@@ -413,14 +322,14 @@ this.compMesh.renderOrder = 4; */
     /*  planeGeoms[0].translate(0,0,1);
  
 planeGeoms[1].translate(0,0,1); */
-    this.graphScene.add(this.clipObjects[0] /* ,this.clipObjects[1] */);
+    this.graphScene.add(this.clipObjects[0], this.clipObjects[1]);
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 2; i++) {
       const plane = this.clipPlanes[i];
       this.stencilGroup[i] = this.createPlaneStencilGroup(
         graphGeos[i],
         [plane],
-        1,
+        1 + i,
         i
       ); // plane is clipped by the other clipping planes
       /* this.stencilGroup[0].renderOrder = 0.1;
@@ -441,7 +350,6 @@ planeGeoms[1].translate(0,0,1); */
       planeMats[i].color = new THREE.Color(1, 0.5, 1);
      } */
       this.pos[i] = new THREE.Mesh(this.planeGeoms[i], planeMats[i]);
-      this.pos[i].rotateY(Math.PI / 2);
 
       this.pos[i].onAfterRender = function (renderer) {
         renderer.clearStencil();
@@ -449,8 +357,7 @@ planeGeoms[1].translate(0,0,1); */
          */
       };
 
-      this.pos[i].renderOrder = 1.1;
-      this.pos[i].translateX(0.001);
+      this.pos[i].renderOrder = 1.1 + i;
 
       /*   this.clipObjects[i].add( this.stencilGroup[i] );
        */ poGroups[i].add(this.pos[i]);
@@ -469,23 +376,29 @@ planeGeoms[1].translate(0,0,1); */
   side: THREE.DoubleSide, */
       });
       if (i == 0) {
-        this.graphMat[i].color = new THREE.Color(0.2, 0.5, 0.5);
+        this.graphMat[i].color = new THREE.Color(0.3, 0.67, 0.67);
+        planeMats[i].color = new THREE.Color(0.25, 0.5575, 0.5575);
       } else {
-        this.graphMat[i].color = new THREE.Color(0.5, 0.2, 0.5);
+        this.graphMat[i].color = new THREE.Color(0.67, 0.3, 0.67);
+        planeMats[i].color = new THREE.Color(0.5575, 0.25, 0.5575);
       }
       graphMesh[i] = new THREE.Mesh(graphGeos[i], this.graphMat[i]);
-      graphMesh[i].renderOrder = 6;
-      graphMesh[i].translateX(0.001);
+      graphMesh[i].renderOrder = 6 + i;
     }
+    this.pos[0].rotateY(Math.PI / 2);
+    this.pos[1].rotateY(-Math.PI / 2);
+
+    graphMesh[0].translateX(0.001);
+    graphMesh[1].translateX(-0.001);
+    this.pos[0].translateX(0.001);
+    this.pos[1].translateX(-0.001);
 
     this.clipObjects[0].add(this.stencilGroup[0]);
-    /*   this.clipObjects[1].add( this.stencilGroup[1] );
-     */
+    this.clipObjects[1].add(this.stencilGroup[1]);
 
     this.graphScene.add(this.pos[0], this.pos[1]);
     this.clipObjects[0].add(graphMesh[0]);
-    /*     this.clipObjects[1].add( graphMesh[1] );
-     */
+    this.clipObjects[1].add(graphMesh[1]);
 
     this.bendGroup.add(this.beamMesh, this.beamLine);
     this.bendScene.add(this.bendGroup);
@@ -536,7 +449,7 @@ planeGeoms[1].translate(0,0,1); */
     this.mat0[index].stencilZPass = THREE.IncrementWrapStencilOp;
 
     this.mesh0[index] = new THREE.Mesh(geometry, this.mat0[index]);
-    this.mesh0[index].renderOrder = 1;
+    this.mesh0[index].renderOrder = renderOrder;
     group.add(this.mesh0[index]);
 
     // front faces
@@ -547,7 +460,7 @@ planeGeoms[1].translate(0,0,1); */
     this.mat1[index].stencilZPass = THREE.DecrementWrapStencilOp;
 
     this.mesh1[index] = new THREE.Mesh(geometry, this.mat1[index]);
-    this.mesh1[index].renderOrder = 1;
+    this.mesh1[index].renderOrder = renderOrder;
 
     group.add(this.mesh1[index]);
 
@@ -560,22 +473,25 @@ planeGeoms[1].translate(0,0,1); */
     if (this.angle == 0) {
       this.graphMat[0].visible = false;
       this.pos[0].visible = false;
+      this.graphMat[1].visible = false;
+      this.pos[1].visible = false;
     } else {
       this.graphMat[0].visible = true;
       this.pos[0].visible = true;
+      this.graphMat[1].visible = true;
+      this.pos[1].visible = true;
 
       this.graphMat[0].clippingPlanes = [
         new THREE.Plane(new THREE.Vector3(-1, this.angle / 30, 0), 0.001),
         new THREE.Plane(new THREE.Vector3(1, 0, 0)),
       ];
       this.graphMat[1].clippingPlanes = [
-        new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
+        new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0), 0.001),
         new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
       ];
     }
 
-    /*  this.planeGeoms[0].rotateX((Math.PI/4)*this.angle/60);
-     */ this.mat0[0].clippingPlanes = [
+    this.mat0[0].clippingPlanes = [
       new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
     ];
     this.mat1[0].clippingPlanes = [
@@ -585,11 +501,22 @@ planeGeoms[1].translate(0,0,1); */
       new THREE.Vector3(0, 0, 1),
       Math.atan(-this.angle / 30)
     );
+    this.mat0[1].clippingPlanes = [
+      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
+    ];
+    this.mat1[1].clippingPlanes = [
+      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
+    ];
+    this.pos[1].quaternion.setFromAxisAngle(
+      new THREE.Vector3(0, 0, 1),
+      Math.atan(-this.angle / 30)
+    );
     /*     this.tensPlaneMesh.quaternion.setFromUnitVectors(new THREE.Vector3(1,0, 0), new THREE.Vector3(1,-this.angle/60,0));
      */
 
     /* this.pos[0].quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(-1,this.angle/30,0));
      */ this.pos[0].rotateY(Math.PI / 2);
+    this.pos[1].rotateY(-Math.PI / 2);
     /*      this.pos[0].translateX(0.0001);
      */ const curve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(-this.beamLength / 2, 0, 0),
