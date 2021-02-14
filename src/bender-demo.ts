@@ -1,20 +1,23 @@
 import { LitElement, html, css, property } from 'lit-element';
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { threadId } from 'worker_threads';
+import { Plane, Vector2, Vector3 } from 'three';
 
 class BenderDemo extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
+
   @property({ attribute: false }) angle = 0;
   @property({ attribute: false }) bendGroup = new THREE.Group();
   @property({ attribute: false }) graphGroup = new THREE.Group();
-  @property({ attribute: false }) sectionMat = new THREE.MeshPhongMaterial({
-    color: new THREE.Color(0.2, 0.2, 0.2),
-    polygonOffset: true,
-    polygonOffsetFactor: -1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    side: THREE.DoubleSide,
-  });
+
+  @property({ attribute: false }) pos = [new THREE.Mesh(), new THREE.Mesh()];
+  @property({ attribute: false }) flangeTopMesh = new THREE.Mesh();
+  @property({ attribute: false }) flangeBotMesh = new THREE.Mesh();
+
   @property({ attribute: false }) baseMat = new THREE.MeshBasicMaterial({
     depthWrite: false,
     depthTest: false,
@@ -22,21 +25,6 @@ class BenderDemo extends LitElement {
     stencilWrite: true,
     stencilFunc: THREE.AlwaysStencilFunc,
   });
-  @property({ attribute: false }) planeGeoms = [
-    new THREE.PlaneGeometry(4, 4),
-    new THREE.PlaneGeometry(4, 4),
-  ];
-  @property({ attribute: false }) pos = [new THREE.Mesh(), new THREE.Mesh()];
-
-  @property({ attribute: false }) planeObjects = [
-    new THREE.Mesh(),
-    new THREE.Mesh(),
-  ];
-  @property({ attribute: false }) stencilGroup = [
-    new THREE.Group(),
-    new THREE.Group(),
-  ];
-
   // back faces
   @property({ attribute: false }) mat0 = [
     this.baseMat.clone(),
@@ -57,11 +45,11 @@ class BenderDemo extends LitElement {
   ];
 
   @property({ attribute: false }) compClip = [
-    new THREE.Plane(new THREE.Vector3(-1, this.angle / 30, 0)),
+    new THREE.Plane(new THREE.Vector3(-1, this.angle, 0)),
     new THREE.Plane(new THREE.Vector3(1, 0, 0)),
   ];
   @property({ attribute: false }) tensClip = [
-    new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
+    new THREE.Plane(new THREE.Vector3(1, -this.angle, 0)),
     new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
   ];
   @property({ attribute: false }) clipPlanes = [this.compClip, this.tensClip];
@@ -72,16 +60,7 @@ class BenderDemo extends LitElement {
     new THREE.MeshStandardMaterial(),
   ];
 
-  @property({ attribute: false }) compFrontMat = new THREE.MeshBasicMaterial();
-  @property({ attribute: false }) compBackMat = new THREE.MeshBasicMaterial();
-  @property({ attribute: false }) compPlaneMat = new THREE.MeshNormalMaterial();
-  @property({ attribute: false }) tensFrontMat = new THREE.MeshBasicMaterial();
-  @property({ attribute: false }) tensBackMat = new THREE.MeshBasicMaterial();
-  @property({ attribute: false }) tensPlaneMat = new THREE.MeshNormalMaterial();
-  @property({ attribute: false }) compPlaneMesh = new THREE.Mesh();
-  @property({ attribute: false }) tensPlaneMesh = new THREE.Mesh();
-
-  @property({ attribute: false }) section = new THREE.Shape([
+  /*   @property({ attribute: false }) section = new THREE.Shape([
     new THREE.Vector2(-0.5, -0.5),
     new THREE.Vector2(0.5, -0.5),
     new THREE.Vector2(0.5, -0.4),
@@ -95,11 +74,26 @@ class BenderDemo extends LitElement {
     new THREE.Vector2(-0.05, -0.4),
     new THREE.Vector2(-0.5, -0.4),
     new THREE.Vector2(-0.5, -0.5),
+  ]); */
+  @property({ attribute: false }) bh = 1;
+  @property({ attribute: false }) t = 0.2;
+
+  @property({ attribute: false }) section = new THREE.Shape([
+    new THREE.Vector2(-this.bh / 2, -this.bh / 2),
+    new THREE.Vector2(this.bh / 2, -this.bh / 2),
+    new THREE.Vector2(this.bh / 2, (2 * this.t) / 2 - this.bh / 2),
+    new THREE.Vector2(this.t / 2, (2 * this.t) / 2 - this.bh / 2),
+    new THREE.Vector2(this.t / 2, this.bh / 2 - (2 * this.t) / 2),
+    new THREE.Vector2(this.bh / 2, this.bh / 2 - (2 * this.t) / 2),
+    new THREE.Vector2(this.bh / 2, this.bh / 2),
+    new THREE.Vector2(-this.bh / 2, this.bh / 2),
+    new THREE.Vector2(-this.bh / 2, this.bh / 2 - (2 * this.t) / 2),
+    new THREE.Vector2(-this.t / 2, this.bh / 2 - (2 * this.t) / 2),
+    new THREE.Vector2(-this.t / 2, (2 * this.t) / 2 - this.bh / 2),
+    new THREE.Vector2(-this.bh / 2, (2 * this.t) / 2 - this.bh / 2),
+    new THREE.Vector2(-this.bh / 2, -this.bh / 2),
   ]);
 
-  @property({ attribute: false }) sectionGeo = new THREE.ShapeGeometry(
-    this.section
-  );
   @property({ attribute: false }) straightBeamGeo = new THREE.ExtrudeGeometry(
     this.section,
     {
@@ -107,33 +101,13 @@ class BenderDemo extends LitElement {
       bevelEnabled: false,
     }
   );
-  /*   @property({ attribute: false }) compGeo = new THREE.ExtrudeGeometry(this.section, {
-    depth: 1,
-    bevelEnabled: false,
-  });
-  @property({ attribute: false }) tensGeo = new THREE.ExtrudeGeometry(this.section, {
-    depth: 1,
-    bevelEnabled: false,
-  }); */
+
   @property({ attribute: false }) beamLine = new THREE.LineSegments();
-
-  /*   @property({ attribute: false }) compMesh = new THREE.Mesh();
-  @property({ attribute: false }) tensMesh = new THREE.Mesh(); */
-
   @property({ attribute: false }) graphBeamLine = new THREE.LineSegments();
-
   @property({ attribute: false }) graphBeamMesh = new THREE.Mesh();
-
-  /* @property({ attribute: false }) compMat = new THREE.MeshBasicMaterial({color: new THREE.Color(0.4,1,1), side: THREE.DoubleSide});
-  @property({ attribute: false }) tensMat = new THREE.MeshBasicMaterial({color: new THREE.Color(1,0.4,1), side: THREE.DoubleSide}); */
   @property({ attribute: false }) beamMesh = new THREE.Mesh();
-  /*   @property({ attribute: false }) tensMesh = new THREE.Mesh(this.straightBeamGeo,this.tensMat);
-  @property({ attribute: false }) compMesh = new THREE.Mesh(this.straightBeamGeo,this.compMat); */
-
   @property({ attribute: false }) bendScene = new THREE.Scene();
-
   @property({ attribute: false }) graphScene = new THREE.Scene();
-
   @property({ attribute: false }) camera = new THREE.PerspectiveCamera(
     33,
     window.innerWidth / window.innerHeight,
@@ -147,6 +121,7 @@ class BenderDemo extends LitElement {
   @property({ attribute: false }) renderer2 = new THREE.WebGLRenderer({
     antialias: true,
   });
+
   @property({ attribute: false }) controls = new OrbitControls(
     this.camera,
     (this.renderer.domElement as unknown) as HTMLElement
@@ -174,12 +149,7 @@ class BenderDemo extends LitElement {
 
   handleResize = () => {
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(
-      /*       Math.min(window.innerWidth / 1.4, window.innerHeight / 1.4),
-      Math.min(window.innerWidth / 2.1, window.innerHeight / 2.1) */
-      window.innerHeight / 2.55,
-      window.innerHeight / 3.06
-    );
+    this.renderer.setSize(window.innerHeight / 2.55, window.innerHeight / 3.06);
     this.renderer2.setSize(
       window.innerHeight / 2.55,
       window.innerHeight / 3.06
@@ -187,26 +157,26 @@ class BenderDemo extends LitElement {
   };
 
   init() {
-    this.renderer2.localClippingEnabled = true;
     window.addEventListener('resize', this.handleResize);
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
     this.controls.enableDamping = true;
-    this.controls.minAzimuthAngle = -Math.PI / 4;
-    this.controls.maxAzimuthAngle = Math.PI / 4;
+    this.controls.minAzimuthAngle = -Math.PI / 2;
+    this.controls.maxAzimuthAngle = Math.PI / 2;
     this.controls.minPolarAngle = Math.PI / 3;
     this.controls.maxPolarAngle = (2 * Math.PI) / 3;
     this.controls2.enablePan = false;
     this.controls2.enableZoom = false;
     this.controls2.enableDamping = true;
-    this.controls2.minAzimuthAngle = -Math.PI / 4;
-    this.controls2.maxAzimuthAngle = Math.PI / 4;
+    this.controls2.minAzimuthAngle = -Math.PI / 2;
+    this.controls2.maxAzimuthAngle = Math.PI / 2;
     this.controls2.minPolarAngle = Math.PI / 3;
     this.controls2.maxPolarAngle = (2 * Math.PI) / 3;
     this.bendScene.background = new THREE.Color(0xfffde8);
     this.graphScene.background = new THREE.Color(0xfffde8);
     this.camera.aspect = 3 / 2.5;
     this.camera.updateProjectionMatrix();
+    this.renderer2.localClippingEnabled = true;
     this.renderer.setSize(window.innerHeight / 2.55, window.innerHeight / 3.06);
     this.renderer2.setSize(
       window.innerHeight / 2.55,
@@ -237,29 +207,28 @@ class BenderDemo extends LitElement {
     this.graphScene.add(light2, amlight2, hemlight2);
 
     const plotPlaneGeo = new THREE.PlaneGeometry(1.7, 1.7, 1);
-    const plotPlaneMat = new THREE.MeshBasicMaterial({
+    /*     const plotPlaneMat = new THREE.MeshBasicMaterial({
       color: new THREE.Color('rgb(255, 255, 255)'),
       opacity: 0.4,
       transparent: true,
       side: THREE.DoubleSide,
-    });
-    const plotPlaneMesh = new THREE.Mesh(plotPlaneGeo, plotPlaneMat);
-    const plotPlaneEdge = new THREE.EdgesGeometry(plotPlaneGeo);
+    }); */
+    /*     const plotPlaneMesh = new THREE.Mesh(plotPlaneGeo, plotPlaneMat);
+     */ const plotPlaneEdge = new THREE.EdgesGeometry(plotPlaneGeo);
     const plotPlaneLines = new THREE.LineSegments(
       plotPlaneEdge,
       new THREE.LineBasicMaterial({ color: 0x000000 })
     );
-    plotPlaneMesh.rotateY(Math.PI / 2);
-    plotPlaneEdge.rotateY(Math.PI / 2);
-
-    const sectionEdge = new THREE.EdgesGeometry(this.sectionGeo);
+    /*     plotPlaneMesh.rotateY(Math.PI / 2);
+     */ plotPlaneEdge.rotateY(Math.PI / 2);
+    const sectionGeo = new THREE.ShapeGeometry(this.section);
+    const sectionEdge = new THREE.EdgesGeometry(sectionGeo);
     const sectionLine = new THREE.LineSegments(
       sectionEdge,
       new THREE.LineBasicMaterial({ color: 0x000000 })
     );
     sectionLine.rotateY(-Math.PI / 2);
-    this.sectionGeo.rotateY(-Math.PI / 2);
-    const sectionMesh = new THREE.Mesh(this.sectionGeo, this.sectionMat);
+    sectionGeo.rotateY(-Math.PI / 2);
 
     const beamMat = new THREE.MeshPhongMaterial({
       color: new THREE.Color(0.2, 0.2, 0.2),
@@ -267,38 +236,7 @@ class BenderDemo extends LitElement {
       polygonOffsetFactor: -1, // positive value pushes polygon further away
       polygonOffsetUnits: 1,
     });
-    /*      const beamGeo = new THREE.ExtrudeGeometry(this.section, {
-      depth: 2,
-      bevelEnabled: false,
-    }); */
-    /*         this.compGeo.rotateY(Math.PI / 2);
-        this.tensGeo.rotateY(Math.PI / 2);     */
 
-    /* this.tensMesh = new THREE.Mesh(this.straightBeamGeo,this.compMat);
-this.compMesh = new THREE.Mesh(this.straightBeamGeo,this.compMat); */
-    /* this.compGeo.translate(0.0001,0,0);
-this.tensGeo.translate(-1.0001,0,0); */
-
-    this.straightBeamGeo.rotateY(Math.PI / 2);
-    this.straightBeamGeo.translate(-1, 0, 0);
-
-    /* this.straightBeamGeo.addGroup( 0, Infinity, 0 );
-this.straightBeamGeo.addGroup( 0, Infinity, 1 ); */
-
-    /* const graphBeamMat = [tensMat, compMat];
-const compMesh = new THREE.Mesh(this.straightBeamGeo,compMat);
-const tensMesh = new THREE.Mesh(this.straightBeamGeo,tensMat); */
-    const beamEdge = new THREE.EdgesGeometry(this.straightBeamGeo);
-
-    this.beamLine.geometry = beamEdge;
-    beamEdge.dispose();
-
-    this.beamLine.material = new THREE.LineBasicMaterial({ color: 0x000000 });
-
-    /* this.tensMesh.renderOrder = 3;
-this.compMesh.renderOrder = 4; */
-
-    this.beamMesh = new THREE.Mesh(this.straightBeamGeo, beamMat);
     const graphMesh = [];
     const planeMats = [];
     const poGroups = [new THREE.Group(), new THREE.Group()];
@@ -317,52 +255,37 @@ this.compMesh.renderOrder = 4; */
     const graphGeos = [compGeo, tensGeo];
     const planeObjects = [];
 
-    /*   planeGeoms[0].rotateY(Math.PI / 2);
-     */
-    /*  planeGeoms[0].translate(0,0,1);
- 
-planeGeoms[1].translate(0,0,1); */
     this.graphScene.add(this.clipObjects[0], this.clipObjects[1]);
-
+    const stencilGroup = [];
     for (let i = 0; i < 2; i++) {
       const plane = this.clipPlanes[i];
-      this.stencilGroup[i] = this.createPlaneStencilGroup(
+      stencilGroup[i] = this.createPlaneStencilGroup(
         graphGeos[i],
         [plane],
         1 + i,
         i
       ); // plane is clipped by the other clipping planes
-      /* this.stencilGroup[0].renderOrder = 0.1;
-       */ planeMats[i] = new THREE.MeshStandardMaterial({
+      planeMats[i] = new THREE.MeshStandardMaterial({
         metalness: 0.1,
         roughness: 0.75,
-        /*       clippingPlanes: clipPlanes[i].filter( p => p !== plane ),
-         */ stencilWrite: true,
+        stencilWrite: true,
         stencilRef: 0,
         stencilFunc: THREE.NotEqualStencilFunc,
         stencilFail: THREE.ReplaceStencilOp,
         stencilZFail: THREE.ReplaceStencilOp,
         stencilZPass: THREE.ReplaceStencilOp,
       });
-      /*     if (i==0) {
-      planeMats[i].color = new THREE.Color(0.5, 1, 1);
-     } else {
-      planeMats[i].color = new THREE.Color(1, 0.5, 1);
-     } */
-      this.pos[i] = new THREE.Mesh(this.planeGeoms[i], planeMats[i]);
+
+      this.pos[i] = new THREE.Mesh(new THREE.PlaneGeometry(4, 4), planeMats[i]);
 
       this.pos[i].onAfterRender = function (renderer) {
         renderer.clearStencil();
-        /*       renderer.clearDepth();
-         */
       };
 
       this.pos[i].renderOrder = 1.1 + i;
 
-      /*   this.clipObjects[i].add( this.stencilGroup[i] );
-       */ poGroups[i].add(this.pos[i]);
+      poGroups[i].add(this.pos[i]);
       planeObjects[i] = this.pos[i];
-      /*   this.graphScene.add( poGroups[i] ); */
 
       this.graphMat[i] = new THREE.MeshStandardMaterial({
         color: 0xffc107,
@@ -370,10 +293,6 @@ planeGeoms[1].translate(0,0,1); */
         roughness: 0.75,
         clippingPlanes: [this.clipPlanes[i][0]],
         clipShadows: true,
-        /*          polygonOffset: true,
-  polygonOffsetFactor: -1, // positive value pushes polygon further away
-  polygonOffsetUnits: 1,
-  side: THREE.DoubleSide, */
       });
       if (i == 0) {
         this.graphMat[i].color = new THREE.Color(0.3, 0.67, 0.67);
@@ -393,39 +312,27 @@ planeGeoms[1].translate(0,0,1); */
     this.pos[0].translateX(0.001);
     this.pos[1].translateX(-0.001);
 
-    this.clipObjects[0].add(this.stencilGroup[0]);
-    this.clipObjects[1].add(this.stencilGroup[1]);
+    this.clipObjects[0].add(stencilGroup[0]);
+    this.clipObjects[1].add(stencilGroup[1]);
 
     this.graphScene.add(this.pos[0], this.pos[1]);
     this.clipObjects[0].add(graphMesh[0]);
     this.clipObjects[1].add(graphMesh[1]);
 
-    this.bendGroup.add(this.beamMesh, this.beamLine);
     this.bendScene.add(this.bendGroup);
-    /*  this.graphGroup.add(this.graphBeamLine)
-     */
 
-    this.camera.position.set(2, 2, 3.2); // Set position like this
+    this.camera.position.set(2, 2, 3.2);
+    /*     this.camera.position.set(3, 0, 0);
+     */
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    this.graphScene.add(
-      /*       plotPlaneMesh,
-       */ sectionLine,
-      plotPlaneLines /* , sectionMesh */
-    );
+    this.graphScene.add(sectionLine, plotPlaneLines);
+    this.newBend();
   }
 
   animator() {
     requestAnimationFrame(() => {
       this.animator();
     });
-
-    const plane = this.clipPlanes[0][0];
-    plane.coplanarPoint(this.planeObjects[0].position);
-    this.planeObjects[0].lookAt(
-      this.planeObjects[0].position.x - plane.normal.x,
-      this.planeObjects[0].position.y - plane.normal.y,
-      this.planeObjects[0].position.z - plane.normal.z
-    );
 
     this.controls.update();
     this.controls2.update();
@@ -469,76 +376,210 @@ planeGeoms[1].translate(0,0,1); */
 
   newBend() {
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
+    const sigmaMax = Math.atan(this.angle);
 
+    const poisson = sigmaMax / 4;
+    const anticlast = sigmaMax / 8;
+
+    const thtop =
+      this.bh / 2 -
+      this.t +
+      poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of topflange
+    const thbot =
+      -this.bh / 2 +
+      this.t +
+      poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of bottomflange
+    const btop = this.bh - this.bh * poisson; //width
+    const bbot = this.bh + this.bh * poisson; //width
+    const btop2 = this.bh - (this.bh * poisson * (this.bh - this.t)) / this.bh; //width at more middle part of flange
+    const bbot2 = this.bh + (this.bh * poisson * (this.bh - this.t)) / this.bh;
+    const ttop = this.t - (this.t * poisson * (this.bh - this.t)) / this.bh; //thickness of web
+    const tbot = this.t + (this.t * poisson * (this.bh - this.t)) / this.bh;
+
+    const anticGuideBot = new THREE.QuadraticBezierCurve(
+      new THREE.Vector2(-bbot / 2, -this.bh / 2 + anticlast),
+      new THREE.Vector2(0, -this.bh / 2 - anticlast),
+      new THREE.Vector2(bbot / 2, -this.bh / 2 + anticlast)
+    );
+    const anticGuideTop = new THREE.QuadraticBezierCurve(
+      new THREE.Vector2(-btop / 2, this.bh / 2 + anticlast),
+      new THREE.Vector2(0, this.bh / 2 - anticlast),
+      new THREE.Vector2(btop / 2, this.bh / 2 + anticlast)
+    );
+
+    const anticTanBot = anticGuideBot.getTangent(0);
+    const anticTanTop = anticGuideTop.getTangent(0);
+
+    const transTestBL = anticGuideBot
+      .clone()
+      .getTangent(0)
+      .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
+      .multiplyScalar(thbot + this.bh / 2);
+    const transTestTL = anticGuideTop
+      .clone()
+      .getTangent(0)
+      .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
+      .multiplyScalar(thtop - this.bh / 2);
+    const transTestBR = anticGuideBot
+      .clone()
+      .getTangent(1)
+      .rotateAround(new Vector2(0, 0), Math.PI / 2 - anticlast * 3)
+      .multiplyScalar(thbot + this.bh / 2);
+    const transTestTR = anticGuideTop
+      .clone()
+      .getTangent(1)
+      .rotateAround(new Vector2(0, 0), Math.PI / 2 - anticlast * 3)
+      .multiplyScalar(thtop - this.bh / 2);
+
+    transTestBL.x -= bbot2 / 2;
+    transTestTL.x -= btop2 / 2;
+    transTestBR.x += bbot2 / 2;
+    transTestTR.x += btop2 / 2;
+    transTestBL.y -= this.bh / 2 - anticlast;
+    transTestTL.y += this.bh / 2 + anticlast;
+    transTestBR.y -= this.bh / 2 - anticlast;
+    transTestTR.y += this.bh / 2 + anticlast;
+
+    const rayDirBot = new THREE.Vector3(anticTanBot.x, anticTanBot.y, 0);
+    const rayDirTop = new THREE.Vector3(anticTanTop.x, anticTanTop.y, 0);
+
+    let rayGuideTop = new THREE.Vector3();
+    let rayGuideBot = new THREE.Vector3();
+
+    const rayTestBot = new THREE.Ray(
+      new THREE.Vector3(transTestBL.x, transTestBL.y, 0),
+      rayDirBot
+    );
+    rayTestBot.intersectPlane(
+      new THREE.Plane(
+        new THREE.Vector3((tbot - ttop) / 2, thtop - thbot, 0).normalize(),
+        -thbot
+      ),
+      rayGuideBot
+    );
+    const rayTestTop = new THREE.Ray(
+      new THREE.Vector3(transTestTL.x, transTestTL.y, 0),
+      rayDirTop
+    );
+    rayTestTop.intersectPlane(
+      new THREE.Plane(
+        new THREE.Vector3((tbot - ttop) / 2, thtop - thbot, 0).normalize(),
+        -thtop
+      ),
+      rayGuideTop
+    );
     if (this.angle == 0) {
-      this.graphMat[0].visible = false;
-      this.pos[0].visible = false;
-      this.graphMat[1].visible = false;
-      this.pos[1].visible = false;
-    } else {
-      this.graphMat[0].visible = true;
-      this.pos[0].visible = true;
-      this.graphMat[1].visible = true;
-      this.pos[1].visible = true;
-
-      this.graphMat[0].clippingPlanes = [
-        new THREE.Plane(new THREE.Vector3(-1, this.angle / 30, 0), 0.001),
-        new THREE.Plane(new THREE.Vector3(1, 0, 0)),
-      ];
-      this.graphMat[1].clippingPlanes = [
-        new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0), 0.001),
-        new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
-      ];
+      rayGuideTop = new THREE.Vector3(thtop, thtop, 0);
+      rayGuideBot = new THREE.Vector3(thbot, thbot, 0);
     }
 
-    this.mat0[0].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
-    ];
-    this.mat1[0].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
-    ];
-    this.pos[0].quaternion.setFromAxisAngle(
-      new THREE.Vector3(0, 0, 1),
-      Math.atan(-this.angle / 30)
-    );
-    this.mat0[1].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
-    ];
-    this.mat1[1].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(1, -this.angle / 30, 0)),
-    ];
-    this.pos[1].quaternion.setFromAxisAngle(
-      new THREE.Vector3(0, 0, 1),
-      Math.atan(-this.angle / 30)
-    );
-    /*     this.tensPlaneMesh.quaternion.setFromUnitVectors(new THREE.Vector3(1,0, 0), new THREE.Vector3(1,-this.angle/60,0));
-     */
-
-    /* this.pos[0].quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(-1,this.angle/30,0));
-     */ this.pos[0].rotateY(Math.PI / 2);
-    this.pos[1].rotateY(-Math.PI / 2);
-    /*      this.pos[0].translateX(0.0001);
-     */ const curve = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(-this.beamLength / 2, 0, 0),
-      new THREE.Vector3(
+    this.section = new THREE.Shape()
+      .moveTo(-bbot / 2, -this.bh / 2 + anticlast) //bot
+      .quadraticCurveTo(
         0,
-        (-this.beamLength / 2) * Math.tan((this.angle * Math.PI) / 360),
-        0
-      ),
+        -this.bh / 2 - anticlast,
+        bbot / 2,
+        -this.bh / 2 + anticlast
+      ) //bot
+      .lineTo(transTestBR.x, transTestBR.y) //bot half
+      .quadraticCurveTo(-rayGuideBot.x, rayGuideBot.y, tbot / 2, thbot)
+      /* .lineTo((this.t-(this.t-tbot)/3)/2,-(thtop-thbot)/6)
+.lineTo((this.t+(this.t-tbot)/3)/2,+(thtop-thbot)/6) */
+      .lineTo(ttop / 2, thtop) //top half
+      .quadraticCurveTo(
+        -rayGuideTop.x,
+        rayGuideTop.y,
+        transTestTR.x,
+        transTestTR.y
+      )
+      .lineTo(btop / 2, this.bh / 2 + anticlast) //top
+      .quadraticCurveTo(
+        0,
+        this.bh / 2 - anticlast,
+        -btop / 2,
+        this.bh / 2 + anticlast
+      ) //top
+      .lineTo(transTestTL.x, transTestTL.y) //top half
+      .quadraticCurveTo(rayGuideTop.x, rayGuideTop.y, -ttop / 2, thtop) //bot half
+      /*        .lineTo((-this.t+(this.t-tbot)/3)/2,-(thtop-thbot)/6)
+       .lineTo((-this.t-(this.t-tbot)/3)/2,+(thtop-thbot)/6) */
+      .lineTo(-tbot / 2, thbot) //bot half
+      .quadraticCurveTo(
+        rayGuideBot.x,
+        rayGuideBot.y,
+        transTestBL.x,
+        transTestBL.y
+      ) //bot half
+      .lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
+    const testy = new THREE.QuadraticBezierCurve(
+      new THREE.Vector2(-tbot / 2, thbot),
+      new THREE.Vector2(rayGuideBot.x, rayGuideBot.y),
+      new THREE.Vector2(transTestBL.x, transTestBL.y)
+    );
+    /*       console.log('curve');
+      console.log(testy.getLength());
+      console.log('bbot2');
+      console.log(bbot2/2-tbot/2);
+      console.log(anticlast);
+ */
+
+    this.graphMat[0].clippingPlanes = [
+      new THREE.Plane(new THREE.Vector3(-1, sigmaMax, 0), 0.001),
+      new THREE.Plane(new THREE.Vector3(1, 0, 0)),
+    ];
+    this.graphMat[1].clippingPlanes = [
+      new THREE.Plane(new THREE.Vector3(1, -sigmaMax, 0), 0.001),
+      new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
+    ];
+
+    for (let i = 0; i < 2; i++) {
+      if (this.angle == 0) {
+        this.graphMat[i].visible = false;
+        this.pos[i].visible = false;
+      } else {
+        this.graphMat[i].visible = true;
+        this.pos[i].visible = true;
+      }
+
+      this.mat0[i].clippingPlanes = [
+        new THREE.Plane(new THREE.Vector3(1, -sigmaMax, 0)),
+      ];
+      this.mat1[i].clippingPlanes = [
+        new THREE.Plane(new THREE.Vector3(1, -sigmaMax, 0)),
+      ];
+
+      this.pos[i].quaternion.setFromAxisAngle(
+        new THREE.Vector3(0, 0, 1),
+        Math.atan(-sigmaMax)
+      );
+      this.pos[i].rotateY(Math.PI / 2 + i * Math.PI);
+    }
+
+    const curve = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(-this.beamLength / 2, 0, 0),
+      new THREE.Vector3(0, sigmaMax, 0),
       new THREE.Vector3(this.beamLength / 2, 0, 0)
     );
+
+    const curve2 = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(-0.001 / 2, 0, 0),
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0.001, 0, 0)
+    );
+
     const bentGeo = new THREE.ExtrudeGeometry(this.section, {
       steps: 20,
       bevelEnabled: false,
       extrudePath: curve,
     });
+
     const count = bentGeo.attributes.position.count;
     bentGeo.setAttribute(
       'color',
       new THREE.BufferAttribute(new Float32Array(count * 3), 3)
     );
-    /*      const positionAttribute = bentGeo.getAttribute( 'position' );
-     */ const colorAttribute = bentGeo.getAttribute('color');
+
+    const colorAttribute = bentGeo.getAttribute('color');
     const positions = bentGeo.attributes.position;
 
     const vertex = new THREE.Vector3();
@@ -548,38 +589,43 @@ planeGeoms[1].translate(0,0,1); */
         if (positions.getY(i) < curve.getPoint((vertex.x + 1) / 2).y) {
           colorAttribute.setXYZ(
             i,
-            this.angle / 240 + 0.2,
+            this.angle / 3 + 0.2,
             0.2,
-            this.angle / 240 + 0.2
+            this.angle / 3 + 0.2
           );
         } else {
           colorAttribute.setXYZ(
             i,
             0.2,
-            this.angle / 240 + 0.2,
-            this.angle / 240 + 0.2
+            this.angle / 3 + 0.2,
+            this.angle / 3 + 0.2
           );
         }
       } else {
         if (positions.getY(i) > curve.getPoint((vertex.x + 1) / 2).y) {
           colorAttribute.setXYZ(
             i,
-            -this.angle / 240 + 0.2,
+            -this.angle / 3 + 0.2,
             0.2,
-            -this.angle / 240 + 0.2
+            -this.angle / 3 + 0.2
           );
         } else {
           colorAttribute.setXYZ(
             i,
             0.2,
-            -this.angle / 240 + 0.2,
-            -this.angle / 240 + 0.2
+            -this.angle / 3 + 0.2,
+            -this.angle / 3 + 0.2
           );
         }
       }
     }
 
-    this.bendGroup.remove(this.beamMesh, this.beamLine);
+    this.bendGroup.remove(
+      this.beamMesh,
+      this.beamLine,
+      this.flangeBotMesh,
+      this.flangeTopMesh
+    );
     this.beamMesh.geometry.dispose();
 
     const bentMat = new THREE.MeshPhongMaterial({
@@ -587,16 +633,17 @@ planeGeoms[1].translate(0,0,1); */
       polygonOffset: true,
       polygonOffsetFactor: -1, // positive value pushes polygon further away
       polygonOffsetUnits: 1,
+      wireframe: false,
     });
-
-    /* this.graphBeamMesh = new THREE.Mesh(this.straightBeamGeo,graphBeamMat);
-     */ const beamEdge = new THREE.EdgesGeometry(bentGeo);
+    const beamEdge = new THREE.EdgesGeometry(bentGeo);
     this.beamLine.geometry = beamEdge;
     beamEdge.dispose();
     this.beamLine.material = new THREE.LineBasicMaterial({ color: 0x000000 });
 
     this.beamMesh = new THREE.Mesh(bentGeo, bentMat);
-    this.bendGroup.add(this.beamMesh, this.beamLine);
+    this.beamLine.geometry.translate(0, -anticlast * 3, 0);
+    this.beamMesh.translateY(-anticlast * 3);
+    this.bendGroup.add(this.beamMesh, this.beamLine, this.beamMesh);
   }
 
   static styles = css`
@@ -624,6 +671,7 @@ planeGeoms[1].translate(0,0,1); */
     h2 {
       margin-top: 0.3em;
     }
+
     h3 {
       margin-top: 0;
       margin-bottom: 0;
@@ -661,19 +709,6 @@ planeGeoms[1].translate(0,0,1); */
     p {
       max-width: 80vw;
       align-self: center;
-    }
-    /*     .cols {
-      flex: 0.5;
-    } */
-
-    /*     #slidertext {
-      width: 20%;
-      height: 100%;
-      flex-direction: row;
-    } */
-
-    svg {
-      display: flex;
     }
 
     .slider-wrapper {
@@ -738,16 +773,15 @@ planeGeoms[1].translate(0,0,1); */
         </div>
         <div class="colright">
           <label for="myRange">${this.english ? 'bend' : '曲げる'}</label>
-
           <div class="slider-wrapper">
             <input
-              type="range"
-              min="-59"
-              max="59"
-              value="0"
-              step="1"
-              class="slider"
               id="myRange"
+              class="slider"
+              type="range"
+              min="-0.5"
+              max="0.5"
+              value="0"
+              step="0.01"
               @input=${this.newBend}
             />
           </div>
@@ -755,8 +789,8 @@ planeGeoms[1].translate(0,0,1); */
       </div>
       <p>
         ${this.english
-          ? 'The plot shows internal forces: compression to the right in blue, and tension to the left in pink.'
-          : 'プロットは内力を示しています。右への圧縮は青で、左への張力はピンクで示されています。'}
+          ? 'The plot shows stress in a vertical slice: compression to the right in blue, and tension to the left in pink.'
+          : 'プロットは、垂直方向のスライスでの応力を示しています。青色で右に圧縮、ピンク色で左に引張られた状態を示しています。'}
       </p>
     `;
   }
