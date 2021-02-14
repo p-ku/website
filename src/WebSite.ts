@@ -547,7 +547,7 @@ export class WebSite extends LitElement {
 
   render() {
     return html`
-      <div id="navbar" >
+      <div id="navbar"  >
         <div id="burger" @click=${() => {
           this.isOpen = !this.isOpen;
         }}>≡</div>

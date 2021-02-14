@@ -4,13 +4,15 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { threadId } from 'worker_threads';
-import { Plane, Vector2, Vector3 } from 'three';
+import { Mesh, Plane, Vector2, Vector3 } from 'three';
 
 class BenderDemo extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
 
   @property({ attribute: false }) angle = 0;
+  @property({ attribute: false }) previous = 0;
+
   @property({ attribute: false }) bendGroup = new THREE.Group();
   @property({ attribute: false }) graphGroup = new THREE.Group();
 
@@ -376,8 +378,7 @@ class BenderDemo extends LitElement {
 
   newBend() {
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
-    const sigmaMax = Math.atan(this.angle);
-
+    const sigmaMax = -Math.atan(this.angle);
     const poisson = sigmaMax / 4;
     const anticlast = sigmaMax / 8;
 
@@ -413,7 +414,7 @@ class BenderDemo extends LitElement {
     const transTestBL = anticGuideBot
       .clone()
       .getTangent(0)
-      .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
+      .rotateAround(new THREE.Vector2(0, 0), Math.PI / 2 + anticlast * 3)
       .multiplyScalar(thbot + this.bh / 2);
     const transTestTL = anticGuideTop
       .clone()
@@ -524,11 +525,11 @@ class BenderDemo extends LitElement {
  */
 
     this.graphMat[0].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(-1, sigmaMax, 0), 0.001),
+      new THREE.Plane(new THREE.Vector3(-1, -sigmaMax, 0), 0.001),
       new THREE.Plane(new THREE.Vector3(1, 0, 0)),
     ];
     this.graphMat[1].clippingPlanes = [
-      new THREE.Plane(new THREE.Vector3(1, -sigmaMax, 0), 0.001),
+      new THREE.Plane(new THREE.Vector3(1, sigmaMax, 0), 0.001),
       new THREE.Plane(new THREE.Vector3(-1, 0, 0)),
     ];
 
@@ -542,15 +543,15 @@ class BenderDemo extends LitElement {
       }
 
       this.mat0[i].clippingPlanes = [
-        new THREE.Plane(new THREE.Vector3(1, -sigmaMax, 0)),
+        new THREE.Plane(new THREE.Vector3(1, sigmaMax, 0)),
       ];
       this.mat1[i].clippingPlanes = [
-        new THREE.Plane(new THREE.Vector3(1, -sigmaMax, 0)),
+        new THREE.Plane(new THREE.Vector3(1, sigmaMax, 0)),
       ];
 
       this.pos[i].quaternion.setFromAxisAngle(
         new THREE.Vector3(0, 0, 1),
-        Math.atan(-sigmaMax)
+        Math.atan(sigmaMax)
       );
       this.pos[i].rotateY(Math.PI / 2 + i * Math.PI);
     }
