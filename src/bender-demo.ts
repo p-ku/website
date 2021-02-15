@@ -5,6 +5,7 @@ import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { threadId } from 'worker_threads';
 import {
+  ObjectLoader,
   Mesh,
   Plane,
   Vector2,
@@ -125,6 +126,7 @@ class BenderDemo extends LitElement {
   };
 
   init() {
+    const loader = new ObjectLoader();
     window.addEventListener('resize', this.handleResize);
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
@@ -654,6 +656,8 @@ const tensClip = new Plane(new Vector3(0.01, 0.1, 1)); */
     }
 
     this.graphScene.add(plotPlaneLines);
+    const json = this.graphScene.toJSON('jsontest');
+    console.log(JSON.stringify(json));
     this.loading = false;
     this.newBend();
   }
