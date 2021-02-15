@@ -507,11 +507,11 @@ class BenderDemo extends LitElement {
       /*     this.graphScene.add(clipObjects[0], clipObjects[1]);
        */
       const compClip = [
-        new Plane(new Vector3(-1, -sigmaMax, 0), 0.001),
+        new Plane(new Vector3(-1, -sigmaMax * 3.5, 0), 0.001),
         new Plane(new Vector3(1, 0, 0)),
       ];
       const tensClip = [
-        new Plane(new Vector3(1, sigmaMax, 0), 0.001),
+        new Plane(new Vector3(1, sigmaMax * 3.5, 0), 0.001),
         new Plane(new Vector3(-1, 0, 0)),
       ];
 
@@ -569,33 +569,38 @@ const tensClip = new Plane(new Vector3(0.01, 0.1, 1)); */
         visible: false,
       });
 
-      const compPos = new Mesh(new PlaneGeometry(4, 4), compPlaneMat);
-      const tensPos = new Mesh(new PlaneGeometry(4, 4), tensPlaneMat);
-
-      compPos.onAfterRender = function (renderer) {
-        renderer.clearStencil();
-      };
-      tensPos.onAfterRender = function (renderer) {
-        renderer.clearStencil();
-      };
-
-      compPos.renderOrder = 1.1;
-      tensPos.renderOrder = 2.1;
+      let compPos = new Mesh();
+      let tensPos = new Mesh();
 
       /*       compPosGroup.add(compPos);
       tensPosGroup.add(tensPos); */
 
-      const compMesh = new Mesh(compGeo, compMat);
-      compMesh.renderOrder = 6;
-      const tensMesh = new Mesh(tensGeo, tensMat);
-      tensMesh.renderOrder = 7;
+      let compMesh = new Mesh();
+      let tensMesh = new Mesh();
 
-      compMesh.translateX(0.001);
+      if (angle != 0) {
+        compMesh = new Mesh(compGeo, compMat);
+        compMesh.renderOrder = 6;
+        tensMesh = new Mesh(tensGeo, tensMat);
+        tensMesh.renderOrder = 7;
+        compPos = new Mesh(new PlaneGeometry(4, 4), compPlaneMat);
+        tensPos = new Mesh(new PlaneGeometry(4, 4), tensPlaneMat);
+
+        compPos.onAfterRender = function (renderer) {
+          renderer.clearStencil();
+        };
+        tensPos.onAfterRender = function (renderer) {
+          renderer.clearStencil();
+        };
+
+        compPos.renderOrder = 1.1;
+        tensPos.renderOrder = 2.1;
+      }
+      /*       compMesh.translateX(0.001);
       tensMesh.translateX(-0.001);
       compPos.translateX(0.001);
-      tensPos.translateX(
-        -0.001
-      ); /*   compClipObjects.add(compMesh);
+      tensPos.translateX(-0.001);  */
+      /*   compClipObjects.add(compMesh);
     tensClipObjects.add(tensMesh); */
 
       /*     compClipObjects.add(compStencils[0]);
@@ -606,20 +611,21 @@ const tensClip = new Plane(new Vector3(0.01, 0.1, 1)); */
       /*     this.graphScene.add(compPos, tensPos);
        */ compPos.quaternion.setFromAxisAngle(
         new Vector3(0, 0, 1),
-        Math.atan(sigmaMax)
+        Math.atan(sigmaMax * 3.5)
       );
       compPos.rotateY(Math.PI / 2);
       tensPos.quaternion.setFromAxisAngle(
         new Vector3(0, 0, 1),
-        Math.atan(sigmaMax)
+        Math.atan(sigmaMax * 3.5)
       );
-      tensPos.rotateY(-Math.PI / 2);
-      /*      beamMeshGroup.add(beamMesh);
+      tensPos.rotateY(
+        -Math.PI / 2
+      ); /*      beamMeshGroup.add(beamMesh);
     compMeshGroup.add(compMesh);
     tensMeshGroup.add(tensMesh);
     beamLineGroup.add(beamLine);  */
-
-      beamLines[index] = beamLine;
+      /*       if (angle == 0) {compMesh.tr}
+       */ beamLines[index] = beamLine;
       beamMeshes[index] = beamMesh;
       sectionLines[index] = sectionLine;
       compMeshes[index] = compMesh;
