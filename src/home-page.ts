@@ -3,6 +3,8 @@ import { LitElement, html, css, property } from 'lit-element';
 class MainPage extends LitElement {
   @property({ type: String }) lang = '';
   @property({ type: Boolean }) english = true;
+  @property({ type: Boolean }) fadein = false;
+
   @property({ attribute: false }) enintro = html` <p>
       Six years into my first attempt at a career, I've realized three
       things:<br /><br />1. I'm not making things.<br />2. I want to make
@@ -23,7 +25,20 @@ class MainPage extends LitElement {
       this.english = true;
       this.lang = '';
     }
+    if (localStorage.getItem('hasCodeRunBefore') != null) {
+      this.fadein = true;
+    }
   }
+  onlod() {
+    if (localStorage.getItem('hasCodeRunBefore') === null) {
+      this.fadein = false;
+      this.fadein = true;
+
+      console.log('wow');
+      localStorage.setItem('hasCodeRunBefore', 'true');
+    }
+  }
+
   static styles = css`
     :host {
       display: flex;
@@ -140,6 +155,13 @@ class MainPage extends LitElement {
       height: 100%;
       width: 100%;
     }
+    .firstload {
+      opacity: 0;
+    }
+    .fadein {
+      opacity: 1;
+      transition: opacity 1s;
+    }
     /*     #in {
       position: absolute;
       top: 8px;
@@ -189,15 +211,16 @@ ${
   </div>
           <div id="imgcontainer">
             <img
+            class=${this.fadein ? 'fadein firstload' : 'firstload'}
               src="headshot-4k.jpg"
               srcset="
                 headshot-HD.jpg   720w,
                 headshot-FHD.jpg 1080w,
                 headshot-QHD.jpg 1440w,
                 headshot-4k.jpg  2160w,
-                headshot-4k.jpg
-              "
+                headshot-4k.jpg"
               sizes="96vw"
+              @loadend=${this.onlod}
             />
           </div>
         </div>
