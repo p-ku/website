@@ -45,74 +45,39 @@ export class BenderDemo extends LitElement {
 
   @property({ attribute: false }) loading = true;
   @property({ attribute: false }) steps = 20;
-  @property({ attribute: false }) angle = 50;
+  @property({ attribute: false }) angle = this.steps / 2;
   @property({ attribute: false }) previous = 0;
-  @property({ attribute: false }) meshLoaded: boolean[] = new Array(
-    this.steps + 1
-  ).fill(false);
-
-  @property({ attribute: false }) meshes: any = new Array(11).fill(0);
-  @property({ attribute: false }) bendGroup: Group;
-  @property({ attribute: false }) graphGroup: Group;
-
+  @property({ attribute: false }) meshLoaded: boolean[] = [];
   @property({ attribute: false }) bh = 1;
   @property({ attribute: false }) t = 0.2;
 
-  @property({ attribute: false }) section = new Shape([
-    new Vector2(-this.bh / 2, -this.bh / 2),
-    new Vector2(this.bh / 2, -this.bh / 2),
-    new Vector2(this.bh / 2, (2 * this.t) / 2 - this.bh / 2),
-    new Vector2(this.t / 2, (2 * this.t) / 2 - this.bh / 2),
-    new Vector2(this.t / 2, this.bh / 2 - (2 * this.t) / 2),
-    new Vector2(this.bh / 2, this.bh / 2 - (2 * this.t) / 2),
-    new Vector2(this.bh / 2, this.bh / 2),
-    new Vector2(-this.bh / 2, this.bh / 2),
-    new Vector2(-this.bh / 2, this.bh / 2 - (2 * this.t) / 2),
-    new Vector2(-this.t / 2, this.bh / 2 - (2 * this.t) / 2),
-    new Vector2(-this.t / 2, (2 * this.t) / 2 - this.bh / 2),
-    new Vector2(-this.bh / 2, (2 * this.t) / 2 - this.bh / 2),
-    new Vector2(-this.bh / 2, -this.bh / 2),
-  ]);
+  @property({ attribute: false }) beamLines: LineSegments[] = [];
+  @property({ attribute: false }) beamMeshes: Mesh[] = [];
+  @property({ attribute: false }) sectionLines: LineSegments[] = [];
+  @property({ attribute: false }) compMeshes: Mesh[] = [];
+  @property({ attribute: false }) compPoss: Mesh[] = [];
+  @property({ attribute: false }) compStencils1: Mesh[] = [];
+  @property({ attribute: false }) compStencils2: Mesh[] = [];
+  @property({ attribute: false }) tensMeshes: Mesh[] = [];
+  @property({ attribute: false }) tensPoss: Mesh[] = [];
+  @property({ attribute: false }) tensStencils1: Mesh[] = [];
+  @property({ attribute: false }) tensStencils2: Mesh[] = [];
 
-  @property({ attribute: false }) beamLines: LineSegments<
-    EdgesGeometry,
-    LineBasicMaterial
-  >[] = [];
-
-  @property({ attribute: false }) beamMeshes: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(0);
-  @property({ attribute: false }) sectionLines: LineSegments<
-    EdgesGeometry,
-    LineBasicMaterial
-  >[] = [];
-  @property({ attribute: false }) compMeshes: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) compPoss: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) compStencils1: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) compStencils2: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) tensMeshes: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) tensPoss: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) tensStencils1: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
-  @property({ attribute: false }) tensStencils2: Mesh[] = new Array(
-    this.steps + 1
-  ).fill(new Mesh());
+  @property({ attribute: false }) meshes: any = [
+    this.beamMeshes,
+    this.beamLines,
+    this.sectionLines,
+    this.compMeshes,
+    this.compStencils1,
+    this.compStencils2,
+    this.compPoss,
+    this.tensMeshes,
+    this.tensStencils1,
+    this.tensStencils2,
+    this.tensPoss,
+  ];
 
   @property({ attribute: false }) graphBeamLine = new LineSegments();
-  @property({ attribute: false }) graphBeamMesh = new Mesh();
   @property({ attribute: false }) bendScene = new Scene();
   @property({ attribute: false }) graphScene = new Scene();
   @property({ attribute: false }) camera = new PerspectiveCamera(
@@ -144,7 +109,6 @@ export class BenderDemo extends LitElement {
 
   firstUpdated() {
     this.init();
-    this.display();
     this.animator();
   }
 
@@ -212,10 +176,8 @@ export class BenderDemo extends LitElement {
 
     this.graphScene.add(plotPlaneLines);
 
-    this.newBend();
     this.loading = false;
-  }
-  display() {
+
     window.addEventListener('resize', this.handleResize);
 
     this.shadowRoot
@@ -224,7 +186,6 @@ export class BenderDemo extends LitElement {
     this.shadowRoot
       .getElementById('graph')
       .appendChild(this.renderer2.domElement);
-
     this.newBend();
   }
 
@@ -288,20 +249,6 @@ export class BenderDemo extends LitElement {
         this.meshes[index][this.previous].material.visible = false;
       }
     } else {
-      this.meshes = [
-        this.beamMeshes,
-        this.beamLines,
-        this.sectionLines,
-        this.compMeshes,
-        this.compStencils1,
-        this.compStencils2,
-        this.compPoss,
-        this.tensMeshes,
-        this.tensStencils1,
-        this.tensStencils2,
-        this.tensPoss,
-      ];
-
       const beamLength = 2;
 
       let sign = 1;
@@ -489,9 +436,10 @@ export class BenderDemo extends LitElement {
       sectionEdge.dispose();
       sectionLine.rotateY(-Math.PI / 2);
       sectionGeo.rotateY(-Math.PI / 2);
-
+      const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
       const bentGeo = new ExtrudeGeometry(section, {
-        steps: 15,
+        steps: extrudeSteps,
+        curveSegments: extrudeSteps,
         bevelEnabled: false,
         extrudePath: curve,
       });
@@ -622,9 +570,6 @@ export class BenderDemo extends LitElement {
       let compPos = new Mesh();
       let tensPos = new Mesh();
 
-      /*       compPosGroup.add(compPos);
-      tensPosGroup.add(tensPos); */
-
       let compMesh = new Mesh();
       let tensMesh = new Mesh();
 
@@ -671,11 +616,11 @@ export class BenderDemo extends LitElement {
 
       this.meshLoaded[this.angle] = true;
 
-      const bendGroup = new Group();
-      bendGroup.add(this.beamLines[this.angle], this.beamMeshes[this.angle]);
-
-      const graphGroup = new Group();
-      graphGroup.add(
+      this.bendScene.add(
+        this.beamLines[this.angle],
+        this.beamMeshes[this.angle]
+      );
+      this.graphScene.add(
         this.sectionLines[this.angle],
         this.compMeshes[this.angle],
         this.compPoss[this.angle],
@@ -686,8 +631,6 @@ export class BenderDemo extends LitElement {
         this.tensStencils1[this.angle],
         this.tensStencils2[this.angle]
       );
-      this.bendScene.add(bendGroup);
-      this.graphScene.add(graphGroup);
       beamMesh.geometry.dispose();
     }
     if (this.angle != this.steps / 2) {
@@ -699,7 +642,6 @@ export class BenderDemo extends LitElement {
         this.meshes[index][this.angle].material.visible = true;
       }
     }
-
     this.previous = this.angle;
   }
 

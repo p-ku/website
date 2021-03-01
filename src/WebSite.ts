@@ -7,7 +7,6 @@ export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
-  @property({ type: String }) buttonDec = 'en';
   @property({ type: Boolean }) isOpen = false;
 
   constructor() {
@@ -598,7 +597,7 @@ export class WebSite extends LitElement {
                     this.switchLanguage();
                   }}
                   ><div id="jpencircle" class=${
-                    this.buttonDec
+                    this.english ? 'en' : 'jp'
                   }><div id="risingsun"><span id="jpabb">JP</span><span class='linktext'>日</span></div></div></a
                 >
               </div>
