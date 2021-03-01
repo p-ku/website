@@ -16,23 +16,17 @@ class MainPage extends LitElement {
     I want to make things "
   </p>`;
 
-  firstUpdated() {
-    if (localStorage.getItem('hasHomePageRunBefore') != null) {
-      this.loaded = true;
-    }
-  }
-
   changeLang() {
     this.english ? (this.english = false) : (this.english = true);
     console.log('working?');
   }
-  async firstLoad() {
-    if (localStorage.getItem('hasHomePageRunBefore') === null) {
+  initImage() {
+    if (this.loaded == true) {
+      console.log('loaded');
+    } else {
+      console.log('not loaded');
       this.loaded = false;
       this.loaded = true;
-
-      console.log('wow');
-      localStorage.setItem('hasHomePageRunBefore', 'true');
     }
   }
 
@@ -131,13 +125,12 @@ class MainPage extends LitElement {
     img {
       height: 100%;
       width: 100%;
-    }
-    .firstload {
       opacity: 0;
     }
+
     .fadein {
       opacity: 1;
-      transition: opacity 1s;
+      transition: opacity 2s;
     }
 
     @media screen and (max-width: 1080px) {
@@ -184,7 +177,7 @@ ${
   </div>
           <div id="imgcontainer">
             <img
-            class=${this.loaded ? 'fadein firstLoad' : 'firstLoad'}
+            class=${this.loaded ? 'fadein' : ''}
               src="headshot-4k.jpg"
               srcset="
                 headshot-HD.jpg   720w,
@@ -193,7 +186,9 @@ ${
                 headshot-4k.jpg  2160w,
                 headshot-4k.jpg"
               sizes="96vw"
-              @load=${this.firstLoad}
+              @loadend=${() => {
+                this.initImage();
+              }}
             />
           </div>
         </div>

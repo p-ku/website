@@ -7,6 +7,8 @@ export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
+  @property({ type: Boolean }) loaded = false;
+
   @property({ type: Boolean }) isOpen = false;
 
   constructor() {
@@ -15,6 +17,7 @@ export class WebSite extends LitElement {
   }
 
   switchPage(destination = '/') {
+    this.loaded = true;
     this.currentPage = this.lang.concat(destination);
   }
   switchLanguage() {
@@ -504,7 +507,6 @@ export class WebSite extends LitElement {
             <div id="burgerdemo">
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                href=${this.lang.concat('/bender')}
                 @click=${() => this.switchPage('/bender')}
                 >${
                   this.english ? 'demo' : 'デモ'
@@ -513,9 +515,7 @@ export class WebSite extends LitElement {
 
             </div>                      
             <div id="burgerlink">
-              <a class="burgerspace"            href=${this.lang.concat(
-                '/contact'
-              )}
+              <a class="burgerspace"           
                 @click=${() => this.switchPage('/contact')}>
 <span class=${
       this.currentPage.endsWith('contact') ? 'burgertext chosen' : 'burgertext'
@@ -617,7 +617,10 @@ export class WebSite extends LitElement {
                  ? html`<bender-demo ?english=${this.english}></bender-demo>`
                  : this.currentPage.endsWith('contact')
                  ? html`<contact-form ?english=${this.english}></contact-form>`
-                 : html`<home-page ?english=${this.english}></home-page>`
+                 : html`<home-page
+                     ?loaded=${this.loaded}
+                     ?english=${this.english}
+                   ></home-page>`
              }
 
         </div>
