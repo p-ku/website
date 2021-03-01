@@ -1,9 +1,9 @@
-import { LitElement, html, css, property } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element'; // https://lit-element.polymer-project.org/re
 
 class MainPage extends LitElement {
-  @property({ type: String }) lang = '';
-  @property({ type: Boolean }) english = true;
-  @property({ type: Boolean }) fadein = false;
+  /*   @property({ type: String }) lang = '';
+   */ @property({ type: Boolean }) english: boolean;
+  @property({ type: Boolean }) loaded = false;
 
   @property({ attribute: false }) enintro = html` <p>
       Six years into my first attempt at a career, I've realized three
@@ -18,24 +18,29 @@ class MainPage extends LitElement {
   </p>`;
 
   firstUpdated() {
-    if (location.pathname.includes('jp')) {
+    /*     if (location.pathname.includes('jp')) {
       this.english = false;
       this.lang = '/jp';
     } else {
       this.english = true;
       this.lang = '';
-    }
-    if (localStorage.getItem('hasCodeRunBefore') != null) {
-      this.fadein = true;
+    } */
+    if (localStorage.getItem('hasHomePageRunBefore') != null) {
+      this.loaded = true;
     }
   }
-  onlod() {
-    if (localStorage.getItem('hasCodeRunBefore') === null) {
-      this.fadein = false;
-      this.fadein = true;
+
+  changeLang() {
+    this.english ? (this.english = false) : (this.english = true);
+    console.log('working?');
+  }
+  async firstLoad() {
+    if (localStorage.getItem('hasHomePageRunBefore') === null) {
+      this.loaded = false;
+      this.loaded = true;
 
       console.log('wow');
-      localStorage.setItem('hasCodeRunBefore', 'true');
+      localStorage.setItem('hasHomePageRunBefore', 'true');
     }
   }
 
@@ -182,6 +187,7 @@ class MainPage extends LitElement {
 
   render() {
     return html`
+    <slot>
       <div id="topcontainer">
         <div id="toptext">
         <h1>${this.english ? 'Eric Peek' : 'エリック・ピーク'}</h1>
@@ -211,7 +217,7 @@ ${
   </div>
           <div id="imgcontainer">
             <img
-            class=${this.fadein ? 'fadein firstload' : 'firstload'}
+            class=${this.loaded ? 'fadein firstLoad' : 'firstLoad'}
               src="headshot-4k.jpg"
               srcset="
                 headshot-HD.jpg   720w,
@@ -220,11 +226,12 @@ ${
                 headshot-4k.jpg  2160w,
                 headshot-4k.jpg"
               sizes="96vw"
-              @loadend=${this.onlod}
+              @load=${this.firstLoad}
             />
           </div>
         </div>
       </div>
+      </slot>
     `;
   }
 }

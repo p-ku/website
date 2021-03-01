@@ -1,9 +1,9 @@
-import { css, html, LitElement, property } from 'lit-element';
-import * as openpgp from 'openpgp';
+import { css, html, LitElement, property } from 'lit-element'; // https://lit-element.polymer-project.org/
+import * as openpgp from 'openpgp'; // https://openpgpjs.org/
 
 class ContactForm extends LitElement {
   @property({ type: String }) lang = '';
-  @property({ type: Boolean }) english = true;
+  @property({ type: Boolean }) english: boolean;
   @property({ type: Object }) saved = this.messageInput;
   @property({ type: Boolean }) tipOpen = false;
 
@@ -13,27 +13,9 @@ class ContactForm extends LitElement {
   jptooltip = html`<a href="https://ja.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">&#65328;&#65319;&#65328;</a>で暗号化</span>`;
 
   firstUpdated() {
-    if (location.pathname.includes('jp')) {
-      this.english = false;
-      this.lang = '/jp';
-    } else {
-      this.english = true;
-      this.lang = '';
-    }
     this.shadowRoot
       .getElementById('messageInput')
       .focus({ preventScroll: true });
-    /* 
-    const contactoutlet = this.shadowRoot?.getElementById('contactoutlet');
-    const contactrouter = new Router(contactoutlet);
-    contactrouter.setRoutes([
-      { path: '/contact/success', component: 'contact-form' },
-      { path: '/jp/contact', component: 'contact-form' },
-      {
-        path: '(.*)',
-        redirect: '/',
-      },
-    ]); */
   }
 
   async encryptor() {
@@ -243,23 +225,8 @@ TComQBkFSpoM
       margin-top: 0.5em;
       font-size: 18px;
       line-height: 150%;
-      /*       position: absolute;
-      bottom: 5vw; */
-    }
-    /*     #tips:hover .tooltiptext {
-      visibility: visible;
     }
 
-    .tooltip .tooltiptext::after {
-      content: ' ';
-      position: absolute;
-      top: 100%;
-      left: 5px;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: var(--navbar) transparent transparent var(--navbar);
-    } */
     .closed {
       display: none;
     }

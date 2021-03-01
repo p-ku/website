@@ -1,0 +1,136 @@
+/* 
+   Written in 2020 by Write.as
+
+   To the extent possible under law, the author(s) have dedicated all 
+   copyright and related and neighboring rights to this software to the 
+   public domain worldwide. This software is distributed without any 
+   warranty.
+
+   You should have received a copy of the CC0 Public Domain Dedication 
+   along with this software. If not, see 
+   http://creativecommons.org/publicdomain/zero/1.0
+*/
+
+body {
+  color: #321e00;
+  background: #fffde5;
+}
+header p.description,
+body#collection article.norm,
+header p.description body#collection #wrapper h2 + time,
+body#post article time.dt-published,
+body#post article h2#title.dated,
+body#post article h2,
+body#collection #wrapper h2,
+body#post article p,
+#collection article p,
+#subpage article p,
+body .post-title a:link,
+a:visited,
+#collection .post-title a,
+#collection,
+body a,
+body header a,
+body footer nav,
+body footer a.home:link,
+body footer a.home:visited,
+body footer a.home:hover,
+body #official-writing,
+body #wrapper,
+#post article time.dt-published,
+#subpage article time.dt-published,
+#official-writing ul.collections li a.create,
+#wrapper ul.collections li a.create,
+#me #official-writing a:link,
+#me #official-writing a:visited {
+  color: #321e00;
+  font-family: 'Hiragino Kaku Gothic ProN', YuGothic, 'Yu Gothic', Meiryo,
+    'MS Gothic', HiraKakuProN-W3, TakaoExGothic, 'MotoyaLCedar',
+    'Droid Sans Japanese', sans-serif;
+}
+body#post header {
+  opacity: 1;
+}
+
+hr {
+  background-color: #321e00;
+}
+
+#collection pre {
+  background: #fffde8;
+  color: #321e00;
+}
+body header a:hover,
+body a:hover {
+  text-decoration: underline;
+}
+
+body a,
+body a:visited {
+  color: #7a3700;
+}
+
+input[type='email'] {
+  background-color: #fffde8cc;
+  color: #321e00;
+  border: 1px solid #321e00;
+  font-family: 'Hiragino Kaku Gothic ProN', YuGothic, 'Yu Gothic', Meiryo,
+    'MS Gothic', HiraKakuProN-W3, TakaoExGothic, 'MotoyaLCedar',
+    'Droid Sans Japanese', sans-serif;
+}
+
+#manage ul ul li img {
+  filter: invert(1);
+}
+a.btn.cta,
+a.btn.submit,
+a.btn[type='submit'],
+button.cta,
+button.submit,
+button[type='submit'],
+input.cta,
+input.submit,
+input[type='submit'],
+select.inputform.cta,
+select.inputform.submit,
+select.inputform[type='submit'],
+textarea.inputform.cta,
+textarea.inputform.submit,
+textarea.inputform[type='submit'] {
+  background-color: #321e00;
+  color: #fffbd1;
+  border: 1px solid #321e00;
+  font-family: 'Hiragino Kaku Gothic ProN', YuGothic, 'Yu Gothic', Meiryo,
+    'MS Gothic', HiraKakuProN-W3, TakaoExGothic, 'MotoyaLCedar',
+    'Droid Sans Japanese', sans-serif;
+}
+
+a.btn.cta:hover,
+a.btn.submit:hover,
+a.btn[type='submit']:hover,
+button.cta:hover,
+button.submit:hover,
+button[type='submit']:hover,
+input.cta:hover,
+input.submit:hover,
+input[type='submit']:hover,
+select.inputform.cta:hover,
+select.inputform.submit:hover,
+select.inputform[type='submit']:hover,
+textarea.inputform.cta:hover,
+textarea.inputform.submit:hover,
+textarea.inputform[type='submit']:hover {
+  background-color: #321e00;
+  color: #ffc342;
+  font-family: 'Hiragino Kaku Gothic ProN', YuGothic, 'Yu Gothic', Meiryo,
+    'MS Gothic', HiraKakuProN-W3, TakaoExGothic, 'MotoyaLCedar',
+    'Droid Sans Japanese', sans-serif;
+}
+#post article code,
+body #post code,
+body#collection code,
+body#subpage code {
+  background-color: #fffbd1;
+  color: #321e00;
+  border: 1px solid #ffc342;
+}

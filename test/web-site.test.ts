@@ -1,4 +1,4 @@
-import { html, fixture, expect } from '@open-wc/testing';
+/* import { html, fixture, expect } from '@open-wc/testing';
 
 import { WebSite } from '../src/WebSite.js';
 import '../src/web-site.js';
@@ -19,3 +19,4 @@ describe('WebSite', () => {
     await expect(element).shadowDom.to.be.accessible();
   });
 });
+ */

@@ -1,8 +1,7 @@
-import { LitElement, html, css, property } from 'lit-element';
 import './home-page.js';
 import './bender-demo.js';
 import './contact-form.js';
-import { Router } from '@vaadin/router';
+import { LitElement, html, css, property } from 'lit-element'; // https://lit-element.polymer-project.org/
 
 export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
@@ -14,41 +13,17 @@ export class WebSite extends LitElement {
   constructor() {
     super();
     this.currentPage = location.pathname.replace('https://p-ku.com', '');
-    if (this.currentPage.includes('jp')) {
-      this.english = false;
-      this.lang = '/jp';
-      this.buttonDec = 'jp';
-    } else {
-      this.english = true;
-      this.lang = '';
-      this.buttonDec = 'en';
-    }
   }
 
   firstUpdated() {
     const outlet = this.shadowRoot?.getElementById('outlet');
-    const router = new Router(outlet);
-    router.setRoutes([
-      { path: '/', component: 'home-page' },
-      { path: '/crypto', component: 'crypto-demo' },
-      { path: '/bender', component: 'bender-demo' },
-      { path: '/contact', component: 'contact-form' },
-      { path: '/jp/', component: 'home-page' },
-      { path: '/jp/crypto', component: 'crypto-demo' },
-      { path: '/jp/bender', component: 'bender-demo' },
-      { path: '/jp/contact', component: 'contact-form' },
-      {
-        path: '(.*)',
-        redirect: '/',
-      },
-    ]);
   }
-
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
   }
   switchLanguage() {
     this.english = !this.english;
+
     if (this.currentPage.includes('jp')) {
       this.currentPage = this.currentPage.replace('/jp/', '/');
       this.lang = '';
@@ -58,7 +33,6 @@ export class WebSite extends LitElement {
       this.lang = '/jp';
       this.buttonDec = 'jp jpen';
     }
-    return;
   }
 
   static styles = css`
@@ -163,7 +137,7 @@ export class WebSite extends LitElement {
     #demobar {
       display: flex;
       color: #dfabf4;
-      border: solid #dfabf4 0.15em;
+      border: solid #dfabf4 max(4px, 0.15em);
       border-bottom: none;
       border-radius: 1em 1em 0 0;
       height: 55%;
@@ -185,13 +159,13 @@ export class WebSite extends LitElement {
       color: #dfabf4;
       width: 100%;
       min-width: max-content;
-      border-bottom: solid #00000000 0.15em;
-      border-top: solid #00000000 0.15em;
+      border-bottom: solid #00000000 max(4px, 0.15em);
+      border-top: solid #00000000 max(4px, 0.15em);
     }
 
     #demobar a.chosen {
       color: #fffde8;
-      border-bottom: dashed #dfabf4 0.15em;
+      border-bottom: dashed #dfabf4 max(4px, 0.15em);
     }
 
     .linkspace {
@@ -547,7 +521,8 @@ export class WebSite extends LitElement {
 
   render() {
     return html`
-      <div id="navbar"  >
+
+      <div id="navbar">
         <div id="burger" @click=${() => {
           this.isOpen = !this.isOpen;
         }}>≡</div>
@@ -600,7 +575,6 @@ export class WebSite extends LitElement {
 
             <a
               class="home"
-              href=${this.lang.concat('/')}
               @click=${() => {
                 this.switchPage('/');
               }}
@@ -611,7 +585,6 @@ export class WebSite extends LitElement {
             <div id="demobar">
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                href=${this.lang.concat('/bender')}
                 @click=${() => this.switchPage('/bender')}
                 >${this.english ? 'demo' : 'デモ'}</a
               >
@@ -638,7 +611,6 @@ export class WebSite extends LitElement {
                 class=${
                   this.currentPage.endsWith('contact') ? 'mail chosen' : 'mail'
                 }
-                href=${this.lang.concat('/contact')}
                 @click=${() => {
                   this.switchPage('/contact');
                   if (this.isOpen) {
@@ -652,7 +624,6 @@ export class WebSite extends LitElement {
               <div class="linkspace">
                 <a
                 id="jpen"
-                  href=${this.currentPage}
                   @click=${() => {
                     this.switchLanguage();
                   }}
@@ -671,8 +642,18 @@ export class WebSite extends LitElement {
               this.isOpen = !this.isOpen;
             }
           }}
-        ></div>
+        >
+             ${
+               this.currentPage.endsWith('bender')
+                 ? html`<bender-demo ?english=${this.english}></bender-demo>`
+                 : this.currentPage.endsWith('contact')
+                 ? html`<contact-form ?english=${this.english}></contact-form>`
+                 : html`<home-page ?english=${this.english}></home-page>`
+             }
+
+        </div>
       </div>
+
     `;
   }
 }
