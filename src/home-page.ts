@@ -1,8 +1,7 @@
 import { LitElement, html, css, property } from 'lit-element'; // https://lit-element.polymer-project.org/re
 
 class MainPage extends LitElement {
-  /*   @property({ type: String }) lang = '';
-   */ @property({ type: Boolean }) english: boolean;
+  @property({ type: Boolean }) english: boolean;
   @property({ type: Boolean }) loaded = false;
 
   @property({ attribute: false }) enintro = html` <p>
@@ -18,13 +17,6 @@ class MainPage extends LitElement {
   </p>`;
 
   firstUpdated() {
-    /*     if (location.pathname.includes('jp')) {
-      this.english = false;
-      this.lang = '/jp';
-    } else {
-      this.english = true;
-      this.lang = '';
-    } */
     if (localStorage.getItem('hasHomePageRunBefore') != null) {
       this.loaded = true;
     }
@@ -54,26 +46,8 @@ class MainPage extends LitElement {
       color: #321e00;
       align-content: center;
       align-items: center;
-      /*       max-height: calc(100vh - max(64px, 2.5rem));
- */ /*       animation: fade-in-animation 0.5s ease-out;
- */
-      /*       background: url(headshot.jpg) no-repeat center bottom fixed;
-      -webkit-background-size: 100vmin;
-      -moz-background-size: 100vmin;
-      -o-background-size: 100vmin;
-      background-size: 100vmin; */
     }
-    /* 
-    #subhost {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 960px;
-      min-height: calc(100vh - 2.5rem);
-      color: #321e00;
-      margin: 0 auto;
-    } */
+
     @keyframes fade-in-animation {
       from {
         opacity: 0;
@@ -144,9 +118,7 @@ class MainPage extends LitElement {
     #bottomtext p {
       text-align: left;
     }
-    /*     #toptext {
-      align-self: flex-start;
-    } */
+
     #imgcontainer {
       position: relative;
       justify-self: center;
@@ -167,11 +139,6 @@ class MainPage extends LitElement {
       opacity: 1;
       transition: opacity 1s;
     }
-    /*     #in {
-      position: absolute;
-      top: 8px;
-      left: 16px;
-    } */
 
     @media screen and (max-width: 1080px) {
       h1,

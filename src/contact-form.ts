@@ -118,8 +118,6 @@ TComQBkFSpoM
       background: rgba(255, 253, 232, 0.8);
       font-size: 21px;
       flex: 1 1 30vh;
-      /*       box-shadow: 0px 0px 5px 1px inset;
- */
     }
 
     #buttonfoot {

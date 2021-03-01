@@ -41,14 +41,8 @@ import {
 } from 'three';
 
 export class BenderDemo extends LitElement {
-  /*   @property({ type: String }) lang = '';
-   */
   @property({ type: Boolean }) english: boolean;
-  /*   @property({ type: Group }) graphGroup: Group[] = [];
-  @property({ type: Group }) bendGroup: Group[] = []; */
 
-  /*   @property({ type: Object }) location = router.location;
-   */
   @property({ attribute: false }) loading = true;
   @property({ attribute: false }) steps = 20;
   @property({ attribute: false }) angle = 50;
@@ -58,8 +52,7 @@ export class BenderDemo extends LitElement {
   ).fill(false);
 
   @property({ attribute: false }) meshes: any = new Array(11).fill(0);
-  /*   @property({ attribute: false }) groups: any = [];
-   */ @property({ attribute: false }) bendGroup: Group;
+  @property({ attribute: false }) bendGroup: Group;
   @property({ attribute: false }) graphGroup: Group;
 
   @property({ attribute: false }) bh = 1;
@@ -85,19 +78,6 @@ export class BenderDemo extends LitElement {
     EdgesGeometry,
     LineBasicMaterial
   >[] = [];
-  /*   @property({ attribute: false }) beamMeshes: Mesh[] = [];
-  @property({ attribute: false }) sectionLines: LineSegments<
-    EdgesGeometry,
-    LineBasicMaterial
-  >[] = [];
-  @property({ attribute: false }) compMeshes: Mesh[] = [];
-  @property({ attribute: false }) compPoss: Mesh[] = [];
-  @property({ attribute: false }) compStencils1: Mesh[] = [];
-  @property({ attribute: false }) compStencils2: Mesh[] = [];
-  @property({ attribute: false }) tensMeshes: Mesh[] = [];
-  @property({ attribute: false }) tensPoss: Mesh[] = [];
-  @property({ attribute: false }) tensStencils1: Mesh[] = [];
-  @property({ attribute: false }) tensStencils2: Mesh[] = []; */
 
   @property({ attribute: false }) beamMeshes: Mesh[] = new Array(
     this.steps + 1
@@ -162,22 +142,8 @@ export class BenderDemo extends LitElement {
     super();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-  }
   firstUpdated() {
-    /*     if (location.pathname.includes('jp')) {
-      this.english = false;
-      this.lang = '/jp';
-    } else {
-      this.english = true;
-      this.lang = '';
-    } */
-    /*     const myState = new State();
-     */
-
-    /*     myState.englishy = false;
-     */ this.init();
+    this.init();
     this.display();
     this.animator();
   }
@@ -211,8 +177,7 @@ export class BenderDemo extends LitElement {
     this.camera.aspect = 3 / 2.5;
     this.camera.updateProjectionMatrix();
     this.camera.position.set(2, 2, 3.2);
-    /*     this.camera.position.set(3, 0, 0);
-     */
+
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.renderer2.localClippingEnabled = true;
     this.renderer.setSize(window.innerHeight / 2.55, window.innerHeight / 3.06);
@@ -244,28 +209,6 @@ export class BenderDemo extends LitElement {
       new LineBasicMaterial({ color: 0x000000 })
     );
     plotPlaneEdge.rotateY(Math.PI / 2);
-
-    const pos = [
-      /* new Mesh(), new Mesh() */
-    ];
-    const compPos = new Mesh();
-    const tensPos = new Mesh();
-
-    const beamMeshGroup = new Group();
-    const beamLineGroup = new Group();
-    const compMeshGroup = new Group();
-    const tensMeshGroup = new Group();
-    const compLineGroup = new Group();
-    const tensLineGroup = new Group();
-
-    const tensMeshes: Mesh[] = [];
-    const compLines: Mesh[] = [];
-    const tensLines: Mesh[] = [];
-
-    /* this.groups = [beamMeshGroup,
-beamLineGroup,
-compMeshGroup,
-tensMeshGroup] */
 
     this.graphScene.add(plotPlaneLines);
 
@@ -345,18 +288,6 @@ tensMeshGroup] */
         this.meshes[index][this.previous].material.visible = false;
       }
     } else {
-      const beamMeshes: Mesh[] = [];
-      const beamLines: LineSegments[] = [];
-      const sectionLines: LineSegments[] = [];
-      const compMeshes: Mesh[] = [];
-      const compPoss: Mesh[] = [];
-      const compStencils1: Mesh[] = [];
-      const compStencils2: Mesh[] = [];
-      const tensMeshes: Mesh[] = [];
-      const tensPoss: Mesh[] = [];
-      const tensStencils1: Mesh[] = [];
-      const tensStencils2: Mesh[] = [];
-
       this.meshes = [
         this.beamMeshes,
         this.beamLines,
@@ -372,8 +303,7 @@ tensMeshGroup] */
       ];
 
       const beamLength = 2;
-      /*       const bendGroup = new Group();
-      const graphGroup = new Group(); */
+
       let sign = 1;
 
       const angle = ((this.angle - this.steps / 2) * 1) / this.steps;
@@ -543,11 +473,6 @@ tensMeshGroup] */
       }
       //bot half
       section.lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
-      const testy = new QuadraticBezierCurve(
-        new Vector2(-tbot / 2, thbot),
-        new Vector2(rayGuideBot.x, rayGuideBot.y),
-        new Vector2(transTestBL.x, transTestBL.y)
-      );
 
       const curve = new QuadraticBezierCurve3(
         new Vector3(-beamLength / 2, 0, 0),
@@ -555,11 +480,6 @@ tensMeshGroup] */
         new Vector3(beamLength / 2, 0, 0)
       );
 
-      const curve2 = new QuadraticBezierCurve3(
-        new Vector3(-0.001 / 2, 0, 0),
-        new Vector3(0, 0, 0),
-        new Vector3(0.001, 0, 0)
-      );
       const sectionGeo = new ShapeGeometry(section);
       const sectionEdge = new EdgesGeometry(sectionGeo);
       const sectionLine = new LineSegments(
@@ -626,9 +546,6 @@ tensMeshGroup] */
       beamLine.geometry.translate(0, -anticlast * 3, 0);
       beamMesh.translateY(-anticlast * 3);
 
-      /*     const compPosGroup = new Group();
-    const tensPosGroup = new Group(); */
-
       const compGeo = new ExtrudeGeometry(section, {
         depth: 1,
         bevelEnabled: false,
@@ -640,11 +557,7 @@ tensMeshGroup] */
       compGeo.rotateY(Math.PI / 2);
       tensGeo.rotateY(Math.PI / 2);
       tensGeo.translate(-1, 0, 0);
-      /*     const compClipObjects = new Group();
-    const tensClipObjects = new Group(); */
 
-      /*     this.graphScene.add(clipObjects[0], clipObjects[1]);
-       */
       const compClip = [
         new Plane(new Vector3(-1, -sigmaMax * 3.5, 0), 0.001),
         new Plane(new Vector3(1, 0, 0)),
@@ -654,8 +567,6 @@ tensMeshGroup] */
         new Plane(new Vector3(-1, 0, 0)),
       ];
 
-      /* const compClip = new Plane(new Vector3(0.1, 0.1, 0.1));
-  const tensClip = new Plane(new Vector3(0.01, 0.1, 1)); */
       const compMat = new MeshStandardMaterial({
         color: new Color(0.3, 0.67, 0.67),
         metalness: 0.1,
@@ -735,21 +646,7 @@ tensMeshGroup] */
         compPos.renderOrder = 1.1;
         tensPos.renderOrder = 2.1;
       }
-
-      /*       compMesh.translateX(0.001);
-      tensMesh.translateX(-0.001);
-      compPos.translateX(0.001);
-      tensPos.translateX(-0.001);  */
-      /*   compClipObjects.add(compMesh);
-    tensClipObjects.add(tensMesh); */
-
-      /*     compClipObjects.add(compStencils[0]);
-    tensClipObjects.add(tensStencils[0]);
-    compClipObjects.add(compStencils[1]);
-    tensClipObjects.add(tensStencils[1]); */
-
-      /*     this.graphScene.add(compPos, tensPos);
-       */ compPos.quaternion.setFromAxisAngle(
+      compPos.quaternion.setFromAxisAngle(
         new Vector3(0, 0, 1),
         Math.atan(sigmaMax * 3.5)
       );
@@ -758,14 +655,7 @@ tensMeshGroup] */
         new Vector3(0, 0, 1),
         Math.atan(sigmaMax * 3.5)
       );
-      tensPos.rotateY(
-        -Math.PI / 2
-      ); /*      beamMeshGroup.add(beamMesh);
-    compMeshGroup.add(compMesh);
-    tensMeshGroup.add(tensMesh);
-    beamLineGroup.add(beamLine);  */
-      /*       if (angle == 0) {compMesh.tr}
-       */
+      tensPos.rotateY(-Math.PI / 2);
 
       this.beamLines[this.angle] = beamLine;
       this.beamMeshes[this.angle] = beamMesh;
@@ -779,30 +669,11 @@ tensMeshGroup] */
       this.tensStencils1[this.angle] = tensStencils[0];
       this.tensStencils2[this.angle] = tensStencils[1];
 
-      /*       this.meshes[0][this.angle] = beamMesh;
-      this.meshes[1][this.angle] = beamLine;
-      this.meshes[2][this.angle] = sectionLine;
-      this.meshes[3][this.angle] = compMesh;
-      this.meshes[4][this.angle] = compStencils[0];
-      this.meshes[5][this.angle] = compStencils[1];
-      this.meshes[6][this.angle] = compPos;
-      this.meshes[7][this.angle] = tensMesh;
-      this.meshes[8][this.angle] = tensMesh;
-      this.meshes[9][this.angle] = tensMesh;
-      this.meshes[10][this.angle] = tensStencils[0];
-      this.meshes[11][this.angle] = tensStencils[1];
-      this.meshes[12][this.angle] = tensPos; */
-
       this.meshLoaded[this.angle] = true;
 
-      /*     this.bendGroup.add(beamLine, beamMesh);
-       */
       const bendGroup = new Group();
       bendGroup.add(this.beamLines[this.angle], this.beamMeshes[this.angle]);
 
-      /*      this.graphGroup.add(
-
-      );  */
       const graphGroup = new Group();
       graphGroup.add(
         this.sectionLines[this.angle],
@@ -822,6 +693,10 @@ tensMeshGroup] */
     if (this.angle != this.steps / 2) {
       for (let index = 0; index < this.meshes.length; index++) {
         this.meshes[index][this.previous].material.visible = false;
+      }
+    } else {
+      for (let index = 0; index < this.meshes.length; index++) {
+        this.meshes[index][this.angle].material.visible = true;
       }
     }
 
@@ -973,14 +848,5 @@ tensMeshGroup] */
     `;
   }
 }
-/* export class BenderDemo extends BenderBase {
-  constructor() {
-    super();
-    console.log(demoState.counter++);
-  }
-  firstUpdated() {
-    demoState.counter++;
-    console.log(demoState.counter++);
-  }
-} */
+
 customElements.define('bender-demo', BenderDemo);

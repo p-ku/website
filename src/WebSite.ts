@@ -15,24 +15,11 @@ export class WebSite extends LitElement {
     this.currentPage = location.pathname.replace('https://p-ku.com', '');
   }
 
-  firstUpdated() {
-    const outlet = this.shadowRoot?.getElementById('outlet');
-  }
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
   }
   switchLanguage() {
     this.english = !this.english;
-
-    if (this.currentPage.includes('jp')) {
-      this.currentPage = this.currentPage.replace('/jp/', '/');
-      this.lang = '';
-      this.buttonDec = 'jpen';
-    } else {
-      this.currentPage = '/jp' + this.currentPage;
-      this.lang = '/jp';
-      this.buttonDec = 'jp jpen';
-    }
   }
 
   static styles = css`
@@ -182,8 +169,7 @@ export class WebSite extends LitElement {
       font-size: max(16px, calc(12px + 0.5vmin));
       color: #fffde8;
       text-decoration: none;
-      /*       position: absolute;
-      top: max(2em, 51.2px); */
+
       pointer-events: none;
       justify-content: flex-end;
       max-width: 0;
@@ -207,10 +193,7 @@ export class WebSite extends LitElement {
     #jpen {
       color: #eb737b;
     }
-    /* 
-    #mail.chosen {
-      border-bottom: dashed #ffc342 0.15em;
-    } */
+
     #mail.chosen div {
       width: 85%;
     }
@@ -319,9 +302,7 @@ export class WebSite extends LitElement {
         animation: reveal 0.07s ease-out forwards;
         opacity: 1;
       }
-      /*       .linkspace:hover #risingsun {
-        transition: 0.07s ease-out;
-      } */
+
       .linkspace:hover #jpabb {
         transition: 0.06s ease-out;
         flex: 0 1 0;
@@ -499,19 +480,8 @@ export class WebSite extends LitElement {
       }
 
       .burgersource {
-        /*         background-image: radial-gradient(farthest-side at bottom right, #9df5ee, #fffde8);
- */
         color: #9df5ee;
       }
-
-      /*       #burgerdemo a.chosen::after {
-        content: '←';
-        position: absolute;
-        right: 51%;
-        font-weight: 900;
-        font-size: 2em;
-        color: #af4ebd;
-      } */
 
       #demobar {
         display: none;
