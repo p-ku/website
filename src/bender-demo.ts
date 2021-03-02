@@ -63,19 +63,8 @@ export class BenderDemo extends LitElement {
   @property({ attribute: false }) tensStencils1: Mesh[] = [];
   @property({ attribute: false }) tensStencils2: Mesh[] = [];
 
-  @property({ attribute: false }) meshes: any = [
-    this.beamMeshes,
-    this.beamLines,
-    this.sectionLines,
-    this.compMeshes,
-    this.compStencils1,
-    this.compStencils2,
-    this.compPoss,
-    this.tensMeshes,
-    this.tensStencils1,
-    this.tensStencils2,
-    this.tensPoss,
-  ];
+  @property({ attribute: false }) bendGroup: any[] = [];
+  @property({ attribute: false }) graphGroup: any[] = [];
 
   @property({ attribute: false }) graphBeamLine = new LineSegments();
   @property({ attribute: false }) bendScene = new Scene();
@@ -244,336 +233,362 @@ export class BenderDemo extends LitElement {
   newBend() {
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
     if (this.meshLoaded[this.angle] == true) {
-      for (let index = 0; index < this.meshes.length; index++) {
+      /*       for (let index = 0; index < this.meshes.length; index++) {
         this.meshes[index][this.angle].material.visible = true;
         this.meshes[index][this.previous].material.visible = false;
-      }
+      } */
+      this.bendGroup[this.angle].visible = true;
+      this.bendGroup[this.previous].visible = false;
+      this.graphGroup[this.angle].visible = true;
+      this.graphGroup[this.previous].visible = false;
     } else {
+      this.bendGroup[this.angle] = new Group();
+      this.graphGroup[this.angle] = new Group();
       const beamLength = 2;
-
       let sign = 1;
 
-      const angle = ((this.angle - this.steps / 2) * 1) / this.steps;
-      const sigmaMax = -Math.atan(angle);
-      const poisson = sigmaMax / 4;
-      const anticlast = sigmaMax / 8;
-      if (angle > 0) {
-        sign = 1;
+      if (this.angle == this.steps / 2) {
+        const section = new Shape([
+          new Vector2(-this.bh / 2, -this.bh / 2),
+          new Vector2(this.bh / 2, -this.bh / 2),
+          new Vector2(this.bh / 2, (2 * this.t) / 2 - this.bh / 2),
+          new Vector2(this.t / 2, (2 * this.t) / 2 - this.bh / 2),
+          new Vector2(this.t / 2, this.bh / 2 - (2 * this.t) / 2),
+          new Vector2(this.bh / 2, this.bh / 2 - (2 * this.t) / 2),
+          new Vector2(this.bh / 2, this.bh / 2),
+          new Vector2(-this.bh / 2, this.bh / 2),
+          new Vector2(-this.bh / 2, this.bh / 2 - (2 * this.t) / 2),
+          new Vector2(-this.t / 2, this.bh / 2 - (2 * this.t) / 2),
+          new Vector2(-this.t / 2, (2 * this.t) / 2 - this.bh / 2),
+          new Vector2(-this.bh / 2, (2 * this.t) / 2 - this.bh / 2),
+        ]);
+        const sectionGeo = new ShapeGeometry(section);
+        const sectionEdge = new EdgesGeometry(sectionGeo);
+        const sectionLine = new LineSegments(
+          sectionEdge,
+          new LineBasicMaterial({ color: 0x000000, visible: true })
+        );
+        sectionEdge.dispose();
+        sectionLine.rotateY(-Math.PI / 2);
+        sectionGeo.rotateY(-Math.PI / 2);
+        const straightGeo = new ExtrudeGeometry(section, {
+          depth: 2,
+          bevelEnabled: false,
+        });
+        const straightMat = new MeshPhongMaterial({
+          color: new Color(0.2, 0.2, 0.2),
+          polygonOffset: true,
+          polygonOffsetFactor: -1, // positive value pushes polygon further away
+          polygonOffsetUnits: 1,
+          visible: true,
+        });
+        const beamMesh = new Mesh(straightGeo, straightMat);
+        const beamEdge = new EdgesGeometry(straightGeo);
+        const beamLine = new LineSegments(
+          beamEdge,
+          new LineBasicMaterial({ color: 0x000000, visible: true })
+        );
+        this.bendGroup[this.angle].add(
+          beamMesh.rotateY(Math.PI / 2).translateZ(-1),
+          beamLine.rotateY(Math.PI / 2).translateZ(-1)
+        );
+        this.graphGroup[this.angle].add(sectionLine);
+        /*         this.graphGroup[this.angle] = null;
+         */ this.bendScene.add(this.bendGroup[this.angle]);
+        this.graphScene.add(this.graphGroup[this.angle]);
+
+        beamEdge.dispose();
       } else {
-        sign = -1;
-      }
+        const angle = (this.angle - this.steps / 2) / this.steps;
+        const sigmaMax = -Math.atan(angle);
+        const poisson = sigmaMax / 4;
+        const anticlast = sigmaMax / 8;
+        if (angle > 0) {
+          sign = 1;
+        } else {
+          sign = -1;
+        }
 
-      const thtop =
-        this.bh / 2 -
-        this.t +
-        poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of topflange
-      const thbot =
-        -this.bh / 2 +
-        this.t +
-        poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of bottomflange
-      const btop = this.bh - this.bh * poisson; //width
-      const bbot = this.bh + this.bh * poisson; //width
-      const btop2 =
-        this.bh - (this.bh * poisson * (this.bh - this.t)) / this.bh; //width at more middle part of flange
-      const bbot2 =
-        this.bh + (this.bh * poisson * (this.bh - this.t)) / this.bh;
-      const ttop = this.t - (this.t * poisson * (this.bh - this.t)) / this.bh; //thickness of web
-      const tbot = this.t + (this.t * poisson * (this.bh - this.t)) / this.bh;
+        const thtop =
+          this.bh / 2 -
+          this.t +
+          poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of topflange
+        const thbot =
+          -this.bh / 2 +
+          this.t +
+          poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of bottomflange
+        const btop = this.bh - this.bh * poisson; //width
+        const bbot = this.bh + this.bh * poisson; //width
+        const btop2 =
+          this.bh - (this.bh * poisson * (this.bh - this.t)) / this.bh; //width at more middle part of flange
+        const bbot2 =
+          this.bh + (this.bh * poisson * (this.bh - this.t)) / this.bh;
+        const ttop = this.t - (this.t * poisson * (this.bh - this.t)) / this.bh; //thickness of web
+        const tbot = this.t + (this.t * poisson * (this.bh - this.t)) / this.bh;
 
-      const anticGuideBot = new QuadraticBezierCurve(
-        new Vector2(-bbot / 2, -this.bh / 2 + anticlast),
-        new Vector2(0, -this.bh / 2 - anticlast),
-        new Vector2(bbot / 2, -this.bh / 2 + anticlast)
-      );
-      const anticGuideTop = new QuadraticBezierCurve(
-        new Vector2(-btop / 2, this.bh / 2 + anticlast),
-        new Vector2(0, this.bh / 2 - anticlast),
-        new Vector2(btop / 2, this.bh / 2 + anticlast)
-      );
+        const anticGuideBot = new QuadraticBezierCurve(
+          new Vector2(-bbot / 2, -this.bh / 2 + anticlast),
+          new Vector2(0, -this.bh / 2 - anticlast),
+          new Vector2(bbot / 2, -this.bh / 2 + anticlast)
+        );
+        const anticGuideTop = new QuadraticBezierCurve(
+          new Vector2(-btop / 2, this.bh / 2 + anticlast),
+          new Vector2(0, this.bh / 2 - anticlast),
+          new Vector2(btop / 2, this.bh / 2 + anticlast)
+        );
 
-      const anticTanBot = anticGuideBot.getTangent(0);
-      const anticTanTop = anticGuideTop.getTangent(0);
+        const anticTanBot = anticGuideBot.getTangent(0);
+        const anticTanTop = anticGuideTop.getTangent(0);
 
-      const transTestBL = anticGuideBot
-        .clone()
-        .getTangent(0)
-        .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
-        .multiplyScalar(thbot + this.bh / 2);
-      const transTestTL = anticGuideTop
-        .clone()
-        .getTangent(0)
-        .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
-        .multiplyScalar(thtop - this.bh / 2);
-      const transTestBR = anticGuideBot
-        .clone()
-        .getTangent(1)
-        .rotateAround(new Vector2(0, 0), Math.PI / 2 - anticlast * 3)
-        .multiplyScalar(thbot + this.bh / 2);
-      const transTestTR = anticGuideTop
-        .clone()
-        .getTangent(1)
-        .rotateAround(new Vector2(0, 0), Math.PI / 2 - anticlast * 3)
-        .multiplyScalar(thtop - this.bh / 2);
+        const transTestBL = anticGuideBot
+          .clone()
+          .getTangent(0)
+          .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
+          .multiplyScalar(thbot + this.bh / 2);
+        const transTestTL = anticGuideTop
+          .clone()
+          .getTangent(0)
+          .rotateAround(new Vector2(0, 0), Math.PI / 2 + anticlast * 3)
+          .multiplyScalar(thtop - this.bh / 2);
+        const transTestBR = anticGuideBot
+          .clone()
+          .getTangent(1)
+          .rotateAround(new Vector2(0, 0), Math.PI / 2 - anticlast * 3)
+          .multiplyScalar(thbot + this.bh / 2);
+        const transTestTR = anticGuideTop
+          .clone()
+          .getTangent(1)
+          .rotateAround(new Vector2(0, 0), Math.PI / 2 - anticlast * 3)
+          .multiplyScalar(thtop - this.bh / 2);
 
-      transTestBL.x -= bbot2 / 2;
-      transTestTL.x -= btop2 / 2;
-      transTestBR.x += bbot2 / 2;
-      transTestTR.x += btop2 / 2;
-      transTestBL.y -= this.bh / 2 - anticlast;
-      transTestTL.y += this.bh / 2 + anticlast;
-      transTestBR.y -= this.bh / 2 - anticlast;
-      transTestTR.y += this.bh / 2 + anticlast;
+        transTestBL.x -= bbot2 / 2;
+        transTestTL.x -= btop2 / 2;
+        transTestBR.x += bbot2 / 2;
+        transTestTR.x += btop2 / 2;
+        transTestBL.y -= this.bh / 2 - anticlast;
+        transTestTL.y += this.bh / 2 + anticlast;
+        transTestBR.y -= this.bh / 2 - anticlast;
+        transTestTR.y += this.bh / 2 + anticlast;
 
-      const rayDirBot = new Vector3(anticTanBot.x, anticTanBot.y, 0);
-      const rayDirTop = new Vector3(anticTanTop.x, anticTanTop.y, 0);
+        const rayDirBot = new Vector3(anticTanBot.x, anticTanBot.y, 0);
+        const rayDirTop = new Vector3(anticTanTop.x, anticTanTop.y, 0);
 
-      let rayGuideTop = new Vector3();
-      let rayGuideBot = new Vector3();
+        let rayGuideTop = new Vector3();
+        let rayGuideBot = new Vector3();
 
-      const rayTestBot = new Ray(
-        new Vector3(transTestBL.x, transTestBL.y, 0),
-        rayDirBot
-      );
-      rayTestBot.intersectPlane(
-        new Plane(
-          new Vector3((tbot - ttop) / 2, thtop - thbot, 0).normalize(),
-          -thbot
-        ),
-        rayGuideBot
-      );
-      const rayTestTop = new Ray(
-        new Vector3(transTestTL.x, transTestTL.y, 0),
-        rayDirTop
-      );
-      rayTestTop.intersectPlane(
-        new Plane(
-          new Vector3((tbot - ttop) / 2, thtop - thbot, 0).normalize(),
-          -thtop
-        ),
-        rayGuideTop
-      );
-      if (angle == 0) {
+        const rayTestBot = new Ray(
+          new Vector3(transTestBL.x, transTestBL.y, 0),
+          rayDirBot
+        );
+        rayTestBot.intersectPlane(
+          new Plane(
+            new Vector3((tbot - ttop) / 2, thtop - thbot, 0).normalize(),
+            -thbot
+          ),
+          rayGuideBot
+        );
+        const rayTestTop = new Ray(
+          new Vector3(transTestTL.x, transTestTL.y, 0),
+          rayDirTop
+        );
+        rayTestTop.intersectPlane(
+          new Plane(
+            new Vector3((tbot - ttop) / 2, thtop - thbot, 0).normalize(),
+            -thtop
+          ),
+          rayGuideTop
+        );
         rayGuideTop = new Vector3(thtop, thtop, 0);
         rayGuideBot = new Vector3(thbot, thbot, 0);
-      }
 
-      const section = new Shape()
-        .moveTo(-bbot / 2, -this.bh / 2 + anticlast) //bot
-        .quadraticCurveTo(
-          0,
-          -this.bh / 2 - anticlast,
-          bbot / 2,
-          -this.bh / 2 + anticlast
-        ) //bot
-        .lineTo(transTestBR.x, transTestBR.y); //bot half
-      if (angle == 0) {
-        section.lineTo(tbot / 2, thbot);
-      } else {
+        const section = new Shape()
+          .moveTo(-bbot / 2, -this.bh / 2 + anticlast) //bot
+          .quadraticCurveTo(
+            0,
+            -this.bh / 2 - anticlast,
+            bbot / 2,
+            -this.bh / 2 + anticlast
+          ) //bot
+          .lineTo(transTestBR.x, transTestBR.y); //bot half
         section.quadraticCurveTo(
           -rayGuideBot.x,
           rayGuideBot.y,
           tbot / 2,
           thbot
         );
-      }
-
-      section.lineTo(ttop / 2, thtop); //top half
-      if (angle == 0) {
+        section.lineTo(ttop / 2, thtop); //top half
         section.lineTo(transTestTR.x, transTestTR.y);
-      } else {
         section.quadraticCurveTo(
           -rayGuideTop.x,
           rayGuideTop.y,
           transTestTR.x,
           transTestTR.y
         );
-      }
-
-      section.lineTo(btop / 2, this.bh / 2 + anticlast); //top
-      section.quadraticCurveTo(
-        0,
-        this.bh / 2 - anticlast,
-        -btop / 2,
-        this.bh / 2 + anticlast
-      ); //top
-      section.lineTo(transTestTL.x, transTestTL.y); //top half
-      if (angle == 0) {
+        section.lineTo(btop / 2, this.bh / 2 + anticlast); //top
+        section.quadraticCurveTo(
+          0,
+          this.bh / 2 - anticlast,
+          -btop / 2,
+          this.bh / 2 + anticlast
+        ); //top
+        section.lineTo(transTestTL.x, transTestTL.y); //top half
         section.lineTo(-ttop / 2, thtop); //bot half
-      } else {
         section.quadraticCurveTo(
           rayGuideTop.x,
           rayGuideTop.y,
           -ttop / 2,
           thtop
         ); //bot half
-      }
-      section.lineTo(-tbot / 2, thbot); //bot half
-      if (angle == 0) {
+        section.lineTo(-tbot / 2, thbot); //bot half
         section.lineTo(transTestBL.x, transTestBL.y);
-      } else {
         section.quadraticCurveTo(
           rayGuideBot.x,
           rayGuideBot.y,
           transTestBL.x,
           transTestBL.y
         );
-      }
-      //bot half
-      section.lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
+        //bot half
+        section.lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
 
-      const curve = new QuadraticBezierCurve3(
-        new Vector3(-beamLength / 2, 0, 0),
-        new Vector3(0, sigmaMax, 0),
-        new Vector3(beamLength / 2, 0, 0)
-      );
+        const curve = new QuadraticBezierCurve3(
+          new Vector3(-beamLength / 2, 0, 0),
+          new Vector3(0, sigmaMax, 0),
+          new Vector3(beamLength / 2, 0, 0)
+        );
 
-      const sectionGeo = new ShapeGeometry(section);
-      const sectionEdge = new EdgesGeometry(sectionGeo);
-      const sectionLine = new LineSegments(
-        sectionEdge,
-        new LineBasicMaterial({ color: 0x000000, visible: true })
-      );
-      sectionEdge.dispose();
-      sectionLine.rotateY(-Math.PI / 2);
-      sectionGeo.rotateY(-Math.PI / 2);
-      const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
-      const bentGeo = new ExtrudeGeometry(section, {
-        steps: extrudeSteps,
-        curveSegments: extrudeSteps,
-        bevelEnabled: false,
-        extrudePath: curve,
-      });
+        const sectionGeo = new ShapeGeometry(section);
+        const sectionEdge = new EdgesGeometry(sectionGeo);
+        const sectionLine = new LineSegments(
+          sectionEdge,
+          new LineBasicMaterial({ color: 0x000000, visible: true })
+        );
+        sectionEdge.dispose();
+        sectionLine.rotateY(-Math.PI / 2);
+        sectionGeo.rotateY(-Math.PI / 2);
+        const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
+        const bentGeo = new ExtrudeGeometry(section, {
+          steps: extrudeSteps,
+          curveSegments: extrudeSteps,
+          bevelEnabled: false,
+          extrudePath: curve,
+        });
 
-      const count = bentGeo.attributes.position.count;
-      bentGeo.setAttribute(
-        'color',
-        new BufferAttribute(new Float32Array(count * 3), 3)
-      );
+        const count = bentGeo.attributes.position.count;
+        bentGeo.setAttribute(
+          'color',
+          new BufferAttribute(new Float32Array(count * 3), 3)
+        );
 
-      const colorAttribute = bentGeo.getAttribute('color');
-      const positions = bentGeo.attributes.position;
+        const colorAttribute = bentGeo.getAttribute('color');
+        const positions = bentGeo.attributes.position;
 
-      const vertex = new Vector3();
+        const vertex = new Vector3();
 
-      const baseGray = 0.2;
-      const colorCalc = angle / 3 + baseGray;
-      const negColorCalc = -angle / 3 + baseGray;
+        const baseGray = 0.2;
+        const colorCalc = angle / 3 + baseGray;
+        const negColorCalc = -angle / 3 + baseGray;
 
-      for (let j = 0; j < count; j++) {
-        if (angle > 0) {
-          if (positions.getY(j) < curve.getPoint((vertex.x + 1) / 2).y) {
-            colorAttribute.setXYZ(j, colorCalc, 0.2, colorCalc);
+        for (let j = 0; j < count; j++) {
+          if (angle > 0) {
+            if (positions.getY(j) < curve.getPoint((vertex.x + 1) / 2).y) {
+              colorAttribute.setXYZ(j, colorCalc, 0.2, colorCalc);
+            } else {
+              colorAttribute.setXYZ(j, 0.2, colorCalc, colorCalc);
+            }
           } else {
-            colorAttribute.setXYZ(j, 0.2, colorCalc, colorCalc);
-          }
-        } else {
-          if (positions.getY(j) > curve.getPoint((vertex.x + 1) / 2).y) {
-            colorAttribute.setXYZ(j, negColorCalc, 0.2, negColorCalc);
-          } else {
-            colorAttribute.setXYZ(j, 0.2, negColorCalc, negColorCalc);
+            if (positions.getY(j) > curve.getPoint((vertex.x + 1) / 2).y) {
+              colorAttribute.setXYZ(j, negColorCalc, 0.2, negColorCalc);
+            } else {
+              colorAttribute.setXYZ(j, 0.2, negColorCalc, negColorCalc);
+            }
           }
         }
-      }
 
-      const bentMat = new MeshPhongMaterial({
-        vertexColors: true,
-        polygonOffset: true,
-        polygonOffsetFactor: -1, // positive value pushes polygon further away
-        polygonOffsetUnits: 1,
-        wireframe: false,
-        visible: true,
-      });
-      const beamEdge = new EdgesGeometry(bentGeo);
-      const beamLine = new LineSegments(
-        beamEdge,
-        new LineBasicMaterial({ color: 0x000000, visible: true })
-      );
-      beamEdge.dispose();
+        const bentMat = new MeshPhongMaterial({
+          vertexColors: true,
+          polygonOffset: true,
+          polygonOffsetFactor: -1, // positive value pushes polygon further away
+          polygonOffsetUnits: 1,
+          wireframe: false,
+          visible: true,
+        });
+        const beamEdge = new EdgesGeometry(bentGeo);
+        const beamLine = new LineSegments(
+          beamEdge,
+          new LineBasicMaterial({ color: 0x000000, visible: true })
+        );
+        beamEdge.dispose();
+        const beamMesh = new Mesh(bentGeo, bentMat);
+        beamLine.geometry.translate(0, -anticlast * 3, 0);
+        beamMesh.translateY(-anticlast * 3);
 
-      const beamMesh = new Mesh(bentGeo, bentMat);
-      beamLine.geometry.translate(0, -anticlast * 3, 0);
-      beamMesh.translateY(-anticlast * 3);
+        const compGeo = new ExtrudeGeometry(section, {
+          depth: 1,
+          bevelEnabled: false,
+        });
+        const tensGeo = new ExtrudeGeometry(section, {
+          depth: 1,
+          bevelEnabled: false,
+        });
+        compGeo.rotateY(Math.PI / 2);
+        tensGeo.rotateY(Math.PI / 2);
+        tensGeo.translate(-1, 0, 0);
 
-      const compGeo = new ExtrudeGeometry(section, {
-        depth: 1,
-        bevelEnabled: false,
-      });
-      const tensGeo = new ExtrudeGeometry(section, {
-        depth: 1,
-        bevelEnabled: false,
-      });
-      compGeo.rotateY(Math.PI / 2);
-      tensGeo.rotateY(Math.PI / 2);
-      tensGeo.translate(-1, 0, 0);
+        const compClip = [new Plane(new Vector3(1, sigmaMax * 3.5, 0), 0.001)];
+        const tensClip = [
+          new Plane(new Vector3(-1, -sigmaMax * 3.5, 0), 0.001),
+        ];
 
-      const compClip = [
-        new Plane(new Vector3(-1, -sigmaMax * 3.5, 0), 0.001),
-        new Plane(new Vector3(1, 0, 0)),
-      ];
-      const tensClip = [
-        new Plane(new Vector3(1, sigmaMax * 3.5, 0), 0.001),
-        new Plane(new Vector3(-1, 0, 0)),
-      ];
+        const compMat = new MeshStandardMaterial({
+          color: new Color(0.3, 0.67, 0.67),
+          metalness: 0.1,
+          roughness: 0.75,
+          visible: true,
+          clippingPlanes: tensClip,
+        });
+        const tensMat = new MeshStandardMaterial({
+          color: new Color(0.67, 0.3, 0.67),
+          metalness: 0.1,
+          roughness: 0.75,
+          visible: true,
+          clippingPlanes: compClip,
+        });
 
-      const compMat = new MeshStandardMaterial({
-        color: new Color(0.3, 0.67, 0.67),
-        metalness: 0.1,
-        roughness: 0.75,
-        visible: true,
-      });
-      const tensMat = new MeshStandardMaterial({
-        color: new Color(0.67, 0.3, 0.67),
-        metalness: 0.1,
-        roughness: 0.75,
-        visible: true,
-      });
-      compMat.clippingPlanes = [compClip[0]];
-      tensMat.clippingPlanes = [tensClip[0]];
+        const compStencils = this.createPlaneStencilGroup(compGeo, compClip, 1);
+        const tensStencils = this.createPlaneStencilGroup(tensGeo, tensClip, 2);
 
-      const compStencils = this.createPlaneStencilGroup(
-        compGeo,
-        [compClip[0]],
-        1
-      );
-      const tensStencils = this.createPlaneStencilGroup(
-        tensGeo,
-        [tensClip[0]],
-        2
-      );
+        const compPlaneMat = new MeshStandardMaterial({
+          metalness: 0.1,
+          roughness: 0.75,
+          stencilWrite: true,
+          stencilRef: 0,
+          stencilFunc: NotEqualStencilFunc,
+          stencilFail: ReplaceStencilOp,
+          stencilZFail: ReplaceStencilOp,
+          stencilZPass: ReplaceStencilOp,
+          color: new Color(0.25, 0.5575, 0.5575),
+          visible: true,
+        });
 
-      const compPlaneMat = new MeshStandardMaterial({
-        metalness: 0.1,
-        roughness: 0.75,
-        stencilWrite: true,
-        stencilRef: 0,
-        stencilFunc: NotEqualStencilFunc,
-        stencilFail: ReplaceStencilOp,
-        stencilZFail: ReplaceStencilOp,
-        stencilZPass: ReplaceStencilOp,
-        color: new Color(0.25, 0.5575, 0.5575),
-        visible: true,
-      });
+        const tensPlaneMat = new MeshStandardMaterial({
+          metalness: 0.1,
+          roughness: 0.75,
+          stencilWrite: true,
+          stencilRef: 0,
+          stencilFunc: NotEqualStencilFunc,
+          stencilFail: ReplaceStencilOp,
+          stencilZFail: ReplaceStencilOp,
+          stencilZPass: ReplaceStencilOp,
+          color: new Color(0.5575, 0.25, 0.5575),
+          visible: true,
+        });
 
-      const tensPlaneMat = new MeshStandardMaterial({
-        metalness: 0.1,
-        roughness: 0.75,
-        stencilWrite: true,
-        stencilRef: 0,
-        stencilFunc: NotEqualStencilFunc,
-        stencilFail: ReplaceStencilOp,
-        stencilZFail: ReplaceStencilOp,
-        stencilZPass: ReplaceStencilOp,
-        color: new Color(0.5575, 0.25, 0.5575),
-        visible: true,
-      });
+        let compPos = new Mesh();
+        let tensPos = new Mesh();
 
-      let compPos = new Mesh();
-      let tensPos = new Mesh();
+        let compMesh = new Mesh();
+        let tensMesh = new Mesh();
 
-      let compMesh = new Mesh();
-      let tensMesh = new Mesh();
-
-      if (angle != 0) {
         compMesh = new Mesh(compGeo, compMat);
         compMesh.renderOrder = 6;
         tensMesh = new Mesh(tensGeo, tensMat);
@@ -590,58 +605,161 @@ export class BenderDemo extends LitElement {
 
         compPos.renderOrder = 1.1;
         tensPos.renderOrder = 2.1;
+
+        compPos.quaternion.setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          Math.atan(sigmaMax * 3.5)
+        );
+        compPos.rotateY(Math.PI / 2);
+        tensPos.quaternion.setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          Math.atan(sigmaMax * 3.5)
+        );
+        tensPos.rotateY(-Math.PI / 2);
+
+        this.bendGroup[this.angle].add(beamLine, beamMesh);
+        this.graphGroup[this.angle].add(
+          compMesh,
+          tensMesh,
+          tensStencils[0],
+          compStencils[1],
+          compStencils[0],
+          tensStencils[1],
+          sectionLine,
+          compPos,
+          tensPos
+        );
+
+        this.graphGroup[this.steps - this.angle] = new Group();
+
+        const compClip2 = [
+          new Plane(new Vector3(-1, sigmaMax * 3.5, 0), 0.001),
+        ];
+        const tensClip2 = [
+          new Plane(new Vector3(1, -sigmaMax * 3.5, 0), 0.001),
+        ];
+
+        const compMat2 = new MeshStandardMaterial({
+          color: new Color(0.3, 0.67, 0.67),
+          metalness: 0.1,
+          roughness: 0.75,
+          visible: true,
+          clippingPlanes: compClip2,
+        });
+        const tensMat2 = new MeshStandardMaterial({
+          color: new Color(0.67, 0.3, 0.67),
+          metalness: 0.1,
+          roughness: 0.75,
+          visible: true,
+          clippingPlanes: tensClip2,
+        });
+
+        const compGeo2 = compGeo.clone().rotateX(Math.PI);
+        const tensGeo2 = tensGeo.clone().rotateX(Math.PI);
+
+        const compMesh2 = new Mesh(compGeo2, compMat2);
+        const tensMesh2 = new Mesh(tensGeo2, tensMat2);
+        compMesh2.renderOrder = 6;
+        tensMesh2.renderOrder = 7;
+        /*         const compStencils2 = this.createPlaneStencilGroup(
+          compGeo2,
+          compClip2,
+          1
+        );
+        const tensStencils2 = this.createPlaneStencilGroup(
+          tensGeo2,
+          tensClip2,
+          2
+        ); */
+        /*         const compStencils2 = compStencils.map(el => el.clone());
+        const tensStencils2 = tensStencils.map(el => el.clone()); */
+        const compStencils2 = this.createPlaneStencilGroup(
+          compGeo2,
+          compClip2,
+          1
+        );
+        const tensStencils2 = this.createPlaneStencilGroup(
+          tensGeo2,
+          tensClip2,
+          2
+        );
+        /*         const compPlaneMat2 = compPlaneMat.clone();
+        const tensPlaneMat2 = tensPlaneMat.clone(); */
+
+        const compPlaneMat2 = compPlaneMat.clone();
+        const tensPlaneMat2 = tensPlaneMat.clone();
+
+        const compPos2 = new Mesh(new PlaneGeometry(4, 4), compPlaneMat2);
+        const tensPos2 = new Mesh(new PlaneGeometry(4, 4), tensPlaneMat2);
+
+        compPos2.onAfterRender = function (renderer) {
+          renderer.clearStencil();
+        };
+        tensPos2.onAfterRender = function (renderer) {
+          renderer.clearStencil();
+        };
+
+        compPos2.renderOrder = 1.1;
+        tensPos2.renderOrder = 2.1;
+        /*         compPos.quaternion.setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          Math.atan(sigmaMax * 3.5)
+        );
+        compPos.rotateY(Math.PI / 2);
+        tensPos.quaternion.setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          Math.atan(sigmaMax * 3.5)
+        );       tensPos.rotateY(-Math.PI / 2);
+*/
+        compPos2.quaternion.setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          Math.atan(-sigmaMax * 3.5)
+        );
+        compPos2.rotateY(Math.PI / 2);
+        tensPos2.quaternion.setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          Math.atan(-sigmaMax * 3.5)
+        );
+        tensPos2.rotateY(-Math.PI / 2);
+        this.graphGroup[this.steps - this.angle].add(
+          compMesh2,
+          tensMesh2,
+          tensStencils2[0],
+          compStencils2[0],
+          tensStencils2[1],
+          compStencils2[1],
+          sectionLine.clone().rotateX(Math.PI),
+          compPos2,
+          tensPos2
+        );
+        this.bendGroup[this.steps - this.angle] = this.bendGroup[this.angle]
+          .clone()
+          .rotateX(Math.PI);
+        /*       beamMesh.geometry.dispose();
+         */
+        this.meshLoaded[this.steps - this.angle] = true;
+        this.bendScene.add(
+          this.bendGroup[this.angle],
+          this.bendGroup[this.steps - this.angle]
+        );
+        this.graphScene.add(
+          this.graphGroup[this.angle],
+          this.graphGroup[this.steps - this.angle]
+        );
       }
-      compPos.quaternion.setFromAxisAngle(
-        new Vector3(0, 0, 1),
-        Math.atan(sigmaMax * 3.5)
-      );
-      compPos.rotateY(Math.PI / 2);
-      tensPos.quaternion.setFromAxisAngle(
-        new Vector3(0, 0, 1),
-        Math.atan(sigmaMax * 3.5)
-      );
-      tensPos.rotateY(-Math.PI / 2);
-
-      this.beamLines[this.angle] = beamLine;
-      this.beamMeshes[this.angle] = beamMesh;
-      this.sectionLines[this.angle] = sectionLine;
-      this.compMeshes[this.angle] = compMesh;
-      this.compPoss[this.angle] = compPos;
-      this.compStencils1[this.angle] = compStencils[0];
-      this.compStencils2[this.angle] = compStencils[1];
-      this.tensMeshes[this.angle] = tensMesh;
-      this.tensPoss[this.angle] = tensPos;
-      this.tensStencils1[this.angle] = tensStencils[0];
-      this.tensStencils2[this.angle] = tensStencils[1];
-
       this.meshLoaded[this.angle] = true;
+      /* */
+      this.bendGroup[this.steps - this.angle].visible = false;
+      this.graphGroup[this.steps - this.angle].visible = false;
 
-      this.bendScene.add(
-        this.beamLines[this.angle],
-        this.beamMeshes[this.angle]
-      );
-      this.graphScene.add(
-        this.sectionLines[this.angle],
-        this.compMeshes[this.angle],
-        this.compPoss[this.angle],
-        this.compStencils1[this.angle],
-        this.compStencils2[this.angle],
-        this.tensMeshes[this.angle],
-        this.tensPoss[this.angle],
-        this.tensStencils1[this.angle],
-        this.tensStencils2[this.angle]
-      );
-      beamMesh.geometry.dispose();
+      this.bendGroup[this.angle].visible = true;
+      this.graphGroup[this.angle].visible = true;
     }
-    if (this.angle != this.steps / 2) {
-      for (let index = 0; index < this.meshes.length; index++) {
-        this.meshes[index][this.previous].material.visible = false;
-      }
-    } else {
-      for (let index = 0; index < this.meshes.length; index++) {
-        this.meshes[index][this.angle].material.visible = true;
-      }
+    if (typeof this.bendGroup[this.previous] !== 'undefined') {
+      this.bendGroup[this.previous].visible = false;
+      this.graphGroup[this.previous].visible = false;
     }
+
     this.previous = this.angle;
   }
 
