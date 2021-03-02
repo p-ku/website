@@ -157,7 +157,7 @@ class MainPage extends LitElement {
         <p>
 ${
   this.english
-    ? 'Software is both ubiquitous and hungry for ingenuity. With that in mind, the solution has become painfully obvious; I must work in software.'
+    ? 'Software is both ubiquitous and hungry for ingenuity. With that in mind, the solution has become painfully obvious—I must work in software.'
     : 'ソフトウェアはユビキタスであり、創意工夫に飢えています。それを念頭に置いて、解決策は痛々しいほど明白になった。ソフトウェアで作業する必要があります。'
 }
         </p>
