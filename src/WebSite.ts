@@ -130,14 +130,7 @@ export class WebSite extends LitElement {
       height: 55%;
       font-size: max(25.5px, 1em);
       max-width: 960px;
-      width: 18vw;
-    }
-
-    .demotitle {
-      cursor: default;
-      border: none;
-      font-size: max(16px, calc(12px + 0.5vmin));
-      color: #dfabf4;
+      width: 12vw;
     }
 
     #demobar a {
@@ -166,10 +159,8 @@ export class WebSite extends LitElement {
       display: flex;
       opacity: 0;
       width: min-content;
-      font-size: max(16px, calc(12px + 0.5vmin));
       color: #fffde8;
       text-decoration: none;
-
       pointer-events: none;
       justify-content: flex-end;
       max-width: 0;
@@ -188,6 +179,11 @@ export class WebSite extends LitElement {
     }
     .source {
       color: #9df5ee;
+    }
+    .blog {
+      color: #dfabf4;
+      font-size: max(16px, 0.6em);
+      margin-left: 6vw;
     }
 
     #jpen {
@@ -334,7 +330,8 @@ export class WebSite extends LitElement {
         transition: none;
       }
 
-      #demobar a:hover {
+      #demobar a:hover,
+      .blog:hover {
         color: #fffde8;
       }
 
@@ -441,8 +438,8 @@ export class WebSite extends LitElement {
         text-align: center;
         justify-content: flex-end;
         align-content: center;
-
-        font-size: 2em;
+        margin-right: 1.5em;
+        font-size: 1.5em;
       }
 
       .burgerspace {
@@ -513,6 +510,14 @@ export class WebSite extends LitElement {
                 }
               }}>
             <div id="burgerdemo">
+            <a
+            id='burgerblog'
+            href="https://blog.p-ku.com"
+                target="_blank"
+                >${
+                  this.english ? 'blog⤴' : 'ブログ⤴'
+                }<span class="buttonspace"></span></a
+              >
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
                 @click=${() => this.switchPage('/bender')}
@@ -537,9 +542,7 @@ export class WebSite extends LitElement {
                 target="_blank">
               
   <span class='burgertext' 
->${
-      this.english ? 'github' : 'ギットハブ'
-    }</span>            <span class="buttonspace"><span id="sourcecircle" class="burgersource">＜＞</span></span>
+>github⤴</span>            <span class="buttonspace"><span id="sourcecircle" class="burgersource">＜＞</span></span>
   </a>
 
              </div>
@@ -559,6 +562,18 @@ export class WebSite extends LitElement {
             >
           </div>
           <div id="navcenter">
+                 <a
+                class="blog"
+                href="https://blog.p-ku.com"
+                target="_blank"
+                @click=${() => {
+                  if (this.isOpen) {
+                    this.isOpen = !this.isOpen;
+                  }
+                }}
+                ><span class='linktext'                 
+              ></span>${this.english ? 'blog⤴' : 'ブログ⤴'}</a
+              >
             <div id="demobar">
               <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
@@ -566,8 +581,12 @@ export class WebSite extends LitElement {
                 >${this.english ? 'demo' : 'デモ'}</a
               >
             </div>
-          </div>
+       
+          </div>   
+              
+        
           <div id="navright">
+
             <div class="linkspace">
               <a
                 class="source"
@@ -579,7 +598,7 @@ export class WebSite extends LitElement {
                   }
                 }}
                 ><div id="sourcecircle">＜<span class='linktext'                 
-              >github</span>＞</div></a
+              >github⤴</span>＞</div></a
               >
               </div>
               <div class="linkspace">
