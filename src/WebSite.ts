@@ -91,6 +91,7 @@ export class WebSite extends LitElement {
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10+ and Edge */
       user-select: none; /* Standard syntax */
+      outline: none;
     }
 
     #navbar .linkspace {
