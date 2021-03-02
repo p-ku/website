@@ -18,16 +18,10 @@ class MainPage extends LitElement {
 
   changeLang() {
     this.english ? (this.english = false) : (this.english = true);
-    console.log('working?');
   }
   initImage() {
-    if (this.loaded == true) {
-      console.log('loaded');
-    } else {
-      console.log('not loaded');
-      this.loaded = false;
-      this.loaded = true;
-    }
+    this.loaded = false;
+    this.loaded = true;
   }
 
   static styles = css`
@@ -40,15 +34,6 @@ class MainPage extends LitElement {
       color: #321e00;
       align-content: center;
       align-items: center;
-    }
-
-    @keyframes fade-in-animation {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
     }
     h1,
     h2,
@@ -122,15 +107,22 @@ class MainPage extends LitElement {
       max-width: 960px;
     }
 
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
     img {
       height: 100%;
       width: 100%;
-      opacity: 0;
     }
 
     .fadein {
-      opacity: 1;
-      transition: opacity 2s;
+      animation: fade-in 0.5s;
     }
 
     @media screen and (max-width: 1080px) {
@@ -177,7 +169,7 @@ ${
   </div>
           <div id="imgcontainer">
             <img
-            class=${this.loaded ? 'fadein' : ''}
+            class=${this.loaded ? '' : 'fadein'}
               src="headshot-4k.jpg"
               srcset="
                 headshot-HD.jpg   720w,

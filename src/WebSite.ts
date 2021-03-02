@@ -7,7 +7,6 @@ export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
-  @property({ type: Boolean }) loaded = false;
 
   @property({ type: Boolean }) isOpen = false;
 
@@ -17,7 +16,6 @@ export class WebSite extends LitElement {
   }
 
   switchPage(destination = '/') {
-    this.loaded = true;
     this.currentPage = this.lang.concat(destination);
   }
   switchLanguage() {
@@ -37,7 +35,7 @@ export class WebSite extends LitElement {
       background-color: #fffde8;
       font-size: calc(10px + 2vmin);
       font-weight: 700;
-      animation: fade-in-animation 0.5s ease;
+      animation: fade-in-animation 0.5s;
     }
     @keyframes fade-in-animation {
       from {
@@ -307,6 +305,9 @@ export class WebSite extends LitElement {
 
       .linkspace:hover #jpabb {
         transition: 0.06s ease-out;
+        /*         -webkit-transition: opacity 0.06s ease-out;
+        -moz-transition: opacity 0.06s ease-out;
+        -o-transition: opacity 0.06s ease-out; */
         flex: 0 1 0;
         min-height: 0;
         opacity: 1;
@@ -314,6 +315,9 @@ export class WebSite extends LitElement {
       .linkspace:hover #risingsun > .linktext {
         flex: 1 0 2.5em;
         transition: 0.06s ease-out;
+        /*         -webkit-transition: opacity 0.06s ease-out;
+        -moz-transition: opacity 0.06s ease-out;
+        -o-transition: opacity 0.06s ease-out; */
         opacity: 1;
         max-width: 100%;
       }
@@ -321,6 +325,9 @@ export class WebSite extends LitElement {
       .linkspace:hover #sourcecircle {
         width: 85%;
         transition: 0.06s ease-out;
+        /*         -webkit-transition: opacity 0.06s ease-out;
+        -moz-transition: opacity 0.06s ease-out;
+        -o-transition: opacity 0.06s ease-out; */
       }
 
       .linkspace:hover #mail.chosen #mailcircle {
@@ -406,6 +413,7 @@ export class WebSite extends LitElement {
         align-items: center;
         justify-content: center;
         min-height: 128px;
+        z-index: 1;
       }
       #burgerdemo,
       #burgerlink {
@@ -617,10 +625,7 @@ export class WebSite extends LitElement {
                  ? html`<bender-demo ?english=${this.english}></bender-demo>`
                  : this.currentPage.endsWith('contact')
                  ? html`<contact-form ?english=${this.english}></contact-form>`
-                 : html`<home-page
-                     ?loaded=${this.loaded}
-                     ?english=${this.english}
-                   ></home-page>`
+                 : html`<home-page ?english=${this.english}></home-page>`
              }
 
         </div>
