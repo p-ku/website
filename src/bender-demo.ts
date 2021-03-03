@@ -453,7 +453,8 @@ export class BenderDemo extends LitElement {
         sectionGeo.rotateY(-Math.PI / 2);
         const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
         const bentGeo = new ExtrudeGeometry(section, {
-          steps: 20,
+          steps: extrudeSteps,
+          curveSegments: extrudeSteps,
           bevelEnabled: false,
           extrudePath: curve,
         });
