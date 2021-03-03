@@ -312,11 +312,11 @@ export class BenderDemo extends LitElement {
         const thtop =
           this.bh / 2 -
           this.t +
-          poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of topflange
+          poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of top flange
         const thbot =
           -this.bh / 2 +
           this.t +
-          poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of bottomflange
+          poisson * (this.bh / 8 - (this.t * this.t) / (2 * this.bh)); //thickness of bottom flange
         const btop = this.bh - this.bh * poisson; //width
         const bbot = this.bh + this.bh * poisson; //width
         const btop2 =
@@ -373,8 +373,8 @@ export class BenderDemo extends LitElement {
         const rayDirBot = new Vector3(anticTanBot.x, anticTanBot.y, 0);
         const rayDirTop = new Vector3(anticTanTop.x, anticTanTop.y, 0);
 
-        let rayGuideTop = new Vector3();
-        let rayGuideBot = new Vector3();
+        const rayGuideTop = new Vector3();
+        const rayGuideBot = new Vector3();
 
         const rayTestBot = new Ray(
           new Vector3(transTestBL.x, transTestBL.y, 0),
@@ -398,9 +398,8 @@ export class BenderDemo extends LitElement {
           ),
           rayGuideTop
         );
-        rayGuideTop = new Vector3(thtop, thtop, 0);
-        rayGuideBot = new Vector3(thbot, thbot, 0);
 
+        //bot
         const section = new Shape()
           .moveTo(-bbot / 2, -this.bh / 2 + anticlast) //bot
           .quadraticCurveTo(
@@ -409,46 +408,33 @@ export class BenderDemo extends LitElement {
             bbot / 2,
             -this.bh / 2 + anticlast
           ) //bot
-          .lineTo(transTestBR.x, transTestBR.y); //bot half
-        section.quadraticCurveTo(
-          -rayGuideBot.x,
-          rayGuideBot.y,
-          tbot / 2,
-          thbot
-        );
-        section.lineTo(ttop / 2, thtop); //top half
-        section.lineTo(transTestTR.x, transTestTR.y);
-        section.quadraticCurveTo(
-          -rayGuideTop.x,
-          rayGuideTop.y,
-          transTestTR.x,
-          transTestTR.y
-        );
-        section.lineTo(btop / 2, this.bh / 2 + anticlast); //top
-        section.quadraticCurveTo(
-          0,
-          this.bh / 2 - anticlast,
-          -btop / 2,
-          this.bh / 2 + anticlast
-        ); //top
-        section.lineTo(transTestTL.x, transTestTL.y); //top half
-        section.lineTo(-ttop / 2, thtop); //bot half
-        section.quadraticCurveTo(
-          rayGuideTop.x,
-          rayGuideTop.y,
-          -ttop / 2,
-          thtop
-        ); //bot half
-        section.lineTo(-tbot / 2, thbot); //bot half
-        section.lineTo(transTestBL.x, transTestBL.y);
-        section.quadraticCurveTo(
-          rayGuideBot.x,
-          rayGuideBot.y,
-          transTestBL.x,
-          transTestBL.y
-        );
-        //bot half
-        section.lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
+          .lineTo(transTestBR.x, transTestBR.y) //bot half
+          .quadraticCurveTo(-rayGuideBot.x, rayGuideBot.y, tbot / 2, thbot)
+          .lineTo(ttop / 2, thtop) //top half
+          .quadraticCurveTo(
+            -rayGuideTop.x,
+            rayGuideTop.y,
+            transTestTR.x,
+            transTestTR.y
+          )
+          .lineTo(btop / 2, this.bh / 2 + anticlast) //top
+          .quadraticCurveTo(
+            0,
+            this.bh / 2 - anticlast,
+            -btop / 2,
+            this.bh / 2 + anticlast
+          ) //top
+          .lineTo(transTestTL.x, transTestTL.y) //top half
+          .quadraticCurveTo(rayGuideTop.x, rayGuideTop.y, -ttop / 2, thtop) //bot half //bot half
+          .lineTo(-tbot / 2, thbot)
+          .quadraticCurveTo(
+            rayGuideBot.x,
+            rayGuideBot.y,
+            transTestBL.x,
+            transTestBL.y
+          )
+          //bot half
+          .lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
 
         const curve = new QuadraticBezierCurve3(
           new Vector3(-beamLength / 2, 0, 0),
@@ -467,8 +453,7 @@ export class BenderDemo extends LitElement {
         sectionGeo.rotateY(-Math.PI / 2);
         const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
         const bentGeo = new ExtrudeGeometry(section, {
-          steps: extrudeSteps,
-          curveSegments: extrudeSteps,
+          steps: 20,
           bevelEnabled: false,
           extrudePath: curve,
         });
