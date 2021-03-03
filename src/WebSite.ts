@@ -439,7 +439,7 @@ export class WebSite extends LitElement {
         text-align: center;
         justify-content: flex-end;
         align-content: center;
-        margin-right: 1.5em;
+        margin-right: 1.5vmin;
         font-size: 1.5em;
       }
 
