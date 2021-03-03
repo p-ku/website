@@ -288,14 +288,23 @@ export class BenderDemo extends LitElement {
           beamEdge,
           new LineBasicMaterial({ color: 0x000000, visible: true })
         );
+        const sectionEnd1 = sectionLine.clone();
+        const sectionEnd2 = sectionLine.clone();
+        sectionEnd1.translateZ(1.005);
+        sectionEnd2.translateZ(-1.005);
+
         this.bendGroup[this.angle].add(
+          sectionEnd1,
+          sectionEnd2,
           beamMesh.rotateY(Math.PI / 2).translateZ(-1),
           beamLine.rotateY(Math.PI / 2).translateZ(-1)
         );
+
         this.graphGroup[this.angle].add(sectionLine);
         /*         this.graphGroup[this.angle] = null;
          */ this.bendScene.add(this.bendGroup[this.angle]);
         this.graphScene.add(this.graphGroup[this.angle]);
+        beamMesh.geometry.dispose();
 
         beamEdge.dispose();
       } else {
@@ -451,6 +460,11 @@ export class BenderDemo extends LitElement {
         sectionEdge.dispose();
         sectionLine.rotateY(-Math.PI / 2);
         sectionGeo.rotateY(-Math.PI / 2);
+        const sectionEnd1 = sectionLine.clone();
+        const sectionEnd2 = sectionLine.clone();
+        sectionEnd1.translateZ(beamLength / 2 + 0.005);
+        sectionEnd2.translateZ(-(beamLength / 2 + 0.005));
+
         const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
         const bentGeo = new ExtrudeGeometry(section, {
           steps: extrudeSteps,
@@ -505,7 +519,12 @@ export class BenderDemo extends LitElement {
         );
         beamEdge.dispose();
         const beamMesh = new Mesh(bentGeo, bentMat);
+
+        sectionEnd1.translateY(-anticlast * 3).rotateX(Math.atan(sigmaMax));
+        sectionEnd2.translateY(-anticlast * 3).rotateX(Math.atan(-sigmaMax));
+
         beamLine.geometry.translate(0, -anticlast * 3, 0);
+
         beamMesh.translateY(-anticlast * 3);
 
         const compGeo = new ExtrudeGeometry(section, {
@@ -603,7 +622,12 @@ export class BenderDemo extends LitElement {
         );
         tensPos.rotateY(-Math.PI / 2);
 
-        this.bendGroup[this.angle].add(beamLine, beamMesh);
+        this.bendGroup[this.angle].add(
+          sectionEnd1,
+          sectionEnd2,
+          beamLine,
+          beamMesh
+        );
         this.graphGroup[this.angle].add(
           compMesh,
           tensMesh,
@@ -669,8 +693,6 @@ export class BenderDemo extends LitElement {
           tensClip2,
           2
         );
-        /*         const compPlaneMat2 = compPlaneMat.clone();
-        const tensPlaneMat2 = tensPlaneMat.clone(); */
 
         const compPlaneMat2 = compPlaneMat.clone();
         const tensPlaneMat2 = tensPlaneMat.clone();
@@ -687,16 +709,7 @@ export class BenderDemo extends LitElement {
 
         compPos2.renderOrder = 1.1;
         tensPos2.renderOrder = 2.1;
-        /*         compPos.quaternion.setFromAxisAngle(
-          new Vector3(0, 0, 1),
-          Math.atan(sigmaMax * 3.5)
-        );
-        compPos.rotateY(Math.PI / 2);
-        tensPos.quaternion.setFromAxisAngle(
-          new Vector3(0, 0, 1),
-          Math.atan(sigmaMax * 3.5)
-        );       tensPos.rotateY(-Math.PI / 2);
-*/
+
         compPos2.quaternion.setFromAxisAngle(
           new Vector3(0, 0, 1),
           Math.atan(-sigmaMax * 3.5)
@@ -707,6 +720,7 @@ export class BenderDemo extends LitElement {
           Math.atan(-sigmaMax * 3.5)
         );
         tensPos2.rotateY(-Math.PI / 2);
+
         this.graphGroup[this.steps - this.angle].add(
           compMesh2,
           tensMesh2,
@@ -721,8 +735,8 @@ export class BenderDemo extends LitElement {
         this.bendGroup[this.steps - this.angle] = this.bendGroup[this.angle]
           .clone()
           .rotateX(Math.PI);
-        /*       beamMesh.geometry.dispose();
-         */
+        beamMesh.geometry.dispose();
+
         this.meshLoaded[this.steps - this.angle] = true;
         this.bendScene.add(
           this.bendGroup[this.angle],
