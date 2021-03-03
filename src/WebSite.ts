@@ -511,6 +511,13 @@ export class WebSite extends LitElement {
                 }
               }}>
             <div id="burgerdemo">
+                            <a
+                class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
+                @click=${() => this.switchPage('/bender')}
+                >${
+                  this.english ? 'demo' : 'デモ'
+                }<span class="buttonspace"></span></a
+              >
             <a
             id='burgerblog'
             href="https://blog.p-ku.com"
@@ -519,13 +526,7 @@ export class WebSite extends LitElement {
                   this.english ? 'blog⤴' : 'ブログ⤴'
                 }<span class="buttonspace"></span></a
               >
-              <a
-                class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                @click=${() => this.switchPage('/bender')}
-                >${
-                  this.english ? 'demo' : 'デモ'
-                }<span class="buttonspace"></span></a
-              >
+
 
             </div>                      
             <div id="burgerlink">

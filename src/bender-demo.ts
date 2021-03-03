@@ -133,11 +133,8 @@ export class BenderDemo extends LitElement {
 
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.renderer2.localClippingEnabled = true;
-    this.renderer.setSize(window.innerHeight / 2.55, window.innerHeight / 3.06);
-    this.renderer2.setSize(
-      window.innerHeight / 2.55,
-      window.innerHeight / 3.06
-    );
+    this.renderer.setSize(window.innerHeight / 2, window.innerHeight / 2.4);
+    this.renderer2.setSize(window.innerHeight / 2, window.innerHeight / 2.4);
     const color = 0xfffde8;
     const intensity = 0.5;
     const amintensity = 1;
@@ -290,8 +287,8 @@ export class BenderDemo extends LitElement {
         );
         const sectionEnd1 = sectionLine.clone();
         const sectionEnd2 = sectionLine.clone();
-        sectionEnd1.translateZ(1.005);
-        sectionEnd2.translateZ(-1.005);
+        sectionEnd1.translateZ(1.008);
+        sectionEnd2.translateZ(-1.008);
 
         this.bendGroup[this.angle].add(
           sectionEnd1,
@@ -460,10 +457,6 @@ export class BenderDemo extends LitElement {
         sectionEdge.dispose();
         sectionLine.rotateY(-Math.PI / 2);
         sectionGeo.rotateY(-Math.PI / 2);
-        const sectionEnd1 = sectionLine.clone();
-        const sectionEnd2 = sectionLine.clone();
-        sectionEnd1.translateZ(beamLength / 2 + 0.005);
-        sectionEnd2.translateZ(-(beamLength / 2 + 0.005));
 
         const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
         const bentGeo = new ExtrudeGeometry(section, {
@@ -519,9 +512,17 @@ export class BenderDemo extends LitElement {
         );
         beamEdge.dispose();
         const beamMesh = new Mesh(bentGeo, bentMat);
+        const sectionEnd1 = sectionLine.clone();
+        const sectionEnd2 = sectionLine.clone();
 
-        sectionEnd1.translateY(-anticlast * 3).rotateX(Math.atan(sigmaMax));
-        sectionEnd2.translateY(-anticlast * 3).rotateX(Math.atan(-sigmaMax));
+        sectionEnd1
+          .translateZ(beamLength / 2 + 0.008 * Math.cos(Math.atan(sigmaMax)))
+          .translateY(-anticlast * 3 - 0.008 * Math.sin(Math.atan(sigmaMax)))
+          .rotateX(Math.atan(sigmaMax));
+        sectionEnd2
+          .translateZ(-beamLength / 2 - 0.008 * Math.cos(Math.atan(sigmaMax)))
+          .translateY(-anticlast * 3 - 0.008 * Math.sin(Math.atan(sigmaMax)))
+          .rotateX(Math.atan(-sigmaMax));
 
         beamLine.geometry.translate(0, -anticlast * 3, 0);
 
