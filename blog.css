@@ -15,6 +15,13 @@ body {
   color: #321e00;
   background: #fffde5;
 }
+img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+body#collection a.read-more, body#subpage a.read-more,
 header p.description,
 body#collection article.norm,
 header p.description body#collection #wrapper h2 + time,

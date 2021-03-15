@@ -8,6 +8,7 @@ import {
   Plane,
   Vector2,
   Vector3,
+  Line,
   MeshBasicMaterial,
   MeshPhongMaterial,
   MeshStandardMaterial,
@@ -38,6 +39,7 @@ import {
   DecrementWrapStencilOp,
   Ray,
   BufferAttribute,
+  ShapeUtils,
 } from 'three';
 
 export class BenderDemo extends LitElement {
@@ -287,8 +289,8 @@ export class BenderDemo extends LitElement {
         );
         const sectionEnd1 = sectionLine.clone();
         const sectionEnd2 = sectionLine.clone();
-        sectionEnd1.translateZ(1.008);
-        sectionEnd2.translateZ(-1.008);
+        sectionEnd1.translateZ(1.004);
+        sectionEnd2.translateZ(-1.004);
 
         this.bendGroup[this.angle].add(
           sectionEnd1,
@@ -404,43 +406,69 @@ export class BenderDemo extends LitElement {
           ),
           rayGuideTop
         );
-
+        const secPoints = [
+          [-bbot / 2, -this.bh / 2 + anticlast],
+          [bbot / 2, -this.bh / 2 + anticlast],
+          [transTestBR.x, transTestBR.y],
+          [tbot / 2, thbot],
+          [ttop / 2, thtop],
+          [transTestTR.x, transTestTR.y],
+          [btop / 2, this.bh / 2 + anticlast],
+          [-btop / 2, this.bh / 2 + anticlast],
+          [transTestTL.x, transTestTL.y],
+          [-ttop / 2, thtop],
+          [-tbot / 2, thbot],
+          [transTestBL.x, transTestBL.y],
+        ];
         //bot
         const section = new Shape()
-          .moveTo(-bbot / 2, -this.bh / 2 + anticlast) //bot
+          .moveTo(secPoints[0][0], secPoints[0][1]) //bot
           .quadraticCurveTo(
             0,
             -this.bh / 2 - anticlast,
-            bbot / 2,
-            -this.bh / 2 + anticlast
+            secPoints[1][0],
+            secPoints[1][1]
           ) //bot
-          .lineTo(transTestBR.x, transTestBR.y) //bot half
-          .quadraticCurveTo(-rayGuideBot.x, rayGuideBot.y, tbot / 2, thbot)
-          .lineTo(ttop / 2, thtop) //top half
+          .lineTo(secPoints[2][0], secPoints[2][1]) //bot half
+          .quadraticCurveTo(
+            -rayGuideBot.x,
+            rayGuideBot.y,
+            secPoints[3][0],
+            secPoints[3][1]
+          )
+          .lineTo(secPoints[4][0], secPoints[4][1]) //top half
           .quadraticCurveTo(
             -rayGuideTop.x,
             rayGuideTop.y,
-            transTestTR.x,
-            transTestTR.y
+            secPoints[5][0],
+            secPoints[5][1]
           )
-          .lineTo(btop / 2, this.bh / 2 + anticlast) //top
+          .lineTo(secPoints[6][0], secPoints[6][1]) //top
           .quadraticCurveTo(
             0,
             this.bh / 2 - anticlast,
-            -btop / 2,
-            this.bh / 2 + anticlast
+            secPoints[7][0],
+            secPoints[7][1]
           ) //top
-          .lineTo(transTestTL.x, transTestTL.y) //top half
-          .quadraticCurveTo(rayGuideTop.x, rayGuideTop.y, -ttop / 2, thtop) //bot half //bot half
-          .lineTo(-tbot / 2, thbot)
+          .lineTo(secPoints[8][0], secPoints[8][1]) //top half
+          .quadraticCurveTo(
+            rayGuideTop.x,
+            rayGuideTop.y,
+            secPoints[9][0],
+            secPoints[9][1]
+          ) //bot half //bot half
+          .lineTo(secPoints[10][0], secPoints[10][1])
           .quadraticCurveTo(
             rayGuideBot.x,
             rayGuideBot.y,
-            transTestBL.x,
-            transTestBL.y
+            secPoints[11][0],
+            secPoints[11][1]
           )
           //bot half
-          .lineTo(-bbot / 2, -this.bh / 2 + anticlast); //bot
+          .lineTo(secPoints[0][0], secPoints[0][1]); //bot
+        this.graphGroup[this.steps - this.angle] = new Group();
+
+        this.bendGroup[this.steps - this.angle] = new Group();
 
         const curve = new QuadraticBezierCurve3(
           new Vector3(-beamLength / 2, 0, 0),
@@ -448,17 +476,59 @@ export class BenderDemo extends LitElement {
           new Vector3(beamLength / 2, 0, 0)
         );
 
+        console.log(secPoints.length);
+        const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
+/*         for (let index = 0; index < secPoints.length; index++) {
+          const secCurve = new QuadraticBezierCurve3(
+            new Vector3(
+              -beamLength / 2,
+              secPoints[index][1],
+              secPoints[index][0]
+            ),
+            new Vector3(0, sigmaMax + secPoints[index][1], secPoints[index][0]),
+            new Vector3(
+              beamLength / 2,
+              secPoints[index][1],
+              secPoints[index][0]
+            )
+          );
+
+          const secCurvePoints = secCurve.getPoints(extrudeSteps);
+          const secCurveGeo = new BufferGeometry().setFromPoints(
+            secCurvePoints
+          );
+
+          const secCurveLine = new Line(
+            secCurveGeo,
+            new LineBasicMaterial({ color: 0x000000, visible: true })
+          ).translateY(-anticlast * 3);
+          this.bendGroup[this.angle].add(secCurveLine);
+          this.bendGroup[this.steps - this.angle].add(
+            secCurveLine.clone().rotateX(Math.PI)
+          );
+        } */
+
         const sectionGeo = new ShapeGeometry(section);
         const sectionEdge = new EdgesGeometry(sectionGeo);
         const sectionLine = new LineSegments(
           sectionEdge,
           new LineBasicMaterial({ color: 0x000000, visible: true })
         );
+
         sectionEdge.dispose();
         sectionLine.rotateY(-Math.PI / 2);
         sectionGeo.rotateY(-Math.PI / 2);
+        const sectionEnd1 = sectionLine.clone();
+        const sectionEnd2 = sectionLine.clone();
 
-        const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
+        sectionEnd1
+          .translateZ(beamLength / 2 + 0.004 * Math.cos(Math.atan(sigmaMax)))
+          .translateY(-anticlast * 3 - 0.004 * Math.sin(Math.atan(sigmaMax)))
+          .rotateX(Math.atan(sigmaMax));
+        sectionEnd2
+          .translateZ(-beamLength / 2 - 0.004 * Math.cos(Math.atan(sigmaMax)))
+          .translateY(-anticlast * 3 - 0.004 * Math.sin(Math.atan(sigmaMax)))
+          .rotateX(Math.atan(-sigmaMax));
         const bentGeo = new ExtrudeGeometry(section, {
           steps: extrudeSteps,
           curveSegments: extrudeSteps,
@@ -512,17 +582,6 @@ export class BenderDemo extends LitElement {
         );
         beamEdge.dispose();
         const beamMesh = new Mesh(bentGeo, bentMat);
-        const sectionEnd1 = sectionLine.clone();
-        const sectionEnd2 = sectionLine.clone();
-
-        sectionEnd1
-          .translateZ(beamLength / 2 + 0.008 * Math.cos(Math.atan(sigmaMax)))
-          .translateY(-anticlast * 3 - 0.008 * Math.sin(Math.atan(sigmaMax)))
-          .rotateX(Math.atan(sigmaMax));
-        sectionEnd2
-          .translateZ(-beamLength / 2 - 0.008 * Math.cos(Math.atan(sigmaMax)))
-          .translateY(-anticlast * 3 - 0.008 * Math.sin(Math.atan(sigmaMax)))
-          .rotateX(Math.atan(-sigmaMax));
 
         beamLine.geometry.translate(0, -anticlast * 3, 0);
 
@@ -640,8 +699,6 @@ export class BenderDemo extends LitElement {
           compPos,
           tensPos
         );
-
-        this.graphGroup[this.steps - this.angle] = new Group();
 
         const compClip2 = [
           new Plane(new Vector3(-1, sigmaMax * 3.5, 0), 0.001),
@@ -773,6 +830,7 @@ export class BenderDemo extends LitElement {
       max-height: 100%;
       color: #321e00;
       margin: 0 auto;
+
     }
     h1,
     h2,
@@ -804,6 +862,7 @@ export class BenderDemo extends LitElement {
       max-height: 100%;
       color: #321e00;
       margin: 0;
+
     }
     .colleft {
       display: flex;
@@ -812,6 +871,8 @@ export class BenderDemo extends LitElement {
       align-items: center;
       align-content: center;
       flex: 0.5, 0.5, 0.5;
+
+
     }
     .colright {
       display: flex;
@@ -825,6 +886,7 @@ export class BenderDemo extends LitElement {
       max-width: 80vw;
       align-self: center;
     }
+
     .slider-wrapper {
       width: 32px;
       height: 50vh;
@@ -880,7 +942,6 @@ export class BenderDemo extends LitElement {
 
   render() {
     return html`
-      <h2>${this.english ? 'bender' : 'ベンダー'}</h2>
       <div id="main">
         <div class="colleft">
           <div id="beam"></div>

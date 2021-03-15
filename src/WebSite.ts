@@ -79,6 +79,7 @@ export class WebSite extends LitElement {
       min-width: 100%;
       width: 100%;
       justify-content: space-between;
+      z-index: 1;
     }
 
     #navbar * a {
@@ -411,7 +412,7 @@ export class WebSite extends LitElement {
         align-items: center;
         justify-content: center;
         min-height: 128px;
-        z-index: 1;
+        z-index: 2;
       }
       #burgerdemo,
       #burgerlink {
@@ -515,7 +516,7 @@ export class WebSite extends LitElement {
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
                 @click=${() => this.switchPage('/bender')}
                 >${
-                  this.english ? 'demo' : 'デモ'
+                  this.english ? 'demo⋆' : 'デモ'
                 }<span class="buttonspace"></span></a
               >
             <a
