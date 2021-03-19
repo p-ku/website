@@ -133,14 +133,14 @@ opacity: 0;
 
 
     .fadein {
-      animation: fade-in 1s;
+      animation: fade-in 0.5s;
     }
 }
 @supports (-moz-appearance:none) {
   img {
       height: 100%;
       width: 100%;
-      transition:opacity 2s; 
+      transition:opacity 0.5s; 
     }
 
     .fadein {
