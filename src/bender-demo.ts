@@ -105,10 +105,9 @@ export class BenderDemo extends LitElement {
 
   handleResize = () => {
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerHeight / 2.55, window.innerHeight / 3.06);
+    this.renderer.setSize(window.innerHeight / 2, window.innerHeight / 2.4);
     this.renderer2.setSize(
-      window.innerHeight / 2.55,
-      window.innerHeight / 3.06
+      window.innerHeight / 2, window.innerHeight / 2.4
     );
   };
 
