@@ -73,7 +73,7 @@ export class BenderDemo extends LitElement {
   @property({ attribute: false }) graphScene = new Scene();
   @property({ attribute: false }) camera = new PerspectiveCamera(
     33,
-    window.innerWidth / window.innerHeight,
+    window.outerWidth / window.outerHeight,
     0.1,
     100
   );
@@ -105,9 +105,9 @@ export class BenderDemo extends LitElement {
 
   handleResize = () => {
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerHeight / 2, window.innerHeight / 2.4);
+    this.renderer.setSize(window.outerHeight / 2.525, window.outerHeight / 3.03);
     this.renderer2.setSize(
-      window.innerHeight / 2, window.innerHeight / 2.4
+      window.outerHeight / 2.525, window.outerHeight / 3.03
     );
   };
 
@@ -134,8 +134,8 @@ export class BenderDemo extends LitElement {
 
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.renderer2.localClippingEnabled = true;
-    this.renderer.setSize(window.innerHeight / 2, window.innerHeight / 2.4);
-    this.renderer2.setSize(window.innerHeight / 2, window.innerHeight / 2.4);
+    this.renderer.setSize(window.outerHeight / 2.525, window.outerHeight / 3.03);
+    this.renderer2.setSize(window.outerHeight / 2.525, window.outerHeight / 3.03);
     const color = 0xfffde8;
     const intensity = 0.5;
     const amintensity = 1;
