@@ -121,6 +121,8 @@ export class WebSite extends LitElement {
       font-size: max(1.5em, 38.4px);
       color: #ffc342;
       text-decoration: none;
+      cursor: pointer;
+
     }
 
     #demobar {
@@ -143,6 +145,8 @@ export class WebSite extends LitElement {
       min-width: max-content;
       border-bottom: solid #00000000 max(4px, 0.15em);
       border-top: solid #00000000 max(4px, 0.15em);
+      cursor: pointer;
+
     }
 
     #demobar a.chosen {
@@ -178,6 +182,8 @@ export class WebSite extends LitElement {
       text-decoration: none;
       width: 100%;
       flex: 1 1 max(5em, 128px);
+      cursor: pointer;
+
     }
     .source {
       color: #9df5ee;

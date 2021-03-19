@@ -15,12 +15,8 @@ body {
   color: #321e00;
   background: #fffde5;
 }
-img{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
+
+#post article.norm,
 body#collection a.read-more, body#subpage a.read-more,
 header p.description,
 body#collection article.norm,
@@ -140,4 +136,10 @@ body#subpage code {
   background-color: #fffbd1;
   color: #321e00;
   border: 1px solid #ffc342;
+}
+body#post img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }

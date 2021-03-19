@@ -106,24 +106,50 @@ class MainPage extends LitElement {
       max-height: 960px;
       max-width: 960px;
     }
-
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    img {
+/* @-moz-document url-prefix() { 
+  img {
       height: 100%;
       width: 100%;
+      opacity: 1;
+      transition: 5s all;
+    }
+
+.fadein {
+opacity: 0;
+} */
+
+       img {
+      height: 100%;
+      width: 100%;
+      opacity: 1;
+    }
+
+@supports not (-moz-appearance:none) {
+ @keyframes fade-in {
+        0% {opacity: 0;}
+        100% {opacity: 1;}
+    }
+  
+
+
+    .fadein {
+      animation: fade-in 1s;
+    }
+}
+@supports (-moz-appearance:none) {
+  img {
+      height: 100%;
+      width: 100%;
+      transition:opacity 2s; 
     }
 
     .fadein {
-      animation: fade-in 0.5s;
-    }
+opacity : 0; 
+}
+}
+
+
+
 
     @media screen and (max-width: 1080px) {
       h1,
