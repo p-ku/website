@@ -1,20 +1,9 @@
-import { LitElement, html, css, property } from 'lit-element'; // https://lit-element.polymer-project.org/re
+import { LitElement, html, css } from 'lit';
+import { property } from 'lit/decorators.js';
 
-class MainPage extends LitElement {
-  @property({ type: Boolean }) english: boolean;
+export class HomePage extends LitElement {
+  @property({ type: Boolean }) english!: boolean;
   @property({ type: Boolean }) loaded = false;
-
-  @property({ attribute: false }) enintro = html` <p>
-      Six years into my first attempt at a career, I've realized three
-      things:<br /><br />1. I'm not making things.<br />2. I want to make
-      things.<br />3. Software engineers make things.
-    </p>
-    <p>hello</p>`;
-  @property({ attribute: false }) jpintro = html` <p>
-    Six years into my first attempt at a career, I've realized two things:<br />
-    1. I'm not making things. 2.<br />
-    I want to make things "
-  </p>`;
 
   changeLang() {
     this.english ? (this.english = false) : (this.english = true);
@@ -106,50 +95,38 @@ class MainPage extends LitElement {
       max-height: 960px;
       max-width: 960px;
     }
-/* @-moz-document url-prefix() { 
-  img {
-      height: 100%;
-      width: 100%;
-      opacity: 1;
-      transition: 5s all;
-    }
 
-.fadein {
-opacity: 0;
-} */
-
-       img {
+    img {
       height: 100%;
       width: 100%;
       opacity: 1;
     }
 
-@supports not (-moz-appearance:none) {
- @keyframes fade-in {
-        0% {opacity: 0;}
-        100% {opacity: 1;}
+    @supports not (-moz-appearance: none) {
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .fadein {
+        animation: fade-in 0.5s;
+      }
     }
-  
+    @supports (-moz-appearance: none) {
+      img {
+        height: 100%;
+        width: 100%;
+        transition: opacity 0.5s;
+      }
 
-
-    .fadein {
-      animation: fade-in 0.5s;
+      .fadein {
+        opacity: 0;
+      }
     }
-}
-@supports (-moz-appearance:none) {
-  img {
-      height: 100%;
-      width: 100%;
-      transition:opacity 0.5s; 
-    }
-
-    .fadein {
-opacity : 0; 
-}
-}
-
-
-
 
     @media screen and (max-width: 1080px) {
       h1,
@@ -216,4 +193,4 @@ ${
   }
 }
 
-customElements.define('home-page', MainPage);
+customElements.define('home-page', HomePage);

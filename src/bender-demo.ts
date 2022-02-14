@@ -1,6 +1,5 @@
-import { LitElement, html, css, property } from 'lit-element';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
+import { LitElement, html, css } from 'lit';
+import { property } from 'lit/decorators.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import {
@@ -8,7 +7,6 @@ import {
   Plane,
   Vector2,
   Vector3,
-  Line,
   MeshBasicMaterial,
   MeshPhongMaterial,
   MeshStandardMaterial,
@@ -39,36 +37,20 @@ import {
   DecrementWrapStencilOp,
   Ray,
   BufferAttribute,
-  ShapeUtils,
 } from 'three';
 
 export class BenderDemo extends LitElement {
-  @property({ type: Boolean }) english: boolean;
+  @property({ type: Boolean }) english!: boolean;
 
-  @property({ attribute: false }) loading = true;
-  @property({ attribute: false }) steps = 20;
-  @property({ attribute: false }) angle = this.steps / 2;
-  @property({ attribute: false }) previous = 0;
+  @property({ type: Boolean }) loading = true;
+  @property({ type: Number }) steps = 20;
+  @property({ type: Number }) angle = this.steps / 2;
+  @property({ type: Number }) previous = 0;
+  @property({ type: Number }) bh = 1;
+  @property({ type: Number }) t = 0.2;
   @property({ attribute: false }) meshLoaded: boolean[] = [];
-  @property({ attribute: false }) bh = 1;
-  @property({ attribute: false }) t = 0.2;
-
-  @property({ attribute: false }) beamLines: LineSegments[] = [];
-  @property({ attribute: false }) beamMeshes: Mesh[] = [];
-  @property({ attribute: false }) sectionLines: LineSegments[] = [];
-  @property({ attribute: false }) compMeshes: Mesh[] = [];
-  @property({ attribute: false }) compPoss: Mesh[] = [];
-  @property({ attribute: false }) compStencils1: Mesh[] = [];
-  @property({ attribute: false }) compStencils2: Mesh[] = [];
-  @property({ attribute: false }) tensMeshes: Mesh[] = [];
-  @property({ attribute: false }) tensPoss: Mesh[] = [];
-  @property({ attribute: false }) tensStencils1: Mesh[] = [];
-  @property({ attribute: false }) tensStencils2: Mesh[] = [];
-
-  @property({ attribute: false }) bendGroup: any[] = [];
-  @property({ attribute: false }) graphGroup: any[] = [];
-
-  @property({ attribute: false }) graphBeamLine = new LineSegments();
+  @property({ attribute: false }) bendGroup: Group[] = [];
+  @property({ attribute: false }) graphGroup: Group[] = [];
   @property({ attribute: false }) bendScene = new Scene();
   @property({ attribute: false }) graphScene = new Scene();
   @property({ attribute: false }) camera = new PerspectiveCamera(
@@ -77,26 +59,20 @@ export class BenderDemo extends LitElement {
     0.1,
     100
   );
-
   @property({ attribute: false }) renderer = new WebGLRenderer({
     antialias: true,
   });
   @property({ attribute: false }) renderer2 = new WebGLRenderer({
     antialias: true,
   });
-
   @property({ attribute: false }) controls = new OrbitControls(
     this.camera,
-    (this.renderer.domElement as unknown) as HTMLElement
+    this.renderer.domElement as unknown as HTMLElement
   );
   @property({ attribute: false }) controls2 = new OrbitControls(
     this.camera,
-    (this.renderer2.domElement as unknown) as HTMLElement
+    this.renderer2.domElement as unknown as HTMLElement
   );
-
-  constructor() {
-    super();
-  }
 
   firstUpdated() {
     this.init();
@@ -105,9 +81,13 @@ export class BenderDemo extends LitElement {
 
   handleResize = () => {
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.outerHeight / 2.525, window.outerHeight / 3.03);
+    this.renderer.setSize(
+      window.outerHeight / 2.525,
+      window.outerHeight / 3.03
+    );
     this.renderer2.setSize(
-      window.outerHeight / 2.525, window.outerHeight / 3.03
+      window.outerHeight / 2.525,
+      window.outerHeight / 3.03
     );
   };
 
@@ -134,8 +114,14 @@ export class BenderDemo extends LitElement {
 
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.renderer2.localClippingEnabled = true;
-    this.renderer.setSize(window.outerHeight / 2.525, window.outerHeight / 3.03);
-    this.renderer2.setSize(window.outerHeight / 2.525, window.outerHeight / 3.03);
+    this.renderer.setSize(
+      window.outerHeight / 2.525,
+      window.outerHeight / 3.03
+    );
+    this.renderer2.setSize(
+      window.outerHeight / 2.525,
+      window.outerHeight / 3.03
+    );
     const color = 0xfffde8;
     const intensity = 0.5;
     const amintensity = 1;
@@ -166,13 +152,13 @@ export class BenderDemo extends LitElement {
     this.loading = false;
 
     window.addEventListener('resize', this.handleResize);
-
-    this.shadowRoot
-      .getElementById('beam')
-      .appendChild(this.renderer.domElement);
-    this.shadowRoot
-      .getElementById('graph')
-      .appendChild(this.renderer2.domElement);
+    const sRoot = this.shadowRoot;
+    if (sRoot != null) {
+      const beamRoot = sRoot.getElementById('beam');
+      const graphRoot = sRoot.getElementById('beam');
+      if (beamRoot != null) beamRoot.appendChild(this.renderer.domElement);
+      if (graphRoot != null) graphRoot.appendChild(this.renderer.domElement);
+    }
     this.newBend();
   }
 
@@ -231,10 +217,6 @@ export class BenderDemo extends LitElement {
   newBend() {
     this.angle = Number((this.sliderValue as HTMLInputElement).value);
     if (this.meshLoaded[this.angle] == true) {
-      /*       for (let index = 0; index < this.meshes.length; index++) {
-        this.meshes[index][this.angle].material.visible = true;
-        this.meshes[index][this.previous].material.visible = false;
-      } */
       this.bendGroup[this.angle].visible = true;
       this.bendGroup[this.previous].visible = false;
       this.graphGroup[this.angle].visible = true;
@@ -243,7 +225,6 @@ export class BenderDemo extends LitElement {
       this.bendGroup[this.angle] = new Group();
       this.graphGroup[this.angle] = new Group();
       const beamLength = 2;
-      let sign = 1;
 
       if (this.angle == this.steps / 2) {
         const section = new Shape([
@@ -310,11 +291,6 @@ export class BenderDemo extends LitElement {
         const sigmaMax = -Math.atan(angle);
         const poisson = sigmaMax / 4;
         const anticlast = sigmaMax / 8;
-        if (angle > 0) {
-          sign = 1;
-        } else {
-          sign = -1;
-        }
 
         const thtop =
           this.bh / 2 -
@@ -477,35 +453,6 @@ export class BenderDemo extends LitElement {
 
         console.log(secPoints.length);
         const extrudeSteps = Math.max(Math.abs(this.angle - this.steps / 2), 7);
-/*         for (let index = 0; index < secPoints.length; index++) {
-          const secCurve = new QuadraticBezierCurve3(
-            new Vector3(
-              -beamLength / 2,
-              secPoints[index][1],
-              secPoints[index][0]
-            ),
-            new Vector3(0, sigmaMax + secPoints[index][1], secPoints[index][0]),
-            new Vector3(
-              beamLength / 2,
-              secPoints[index][1],
-              secPoints[index][0]
-            )
-          );
-
-          const secCurvePoints = secCurve.getPoints(extrudeSteps);
-          const secCurveGeo = new BufferGeometry().setFromPoints(
-            secCurvePoints
-          );
-
-          const secCurveLine = new Line(
-            secCurveGeo,
-            new LineBasicMaterial({ color: 0x000000, visible: true })
-          ).translateY(-anticlast * 3);
-          this.bendGroup[this.angle].add(secCurveLine);
-          this.bendGroup[this.steps - this.angle].add(
-            secCurveLine.clone().rotateX(Math.PI)
-          );
-        } */
 
         const sectionGeo = new ShapeGeometry(section);
         const sectionEdge = new EdgesGeometry(sectionGeo);
@@ -728,18 +675,7 @@ export class BenderDemo extends LitElement {
         const tensMesh2 = new Mesh(tensGeo2, tensMat2);
         compMesh2.renderOrder = 6;
         tensMesh2.renderOrder = 7;
-        /*         const compStencils2 = this.createPlaneStencilGroup(
-          compGeo2,
-          compClip2,
-          1
-        );
-        const tensStencils2 = this.createPlaneStencilGroup(
-          tensGeo2,
-          tensClip2,
-          2
-        ); */
-        /*         const compStencils2 = compStencils.map(el => el.clone());
-        const tensStencils2 = tensStencils.map(el => el.clone()); */
+
         const compStencils2 = this.createPlaneStencilGroup(
           compGeo2,
           compClip2,
@@ -829,7 +765,6 @@ export class BenderDemo extends LitElement {
       max-height: 100%;
       color: #321e00;
       margin: 0 auto;
-
     }
     h1,
     h2,
@@ -861,7 +796,6 @@ export class BenderDemo extends LitElement {
       max-height: 100%;
       color: #321e00;
       margin: 0;
-
     }
     .colleft {
       display: flex;
@@ -870,8 +804,6 @@ export class BenderDemo extends LitElement {
       align-items: center;
       align-content: center;
       flex: 0.5, 0.5, 0.5;
-
-
     }
     .colright {
       display: flex;

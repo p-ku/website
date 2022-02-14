@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -13,11 +13,8 @@
     "outDir": "out-tsc",
     "sourceMap": true,
     "inlineSources": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": false,
-    "allowJs": true,
-    "rootDir": "./"
+    "rootDir": "./",
+    "incremental": true
   },
   "include": ["**/*.ts"]
 }

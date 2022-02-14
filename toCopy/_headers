@@ -1,0 +1,7 @@
+/*
+
+    Content-Security-Policy: default-src https: 'unsafe-inline'
+    X-Frame-Options: DENY
+    X-XSS-Protection: 1; mode=block
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: same-origin

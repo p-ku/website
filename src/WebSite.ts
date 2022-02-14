@@ -1,19 +1,14 @@
 import './home-page.js';
 import './bender-demo.js';
 import './contact-form.js';
-import { LitElement, html, css, property } from 'lit-element'; // https://lit-element.polymer-project.org/
+import { LitElement, html, css } from 'lit';
+import { property } from 'lit/decorators.js';
 
 export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
   @property({ type: String }) currentPage = '/';
   @property({ type: String }) lang = '';
-
   @property({ type: Boolean }) isOpen = false;
-
-  constructor() {
-    super();
-    this.currentPage = location.pathname.replace('https://p-ku.com', '');
-  }
 
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
@@ -122,7 +117,6 @@ export class WebSite extends LitElement {
       color: #ffc342;
       text-decoration: none;
       cursor: pointer;
-
     }
 
     #demobar {
@@ -146,7 +140,6 @@ export class WebSite extends LitElement {
       border-bottom: solid #00000000 max(4px, 0.15em);
       border-top: solid #00000000 max(4px, 0.15em);
       cursor: pointer;
-
     }
 
     #demobar a.chosen {
@@ -183,7 +176,6 @@ export class WebSite extends LitElement {
       width: 100%;
       flex: 1 1 max(5em, 128px);
       cursor: pointer;
-
     }
     .source {
       color: #9df5ee;
@@ -309,9 +301,6 @@ export class WebSite extends LitElement {
 
       .linkspace:hover #jpabb {
         transition: 0.06s ease-out;
-        /*         -webkit-transition: opacity 0.06s ease-out;
-        -moz-transition: opacity 0.06s ease-out;
-        -o-transition: opacity 0.06s ease-out; */
         flex: 0 1 0;
         min-height: 0;
         opacity: 1;
@@ -319,9 +308,6 @@ export class WebSite extends LitElement {
       .linkspace:hover #risingsun > .linktext {
         flex: 1 0 2.5em;
         transition: 0.06s ease-out;
-        /*         -webkit-transition: opacity 0.06s ease-out;
-        -moz-transition: opacity 0.06s ease-out;
-        -o-transition: opacity 0.06s ease-out; */
         opacity: 1;
         max-width: 100%;
       }
@@ -329,9 +315,6 @@ export class WebSite extends LitElement {
       .linkspace:hover #sourcecircle {
         width: 85%;
         transition: 0.06s ease-out;
-        /*         -webkit-transition: opacity 0.06s ease-out;
-        -moz-transition: opacity 0.06s ease-out;
-        -o-transition: opacity 0.06s ease-out; */
       }
 
       .linkspace:hover #mail.chosen #mailcircle {
@@ -513,14 +496,12 @@ export class WebSite extends LitElement {
         }}>≡</div>
           <div class=${this.isOpen ? 'open closed' : 'closed'}
               @click=${() => {
-                if (this.isOpen) {
-                  this.isOpen = !this.isOpen;
-                }
+                if (this.isOpen) this.isOpen = !this.isOpen;
               }}>
             <div id="burgerdemo">
                             <a
                 class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                @click=${() => this.switchPage('/bender')}
+                @click=${() => this.switchPage('/bender')} 
                 >${
                   this.english ? 'demo⋆' : 'デモ'
                 }<span class="buttonspace"></span></a
@@ -557,9 +538,7 @@ export class WebSite extends LitElement {
              </div>
           </div>
         <div id="navleft" @click=${() => {
-          if (this.isOpen) {
-            this.isOpen = !this.isOpen;
-          }
+          if (this.isOpen) this.isOpen = !this.isOpen;
         }}>
 
             <a
@@ -576,9 +555,7 @@ export class WebSite extends LitElement {
                 href="https://blog.p-ku.com"
                 target="_blank"
                 @click=${() => {
-                  if (this.isOpen) {
-                    this.isOpen = !this.isOpen;
-                  }
+                  if (this.isOpen) this.isOpen = !this.isOpen;
                 }}
                 ><span class='linktext'                 
               ></span>${this.english ? 'blog⤴' : 'ブログ⤴'}</a
@@ -602,9 +579,7 @@ export class WebSite extends LitElement {
                 href="https://github.com/p-ku"
                 target="_blank"
                 @click=${() => {
-                  if (this.isOpen) {
-                    this.isOpen = !this.isOpen;
-                  }
+                  if (this.isOpen) this.isOpen = !this.isOpen;
                 }}
                 ><div id="sourcecircle">＜<span class='linktext'                 
               >github⤴</span>＞</div></a
@@ -618,9 +593,7 @@ export class WebSite extends LitElement {
                 }
                 @click=${() => {
                   this.switchPage('/contact');
-                  if (this.isOpen) {
-                    this.isOpen = !this.isOpen;
-                  }
+                  if (this.isOpen) this.isOpen = !this.isOpen;
                 }}
                 ><div id="mailcircle"><span class='linktext'                 
               >${this.english ? 'contact' : 'コンタクト'}</span>➤</div></a
@@ -643,9 +616,7 @@ export class WebSite extends LitElement {
         <div
           id="outlet"
           @click=${() => {
-            if (this.isOpen) {
-              this.isOpen = !this.isOpen;
-            }
+            if (this.isOpen) this.isOpen = !this.isOpen;
           }}
         >
              ${

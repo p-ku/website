@@ -1,25 +1,25 @@
-import { css, html, LitElement, property } from 'lit-element'; // https://lit-element.polymer-project.org/
-import * as openpgp from 'openpgp'; // https://openpgpjs.org/
+import { css, html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
+import { encrypt, createMessage, readKey } from 'openpgp/lightweight';
 
-class ContactForm extends LitElement {
+export class ContactForm extends LitElement {
   @property({ type: String }) lang = '';
-  @property({ type: Boolean }) english: boolean;
-  @property({ type: Object }) saved = this.messageInput;
+  @property({ type: Boolean }) english!: boolean;
   @property({ type: Boolean }) tipOpen = false;
-
-  @property({ attribute: false }) entooltip = html`Encrypted with&nbsp;
+  @property({ type: Object }) entooltip = html`Encrypted with&nbsp;
     <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a></span>    `;
-  @property()
+  @property({ type: Object })
   jptooltip = html`<a href="https://ja.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">&#65328;&#65319;&#65328;</a>で暗号化</span>`;
 
   firstUpdated() {
-    this.shadowRoot
-      .getElementById('messageInput')
-      .focus({ preventScroll: true });
+    const sRoot = this.shadowRoot;
+    if (sRoot != null) {
+      const messageRoot = sRoot.getElementById('messageInput');
+      if (messageRoot != null) messageRoot.focus({ preventScroll: true });
+    }
   }
 
   async encryptor() {
-    await openpgp.initWorker({ path: 'openpgp.worker.js' });
     const publicKeyArmored = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: OpenPGP.js v4.10.7
 Comment: https://openpgpjs.org
@@ -37,12 +37,10 @@ TComQBkFSpoM
 -----END PGP PUBLIC KEY BLOCK-----
 `;
     const messageInput = (this.messageInput as HTMLInputElement).value;
-    const { data: encrypted } = await openpgp.encrypt({
-      message: openpgp.message.fromText(messageInput),
-      publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys,
-      privateKeys: [],
+    const encrypted = await encrypt({
+      message: await createMessage({ text: messageInput }),
+      encryptionKeys: await readKey({ armoredKey: publicKeyArmored }),
     });
-    await openpgp.destroyWorker();
     return encrypted;
   }
 
@@ -61,8 +59,6 @@ TComQBkFSpoM
       height: 100%;
       color: #321e00;
       line-height: 150%;
-      /*       flex-grow: 1;
- */
       align-items: center;
       margin: 0 auto;
     }
@@ -283,9 +279,8 @@ TComQBkFSpoM
                 this.english ? this.entooltip : this.jptooltip
               }${this.tipOpen ? '▼' : '►'}</span
             ></span>
-
           </div>
-          <button @click=${this.sendMessage}>
+     <button @click=${this.sendMessage}>
             ${this.english ? 'send' : '送る'}
           </button>
         </div>           <div id="space"><span class=${
