@@ -3,11 +3,9 @@ import { property } from 'lit/decorators.js';
 
 export class HomePage extends LitElement {
   @property({ type: Boolean }) english!: boolean;
+
   @property({ type: Boolean }) loaded = false;
 
-  changeLang() {
-    this.english ? (this.english = false) : (this.english = true);
-  }
   initImage() {
     this.loaded = false;
     this.loaded = true;
@@ -181,6 +179,7 @@ ${
                 headshot-4k.jpg  2160w,
                 headshot-4k.jpg"
               sizes="96vw"
+              alt="A well-executed headshot."
               @loadend=${() => {
                 this.initImage();
               }}

@@ -6,15 +6,31 @@ import { property } from 'lit/decorators.js';
 
 export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
+
   @property({ type: String }) currentPage = '/';
+
   @property({ type: String }) lang = '';
+
   @property({ type: Boolean }) isOpen = false;
 
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
   }
+
   switchLanguage() {
     this.english = !this.english;
+  }
+
+  displayContent() {
+    let content;
+    if (this.currentPage.endsWith('bender')) {
+      content = html`<bender-demo ?english=${this.english}></bender-demo>`;
+    } else if (this.currentPage.endsWith('contact')) {
+      content = html`<contact-form ?english=${this.english}></contact-form>`;
+    } else {
+      content = html`<home-page ?english=${this.english}></home-page>`;
+    }
+    return content;
   }
 
   static styles = css`
@@ -77,7 +93,8 @@ export class WebSite extends LitElement {
       z-index: 1;
     }
 
-    #navbar * a {
+    #navbar * a,
+    #navbar * button {
       display: flex;
       height: 100%;
       align-items: center;
@@ -89,12 +106,25 @@ export class WebSite extends LitElement {
       user-select: none; /* Standard syntax */
       outline: none;
     }
+    button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: max(16px, 1em);
+    }
 
+    button:hover,
+    button:focus {
+      text-decoration: none;
+    }
     #navbar .linkspace {
       height: 100%;
     }
 
     #navbar * a::selection,
+    #navbar * button::selection,
     #navbar span::selection,
     #navbar div::selection {
       background: transparent;
@@ -126,12 +156,13 @@ export class WebSite extends LitElement {
       border-bottom: none;
       border-radius: 1em 1em 0 0;
       height: 55%;
-      font-size: max(25.5px, 1em);
       max-width: 960px;
       width: 12vw;
     }
 
-    #demobar a {
+    #demobar a,
+    #demobar button {
+      display: flex;
       justify-content: center;
       box-sizing: border-box;
       color: #dfabf4;
@@ -142,7 +173,8 @@ export class WebSite extends LitElement {
       cursor: pointer;
     }
 
-    #demobar a.chosen {
+    #demobar a.chosen,
+    #demobar button.chosen {
       color: #fffde8;
       border-bottom: dashed #dfabf4 max(4px, 0.15em);
     }
@@ -283,6 +315,20 @@ export class WebSite extends LitElement {
     .closed {
       display: none;
     }
+    .link-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      display: inline;
+
+      font-size: max(16px, 1em);
+    }
+
+    .link-button:hover,
+    .link-button:focus {
+      text-decoration: none;
+    }
 
     @keyframes reveal {
       from {
@@ -322,6 +368,7 @@ export class WebSite extends LitElement {
       }
 
       #demobar a:hover,
+      #demobar button:hover,
       .blog:hover {
         color: #fffde8;
       }
@@ -409,6 +456,8 @@ export class WebSite extends LitElement {
         flex-direction: column;
         height: 100%;
         flex: 1 1 50vw;
+        margin: 0;
+        padding: 0;
       }
 
       #burgerdemo {
@@ -421,16 +470,19 @@ export class WebSite extends LitElement {
         );
       }
 
-      #burgerdemo a {
+      #burgerdemo a,
+      #burgerdemo button {
         display: flex;
         color: #af4ebd;
         border: none;
         min-height: 64px;
+        min-width: 64px;
         text-align: center;
         justify-content: flex-end;
         align-content: center;
         margin-right: 1.5vmin;
         font-size: 1.5em;
+        padding: 0;
       }
 
       .burgerspace {
@@ -442,8 +494,8 @@ export class WebSite extends LitElement {
         align-content: flex-end;
         text-align: center;
         border: none;
-        border-bottom: none;
-        border-top: none;
+        padding: 0;
+        margin: 0;
       }
 
       .buttonspace {
@@ -456,14 +508,22 @@ export class WebSite extends LitElement {
         justify-content: center;
         width: max(2.5em, 64px);
         height: max(2.5em, 64px);
+        justify-content: flex-end;
+        justify-self: flex-end;
+        min-height: 64px;
+        min-width: 64px;
       }
       #burgerdemo a > .buttonspace {
+        width: max(1.25em, 32px);
+      }
+      #burgerdemo button > .buttonspace {
         width: max(1.25em, 32px);
       }
       .burgertext {
         flex-grow: 1;
         text-align: right;
         color: #fffde8;
+        width: 100%;
       }
 
       .burgertext.chosen {
@@ -491,145 +551,80 @@ export class WebSite extends LitElement {
     return html`
 
       <div id="navbar">
-        <div id="burger" @click=${() => {
+        <button id="burger" @click=${() => {
           this.isOpen = !this.isOpen;
-        }}>≡</div>
+        }}>≡</button>
           <div class=${this.isOpen ? 'open closed' : 'closed'}
               @click=${() => {
                 if (this.isOpen) this.isOpen = !this.isOpen;
+              }}
+              @keydown=${() => {
+                if (this.isOpen) this.isOpen = !this.isOpen;
               }}>
-            <div id="burgerdemo">
-                            <a
-                class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                @click=${() => this.switchPage('/bender')} 
-                >${
-                  this.english ? 'demo⋆' : 'デモ'
-                }<span class="buttonspace"></span></a
-              >
-            <a
-            id='burgerblog'
-            href="https://blog.p-ku.com"
-                target="_blank"
-                >${
-                  this.english ? 'blog⤴' : 'ブログ⤴'
-                }<span class="buttonspace"></span></a
-              >
-
-
-            </div>                      
+<div id="burgerdemo">
+<button class=${
+      this.currentPage.endsWith('bender') ? 'chosen' : ''
+    } @click=${() => this.switchPage('/bender')}>${
+      this.english ? 'demo⋆' : 'デモ'
+    }<span class="buttonspace"></span></button>
+            <a id='burgerblog' href="https://blog.p-ku.com" target="_blank">${
+              this.english ? 'blog⤴' : 'ブログ⤴'
+            }<span class="buttonspace"></span></a></div>                      
             <div id="burgerlink">
-              <a class="burgerspace"           
-                @click=${() => this.switchPage('/contact')}>
+              <button class="burgerspace" @click=${() =>
+                this.switchPage('/contact')}>
 <span class=${
       this.currentPage.endsWith('contact') ? 'burgertext chosen' : 'burgertext'
-    }
-  >${
-    this.english ? 'contact' : 'コンタクト'
-  }</span><span class="buttonspace"><span id="mailcircle"  class=${
+    }>${
+      this.english ? 'contact' : 'コンタクト'
+    }</span><span class="buttonspace"><span id="mailcircle"  class=${
       this.currentPage.endsWith('contact') ? 'burgermail chosen' : 'burgermail'
-    }>➤</span></span>
-  </a><a class="burgerspace" href="https://github.com/p-ku"
+    }>➤</span></span></button>
+  <a class="burgerspace" href="https://github.com/p-ku"
                 target="_blank">
-              
-  <span class='burgertext' 
->github⤴</span>            <span class="buttonspace"><span id="sourcecircle" class="burgersource">＜＞</span></span>
-  </a>
-
-             </div>
-          </div>
-        <div id="navleft" @click=${() => {
+<span class='burgertext' >github⤴</span>
+<span class="buttonspace"><span id="sourcecircle" class="burgersource">＜＞</span></span></a></div></div>
+        <div id="navleft" @focus=${() => {
           if (this.isOpen) this.isOpen = !this.isOpen;
         }}>
-
-            <a
-              class="home"
-              @click=${() => {
+            <button
+              class="home" @click=${() => {
                 this.switchPage('/');
-              }}
-              >ピ-クu</a
-            >
-          </div>
+                if (this.isOpen) this.isOpen = !this.isOpen;
+              }}>ピ-クu</button></div>
           <div id="navcenter">
-                 <a
-                class="blog"
-                href="https://blog.p-ku.com"
-                target="_blank"
-                @click=${() => {
-                  if (this.isOpen) this.isOpen = !this.isOpen;
-                }}
-                ><span class='linktext'                 
-              ></span>${this.english ? 'blog⤴' : 'ブログ⤴'}</a
-              >
+                 <a class="blog" href="https://blog.p-ku.com" target="_blank" @click=${() => {
+                   if (this.isOpen) this.isOpen = !this.isOpen;
+                 }}><span class='linktext'></span>${
+      this.english ? 'blog⤴' : 'ブログ⤴'
+    }</a>
             <div id="demobar">
-              <a
-                class=${this.currentPage.endsWith('bender') ? 'chosen' : ''}
-                @click=${() => this.switchPage('/bender')}
-                >${this.english ? 'demo' : 'デモ'}</a
-              >
-            </div>
-       
-          </div>   
-              
-        
+              <button class=${
+                this.currentPage.endsWith('bender') ? 'chosen' : ''
+              } @click=${() => this.switchPage('/bender')}>${
+      this.english ? 'demo' : 'デモ'
+    }</button></div></div>   
           <div id="navright">
-
             <div class="linkspace">
-              <a
-                class="source"
-                href="https://github.com/p-ku"
-                target="_blank"
-                @click=${() => {
-                  if (this.isOpen) this.isOpen = !this.isOpen;
-                }}
-                ><div id="sourcecircle">＜<span class='linktext'                 
-              >github⤴</span>＞</div></a
-              >
-              </div>
+              <a class="source" href="https://github.com/p-ku" target="_blank" @click=${() => {
+                if (this.isOpen) this.isOpen = !this.isOpen;
+              }}><div id="sourcecircle">＜<span class='linktext'>github⤴</span>＞</div></a></div>
               <div class="linkspace">
-              <a
-              id="mail"
-                class=${
-                  this.currentPage.endsWith('contact') ? 'mail chosen' : 'mail'
-                }
-                @click=${() => {
-                  this.switchPage('/contact');
-                  if (this.isOpen) this.isOpen = !this.isOpen;
-                }}
-                ><div id="mailcircle"><span class='linktext'                 
-              >${this.english ? 'contact' : 'コンタクト'}</span>➤</div></a
-              >
-              </div>
-              <div class="linkspace">
-                <a
-                id="jpen"
-                  @click=${() => {
-                    this.switchLanguage();
-                  }}
-                  ><div id="jpencircle" class=${
-                    this.english ? 'en' : 'jp'
-                  }><div id="risingsun"><span id="jpabb">JP</span><span class='linktext'>日</span></div></div></a
-                >
-              </div>
-            </div>
-          </div>
-
-        <div
-          id="outlet"
-          @click=${() => {
-            if (this.isOpen) this.isOpen = !this.isOpen;
-          }}
-        >
-             ${
-               this.currentPage.endsWith('bender')
-                 ? html`<bender-demo ?english=${this.english}></bender-demo>`
-                 : this.currentPage.endsWith('contact')
-                 ? html`<contact-form ?english=${this.english}></contact-form>`
-                 : html`<home-page ?english=${this.english}></home-page>`
-             }
-
-        </div>
-      </div>
-
-    `;
+              <button id="mail" class=${
+                this.currentPage.endsWith('contact') ? 'mail chosen' : 'mail'
+              } @click=${() => {
+      this.switchPage('/contact');
+      if (this.isOpen) this.isOpen = !this.isOpen;
+    }}><div id="mailcircle"><span class='linktext'>${
+      this.english ? 'contact' : 'コンタクト'
+    }</span>➤</div></button></div><div class="linkspace"><button id="jpen" @click=${() => {
+      this.switchLanguage();
+    }}><div id="jpencircle" class=${
+      this.english ? 'en' : 'jp'
+    }><div id="risingsun"><span id="jpabb">JP</span>
+    <span class='linktext'>日</span></div></div></button></div></div></div>
+        <div id="outlet" @focus=${() => {
+          if (this.isOpen) this.isOpen = !this.isOpen;
+        }}>${this.displayContent()}</div></div>`;
   }
 }

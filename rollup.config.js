@@ -1,4 +1,5 @@
 import nodeRes from '@rollup/plugin-node-resolve';
+import { threeMinifier } from '@yushijinhun/three-minifier-rollup';
 import bab from '@rollup/plugin-babel';
 import html from '@web/rollup-plugin-html';
 import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
@@ -18,6 +19,7 @@ export default {
   preserveEntrySignatures: false,
 
   plugins: [
+    threeMinifier(),
     /** Enable using HTML as rollup entrypoint */
     html({
       minify: true,

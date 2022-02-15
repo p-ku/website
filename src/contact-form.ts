@@ -4,10 +4,14 @@ import { encrypt, createMessage, readKey } from 'openpgp/lightweight';
 
 export class ContactForm extends LitElement {
   @property({ type: String }) lang = '';
+
   @property({ type: Boolean }) english!: boolean;
+
   @property({ type: Boolean }) tipOpen = false;
+
   @property({ type: Object }) entooltip = html`Encrypted with&nbsp;
     <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a></span>    `;
+
   @property({ type: Object })
   jptooltip = html`<a href="https://ja.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">&#65328;&#65319;&#65328;</a>で暗号化</span>`;
 
@@ -125,7 +129,7 @@ TComQBkFSpoM
       justify-content: flex-end;
     }
 
-    button {
+    #send {
       display: flex;
       background-color: var(--demobar);
       height: 1.7em;
@@ -191,7 +195,14 @@ TComQBkFSpoM
       align-items: flex-start;
       align-self: flex-start;
       line-height: 150%;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: max(16px, 1em);
     }
+
     .infodot {
       display: flex;
       text-decoration: none;
@@ -237,9 +248,11 @@ TComQBkFSpoM
   get messageInput() {
     return this.shadowRoot?.getElementById('messageInput');
   }
+
   get pgp() {
     return this.shadowRoot?.getElementById('pgp');
   }
+
   get contact() {
     return this.shadowRoot?.getElementById('contact');
   }
@@ -272,15 +285,15 @@ TComQBkFSpoM
         ></textarea>
         <div id="buttonfoot">
 <div id="tips">
-            <span class="tooltip" @click=${() => {
+            <button class="tooltip" @click=${() => {
               this.tipOpen = !this.tipOpen;
             }}
               ><span class="infodot">★</span>${
                 this.english ? this.entooltip : this.jptooltip
               }${this.tipOpen ? '▼' : '►'}</span
-            ></span>
+            ></button>
           </div>
-     <button @click=${this.sendMessage}>
+     <button id='send' @click=${this.sendMessage}>
             ${this.english ? 'send' : '送る'}
           </button>
         </div>           <div id="space"><span class=${
