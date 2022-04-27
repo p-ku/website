@@ -132,38 +132,6 @@
             },
             {
               "kind": "field",
-              "name": "keyPanSpeed",
-              "type": {
-                "text": "number"
-              },
-              "default": "7.0"
-            },
-            {
-              "kind": "field",
-              "name": "autoRotate",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "autoRotateSpeed",
-              "type": {
-                "text": "number"
-              },
-              "default": "2.0"
-            },
-            {
-              "kind": "field",
-              "name": "keys",
-              "type": {
-                "text": "{ LEFT: string; UP: string; RIGHT: string; BOTTOM: string }"
-              },
-              "default": "{\n    LEFT: 'ArrowLeft',\n    UP: 'ArrowUp',\n    RIGHT: 'ArrowRight',\n    BOTTOM: 'ArrowDown',\n  }"
-            },
-            {
-              "kind": "field",
               "name": "mouseButtons",
               "type": {
                 "text": "{ LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE }"
@@ -194,14 +162,6 @@
             },
             {
               "kind": "field",
-              "name": "_domElementKeyEvents",
-              "type": {
-                "text": "EventTarget | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "getPolarAngle",
               "type": {
                 "text": "() => number"
@@ -219,13 +179,6 @@
               "name": "getDistance",
               "type": {
                 "text": "() => number"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "listenToKeyEvents",
-              "type": {
-                "text": "(domElement: any) => void"
               }
             },
             {
@@ -806,7 +759,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "out-tsc/src/OrbitControls.js",
+      "path": "out-tsc/src/OrbitControls copy.js",
       "declarations": [
         {
           "kind": "class",
@@ -1030,7 +983,381 @@
           "name": "OrbitControls",
           "declaration": {
             "name": "OrbitControls",
+            "module": "out-tsc/src/OrbitControls copy.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "out-tsc/src/OrbitControls.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "OrbitControls",
+          "members": [
+            {
+              "kind": "field",
+              "name": "enabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "default": "new Vector3()"
+            },
+            {
+              "kind": "field",
+              "name": "minPolarAngle",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "maxPolarAngle"
+            },
+            {
+              "kind": "field",
+              "name": "minAzimuthAngle",
+              "type": {
+                "text": "number"
+              },
+              "default": "-Infinity"
+            },
+            {
+              "kind": "field",
+              "name": "maxAzimuthAngle",
+              "default": "Infinity"
+            },
+            {
+              "kind": "field",
+              "name": "enableDamping",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "dampingFactor",
+              "type": {
+                "text": "number"
+              },
+              "default": "0.05"
+            },
+            {
+              "kind": "field",
+              "name": "enableRotate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "rotateSpeed",
+              "type": {
+                "text": "number"
+              },
+              "default": "1.0"
+            },
+            {
+              "kind": "field",
+              "name": "enablePan",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "panSpeed",
+              "type": {
+                "text": "number"
+              },
+              "default": "1.0"
+            },
+            {
+              "kind": "field",
+              "name": "screenSpacePanning",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "mouseButtons",
+              "type": {
+                "text": "object"
+              },
+              "default": "{\n            LEFT: MOUSE.ROTATE,\n            MIDDLE: MOUSE.DOLLY,\n            RIGHT: MOUSE.PAN,\n        }"
+            },
+            {
+              "kind": "field",
+              "name": "touches",
+              "type": {
+                "text": "object"
+              },
+              "default": "{\n            ONE: TOUCH.ROTATE,\n            TWO: TOUCH.DOLLY_PAN,\n        }"
+            },
+            {
+              "kind": "field",
+              "name": "target0"
+            },
+            {
+              "kind": "field",
+              "name": "object",
+              "default": "object"
+            },
+            {
+              "kind": "field",
+              "name": "domElement",
+              "default": "domElement"
+            },
+            {
+              "kind": "field",
+              "name": "touchAction",
+              "type": {
+                "text": "string"
+              },
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "position0"
+            },
+            {
+              "kind": "field",
+              "name": "getPolarAngle"
+            },
+            {
+              "kind": "field",
+              "name": "getAzimuthalAngle"
+            },
+            {
+              "kind": "field",
+              "name": "getDistance"
+            },
+            {
+              "kind": "field",
+              "name": "saveState"
+            },
+            {
+              "kind": "field",
+              "name": "reset"
+            },
+            {
+              "kind": "field",
+              "name": "dispose"
+            }
+          ],
+          "superclass": {
+            "name": "EventDispatcher",
+            "package": "three"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "OrbitControls",
+          "declaration": {
+            "name": "OrbitControls",
             "module": "out-tsc/src/OrbitControls.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "out-tsc/src/OrbitControlsEdit.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "OrbitControls",
+          "members": [
+            {
+              "kind": "field",
+              "name": "enabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "default": "new Vector3()"
+            },
+            {
+              "kind": "field",
+              "name": "minPolarAngle",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "maxPolarAngle"
+            },
+            {
+              "kind": "field",
+              "name": "minAzimuthAngle",
+              "type": {
+                "text": "number"
+              },
+              "default": "-Infinity"
+            },
+            {
+              "kind": "field",
+              "name": "maxAzimuthAngle",
+              "default": "Infinity"
+            },
+            {
+              "kind": "field",
+              "name": "enableDamping",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "dampingFactor",
+              "type": {
+                "text": "number"
+              },
+              "default": "0.05"
+            },
+            {
+              "kind": "field",
+              "name": "enableRotate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "rotateSpeed",
+              "type": {
+                "text": "number"
+              },
+              "default": "1.0"
+            },
+            {
+              "kind": "field",
+              "name": "enablePan",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "panSpeed",
+              "type": {
+                "text": "number"
+              },
+              "default": "1.0"
+            },
+            {
+              "kind": "field",
+              "name": "screenSpacePanning",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "mouseButtons",
+              "type": {
+                "text": "object"
+              },
+              "default": "{\n            LEFT: MOUSE.ROTATE,\n            MIDDLE: MOUSE.DOLLY,\n            RIGHT: MOUSE.PAN,\n        }"
+            },
+            {
+              "kind": "field",
+              "name": "touches",
+              "type": {
+                "text": "object"
+              },
+              "default": "{\n            ONE: TOUCH.ROTATE,\n            TWO: TOUCH.DOLLY_PAN,\n        }"
+            },
+            {
+              "kind": "field",
+              "name": "target0"
+            },
+            {
+              "kind": "field",
+              "name": "object",
+              "default": "object"
+            },
+            {
+              "kind": "field",
+              "name": "domElement",
+              "default": "domElement"
+            },
+            {
+              "kind": "field",
+              "name": "touchAction",
+              "type": {
+                "text": "string"
+              },
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "position0"
+            },
+            {
+              "kind": "field",
+              "name": "getPolarAngle"
+            },
+            {
+              "kind": "field",
+              "name": "getAzimuthalAngle"
+            },
+            {
+              "kind": "field",
+              "name": "getDistance"
+            },
+            {
+              "kind": "field",
+              "name": "saveState"
+            },
+            {
+              "kind": "field",
+              "name": "reset"
+            },
+            {
+              "kind": "field",
+              "name": "dispose"
+            }
+          ],
+          "superclass": {
+            "name": "EventDispatcher",
+            "package": "three"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "OrbitControls",
+          "declaration": {
+            "name": "OrbitControls",
+            "module": "out-tsc/src/OrbitControlsEdit.js"
           }
         }
       ]
