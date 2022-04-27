@@ -1,9 +1,5 @@
-// This is a lightly modified Threejs file. It helps keep the imports simple.
-/* eslint-disable default-case */
-/* eslint-disable no-shadow */
-/* eslint-disable no-restricted-properties */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-use-before-define */
+// This is a modified Threejs file: https://github.com/mrdoob/three.js/blob/dev/examples/jsm/controls/OrbitControls.js
+// It helps keep the imports simple.
 
 import {
   EventDispatcher,
@@ -13,7 +9,6 @@ import {
   TOUCH,
   Vector2,
   Vector3,
-  Matrix4,
   PerspectiveCamera,
 } from 'three';
 
@@ -52,19 +47,6 @@ class OrbitControls extends EventDispatcher {
 
   screenSpacePanning: boolean = true;
 
-  keyPanSpeed: number = 7.0;
-
-  autoRotate: boolean = false;
-
-  autoRotateSpeed: number = 2.0;
-
-  keys: { LEFT: string; UP: string; RIGHT: string; BOTTOM: string } = {
-    LEFT: 'ArrowLeft',
-    UP: 'ArrowUp',
-    RIGHT: 'ArrowRight',
-    BOTTOM: 'ArrowDown',
-  };
-
   mouseButtons: { LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE } = {
     LEFT: MOUSE.ROTATE,
     MIDDLE: MOUSE.DOLLY,
@@ -80,15 +62,11 @@ class OrbitControls extends EventDispatcher {
 
   position0: Vector3;
 
-  _domElementKeyEvents: EventTarget | null;
-
   getPolarAngle: () => number;
 
   getAzimuthalAngle: () => number;
 
   getDistance: () => number;
-
-  listenToKeyEvents: (domElement: any) => void;
 
   saveState: () => void;
 
@@ -102,8 +80,6 @@ class OrbitControls extends EventDispatcher {
     this.domElement = domElement;
     this.domElement.style.touchAction = 'none';
     this.position0 = this.object.position.clone();
-
-    this._domElementKeyEvents = null;
 
     const scope = this;
 
@@ -122,15 +98,9 @@ class OrbitControls extends EventDispatcher {
     const spherical = new Spherical();
     const sphericalDelta = new Spherical();
 
-    const panOffset = new Vector3();
-
     const rotateStart = new Vector2();
     const rotateEnd = new Vector2();
     const rotateDelta = new Vector2();
-
-    const panStart = new Vector2();
-    const panEnd = new Vector2();
-    const panDelta = new Vector2();
 
     const pointers: any[] = [];
     const pointerPositions: any[] = [];
@@ -142,11 +112,6 @@ class OrbitControls extends EventDispatcher {
     this.getAzimuthalAngle = () => spherical.theta;
 
     this.getDistance = () => this.object.position.distanceTo(this.target);
-
-    this.listenToKeyEvents = domE => {
-      domE.addEventListener('keydown', onKeyDown);
-      this._domElementKeyEvents = domE;
-    };
 
     this.saveState = () => {
       scope.target0.copy(scope.target);
@@ -189,10 +154,6 @@ class OrbitControls extends EventDispatcher {
         // angle from z-axis around y-axis
         spherical.setFromVector3(offset);
 
-        if (scope.autoRotate && state === STATE.NONE) {
-          rotateLeft(getAutoRotationAngle());
-        }
-
         if (scope.enableDamping) {
           spherical.theta += sphericalDelta.theta * scope.dampingFactor;
           spherical.phi += sphericalDelta.phi * scope.dampingFactor;
@@ -202,11 +163,10 @@ class OrbitControls extends EventDispatcher {
         }
 
         // restrict theta to be between desired limits
-
         let min = scope.minAzimuthAngle;
         let max = scope.maxAzimuthAngle;
 
-        if (isFinite(min) && isFinite(max)) {
+        if (Number.isFinite(min) && Number.isFinite(max)) {
           if (min < -Math.PI) min += twoPI;
           else if (min > Math.PI) min -= twoPI;
 
@@ -231,16 +191,6 @@ class OrbitControls extends EventDispatcher {
 
         spherical.makeSafe();
 
-        spherical.radius *= scale;
-
-        // move target to panned location
-
-        if (scope.enableDamping === true) {
-          scope.target.addScaledVector(panOffset, scope.dampingFactor);
-        } else {
-          scope.target.add(panOffset);
-        }
-
         offset.setFromSpherical(spherical);
 
         // rotate offset back to "camera-up-vector-is-up" space
@@ -253,15 +203,9 @@ class OrbitControls extends EventDispatcher {
         if (scope.enableDamping === true) {
           sphericalDelta.theta *= 1 - scope.dampingFactor;
           sphericalDelta.phi *= 1 - scope.dampingFactor;
-
-          panOffset.multiplyScalar(1 - scope.dampingFactor);
         } else {
           sphericalDelta.set(0, 0, 0);
-
-          panOffset.set(0, 0, 0);
         }
-
-        scale = 1;
 
         // update condition is:
         // min(camera displacement, camera rotation in radians)^2 > EPS
@@ -270,32 +214,25 @@ class OrbitControls extends EventDispatcher {
         return false;
       };
     })();
+    function addPointer(event: any) {
+      pointers.push(event);
+    }
+    function trackPointer(event: PointerEvent) {
+      let position = pointerPositions[event.pointerId];
 
-    this.dispose = () => {
-      scope.domElement.removeEventListener('contextmenu', onContextMenu);
-
-      scope.domElement.removeEventListener('pointerdown', onPointerDown);
-      scope.domElement.removeEventListener('pointercancel', onPointerCancel);
-
-      scope.domElement.removeEventListener('pointermove', onPointerMove);
-      scope.domElement.removeEventListener('pointerup', onPointerUp);
-
-      if (scope._domElementKeyEvents !== null) {
-        scope._domElementKeyEvents.removeEventListener('keydown', onKeyDown);
+      if (position === undefined) {
+        position = new Vector2();
+        pointerPositions[event.pointerId] = position;
       }
 
-      // scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
-    };
-
-    //
-    // internals
-    //
-
-    let scale = 1;
-    function getAutoRotationAngle() {
-      return ((2 * Math.PI) / 60 / 60) * scope.autoRotateSpeed;
+      position.set(event.pageX, event.pageY);
     }
+    function getSecondPointerPosition(event: { pointerId: any }) {
+      const pointer =
+        event.pointerId === pointers[0].pointerId ? pointers[1] : pointers[0];
 
+      return pointerPositions[pointer.pointerId];
+    }
     function rotateLeft(angle: number) {
       sphericalDelta.theta -= angle;
     }
@@ -303,164 +240,6 @@ class OrbitControls extends EventDispatcher {
     function rotateUp(angle: number) {
       sphericalDelta.phi -= angle;
     }
-
-    const panLeft = (() => {
-      const v = new Vector3();
-
-      return function panLeft(distance: number, objectMatrix: Matrix4) {
-        v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
-        v.multiplyScalar(-distance);
-
-        panOffset.add(v);
-      };
-    })();
-
-    const panUp = (() => {
-      const v = new Vector3();
-
-      return function panUp(distance: number, objectMatrix: Matrix4) {
-        if (scope.screenSpacePanning === true) {
-          v.setFromMatrixColumn(objectMatrix, 1);
-        } else {
-          v.setFromMatrixColumn(objectMatrix, 0);
-          v.crossVectors(scope.object.up, v);
-        }
-
-        v.multiplyScalar(distance);
-
-        panOffset.add(v);
-      };
-    })();
-
-    // deltaX and deltaY are in pixels; right and down are positive
-    const pan = () => {
-      const element = scope.domElement;
-      const offset = new Vector3();
-
-      return function pan(deltaX: number, deltaY: number) {
-        // perspective
-        const { position } = scope.object;
-        offset.copy(position).sub(scope.target);
-        let targetDistance = offset.length();
-
-        // half of the fov is center to top of screen
-        targetDistance *= Math.tan(((scope.object.fov / 2) * Math.PI) / 180.0);
-
-        // we use only clientHeight here so aspect ratio does not distort speed
-        panLeft(
-          (2 * deltaX * targetDistance) / element.clientHeight,
-          scope.object.matrix
-        );
-        panUp(
-          (2 * deltaY * targetDistance) / element.clientHeight,
-          scope.object.matrix
-        );
-      };
-    };
-
-    //
-    // event callbacks - update the object state
-    //
-
-    function handleMouseDownRotate(event: {
-      clientX: number;
-      clientY: number;
-    }) {
-      rotateStart.set(event.clientX, event.clientY);
-    }
-
-    function handleMouseDownPan(event: { clientX: number; clientY: number }) {
-      panStart.set(event.clientX, event.clientY);
-    }
-
-    function handleMouseMoveRotate(event: {
-      clientX: number;
-      clientY: number;
-    }) {
-      rotateEnd.set(event.clientX, event.clientY);
-
-      rotateDelta
-        .subVectors(rotateEnd, rotateStart)
-        .multiplyScalar(scope.rotateSpeed);
-
-      const element = scope.domElement;
-
-      rotateLeft((2 * Math.PI * rotateDelta.x) / element.clientHeight); // yes, height
-
-      rotateUp((2 * Math.PI * rotateDelta.y) / element.clientHeight);
-
-      rotateStart.copy(rotateEnd);
-
-      scope.update();
-    }
-
-    function handleMouseMovePan(event: { clientX: number; clientY: number }) {
-      panEnd.set(event.clientX, event.clientY);
-
-      panDelta.subVectors(panEnd, panStart).multiplyScalar(scope.panSpeed);
-
-      pan();
-
-      panStart.copy(panEnd);
-
-      scope.update();
-    }
-
-    function handleKeyDown(event: { code: any; preventDefault: () => void }) {
-      let needsUpdate = false;
-
-      switch (event.code) {
-        case scope.keys.UP:
-          pan();
-          needsUpdate = true;
-          break;
-
-        case scope.keys.BOTTOM:
-          pan();
-          needsUpdate = true;
-          break;
-
-        case scope.keys.LEFT:
-          pan();
-          needsUpdate = true;
-          break;
-
-        case scope.keys.RIGHT:
-          pan();
-          needsUpdate = true;
-          break;
-      }
-
-      if (needsUpdate) {
-        // prevent the browser from scrolling on cursor keys
-        event.preventDefault();
-
-        scope.update();
-      }
-    }
-
-    function handleTouchStartRotate() {
-      if (pointers.length === 1) {
-        rotateStart.set(pointers[0].pageX, pointers[0].pageY);
-      } else {
-        const x = 0.5 * (pointers[0].pageX + pointers[1].pageX);
-        const y = 0.5 * (pointers[0].pageY + pointers[1].pageY);
-
-        rotateStart.set(x, y);
-      }
-    }
-
-    function handleTouchStartPan() {
-      if (pointers.length === 1) {
-        panStart.set(pointers[0].pageX, pointers[0].pageY);
-      } else {
-        const x = 0.5 * (pointers[0].pageX + pointers[1].pageX);
-        const y = 0.5 * (pointers[0].pageY + pointers[1].pageY);
-
-        panStart.set(x, y);
-      }
-    }
-
     function handleTouchMoveRotate(event: PointerEvent) {
       if (pointers.length === 1) {
         rotateEnd.set(event.pageX, event.pageY);
@@ -485,26 +264,111 @@ class OrbitControls extends EventDispatcher {
 
       rotateStart.copy(rotateEnd);
     }
+    function onTouchMove(event: any) {
+      trackPointer(event);
+      handleTouchMoveRotate(event);
+      scope.update();
+    }
+    function handleMouseMoveRotate(event: {
+      clientX: number;
+      clientY: number;
+    }) {
+      rotateEnd.set(event.clientX, event.clientY);
 
-    function handleTouchMovePan(event: PointerEvent) {
-      if (pointers.length === 1) {
-        panEnd.set(event.pageX, event.pageY);
+      rotateDelta
+        .subVectors(rotateEnd, rotateStart)
+        .multiplyScalar(scope.rotateSpeed);
+
+      const element = scope.domElement;
+
+      rotateLeft((2 * Math.PI * rotateDelta.x) / element.clientHeight); // yes, height
+
+      rotateUp((2 * Math.PI * rotateDelta.y) / element.clientHeight);
+
+      rotateStart.copy(rotateEnd);
+
+      scope.update();
+    }
+    function onMouseMove(event: any) {
+      if (scope.enabled === false) return;
+
+      if (scope.enableRotate === false) return;
+
+      handleMouseMoveRotate(event);
+    }
+    function onPointerMove(event: { pointerType: string }) {
+      if (scope.enabled === false) return;
+
+      if (event.pointerType === 'touch') {
+        onTouchMove(event);
       } else {
-        const position = getSecondPointerPosition(event);
+        onMouseMove(event);
+      }
+    }
+    function removePointer(event: PointerEvent) {
+      delete pointerPositions[event.pointerId];
 
-        const x = 0.5 * (event.pageX + position.x);
-        const y = 0.5 * (event.pageY + position.y);
+      for (let i = 0; i < pointers.length; i += 1) {
+        if (pointers[i].pointerId === event.pointerId) {
+          pointers.splice(i, 1);
+          return;
+        }
+      }
+    }
+    function onPointerUp(event: PointerEvent) {
+      removePointer(event);
 
-        panEnd.set(x, y);
+      if (pointers.length === 0) {
+        scope.domElement.releasePointerCapture(event.pointerId);
+
+        scope.domElement.removeEventListener('pointermove', onPointerMove);
+        scope.domElement.removeEventListener('pointerup', onPointerUp);
       }
 
-      panDelta.subVectors(panEnd, panStart).multiplyScalar(scope.panSpeed);
+      scope.dispatchEvent(_endEvent);
 
-      pan();
-
-      panStart.copy(panEnd);
+      state = STATE.NONE;
     }
+    function handleTouchStartRotate() {
+      if (pointers.length === 1) {
+        rotateStart.set(pointers[0].pageX, pointers[0].pageY);
+      } else {
+        const x = 0.5 * (pointers[0].pageX + pointers[1].pageX);
+        const y = 0.5 * (pointers[0].pageY + pointers[1].pageY);
 
+        rotateStart.set(x, y);
+      }
+    }
+    function onTouchStart(event: any) {
+      trackPointer(event);
+
+      if (scope.enableRotate === false) return;
+
+      handleTouchStartRotate();
+
+      state = STATE.TOUCH_ROTATE;
+
+      if (state !== STATE.NONE) {
+        scope.dispatchEvent(_startEvent);
+      }
+    }
+    function handleMouseDownRotate(event: {
+      clientX: number;
+      clientY: number;
+    }) {
+      rotateStart.set(event.clientX, event.clientY);
+    }
+    function onMouseDown(event: MouseEvent) {
+      if (scope.enableRotate === false) return;
+
+      handleMouseDownRotate(event);
+
+      state = STATE.ROTATE;
+
+      if (state !== STATE.NONE) {
+        scope.dispatchEvent(_startEvent);
+      }
+    }
     function onPointerDown(event: PointerEvent) {
       if (scope.enabled === false) return;
 
@@ -523,240 +387,16 @@ class OrbitControls extends EventDispatcher {
         onMouseDown(event);
       }
     }
-
-    function onPointerMove(event: { pointerType: string }) {
-      if (scope.enabled === false) return;
-
-      if (event.pointerType === 'touch') {
-        onTouchMove(event);
-      } else {
-        onMouseMove(event);
-      }
-    }
-
-    function onPointerUp(event: PointerEvent) {
-      removePointer(event);
-
-      if (pointers.length === 0) {
-        scope.domElement.releasePointerCapture(event.pointerId);
-
-        scope.domElement.removeEventListener('pointermove', onPointerMove);
-        scope.domElement.removeEventListener('pointerup', onPointerUp);
-      }
-
-      scope.dispatchEvent(_endEvent);
-
-      state = STATE.NONE;
-    }
-
     function onPointerCancel(event: any) {
       removePointer(event);
     }
-
-    function onMouseDown(event: MouseEvent) {
-      let mouseAction;
-
-      switch (event.button) {
-        case 0:
-          mouseAction = scope.mouseButtons.LEFT;
-          break;
-
-        case 1:
-          mouseAction = scope.mouseButtons.MIDDLE;
-          break;
-
-        case 2:
-          mouseAction = scope.mouseButtons.RIGHT;
-          break;
-
-        default:
-          mouseAction = -1;
-      }
-
-      switch (mouseAction) {
-        case MOUSE.ROTATE:
-          if (event.ctrlKey || event.metaKey || event.shiftKey) {
-            if (scope.enablePan === false) return;
-
-            handleMouseDownPan(event);
-
-            state = STATE.PAN;
-          } else {
-            if (scope.enableRotate === false) return;
-
-            handleMouseDownRotate(event);
-
-            state = STATE.ROTATE;
-          }
-
-          break;
-
-        case MOUSE.PAN:
-          if (event.ctrlKey || event.metaKey || event.shiftKey) {
-            if (scope.enableRotate === false) return;
-
-            handleMouseDownRotate(event);
-
-            state = STATE.ROTATE;
-          } else {
-            if (scope.enablePan === false) return;
-
-            handleMouseDownPan(event);
-
-            state = STATE.PAN;
-          }
-
-          break;
-
-        default:
-          state = STATE.NONE;
-      }
-
-      if (state !== STATE.NONE) {
-        scope.dispatchEvent(_startEvent);
-      }
-    }
-
-    function onMouseMove(event: any) {
-      if (scope.enabled === false) return;
-
-      switch (state) {
-        case STATE.ROTATE:
-          if (scope.enableRotate === false) return;
-
-          handleMouseMoveRotate(event);
-
-          break;
-
-        case STATE.PAN:
-          if (scope.enablePan === false) return;
-
-          handleMouseMovePan(event);
-
-          break;
-      }
-    }
-
-    function onKeyDown(event: any) {
-      if (scope.enabled === false || scope.enablePan === false) return;
-
-      handleKeyDown(event);
-    }
-
-    function onTouchStart(event: any) {
-      trackPointer(event);
-
-      switch (pointers.length) {
-        case 1:
-          switch (scope.touches.ONE) {
-            case TOUCH.ROTATE:
-              if (scope.enableRotate === false) return;
-
-              handleTouchStartRotate();
-
-              state = STATE.TOUCH_ROTATE;
-
-              break;
-
-            case TOUCH.PAN:
-              if (scope.enablePan === false) return;
-
-              handleTouchStartPan();
-
-              state = STATE.TOUCH_PAN;
-
-              break;
-
-            default:
-              state = STATE.NONE;
-          }
-
-          break;
-
-        case 2:
-          switch (scope.touches.TWO) {
-            default:
-              state = STATE.NONE;
-          }
-
-          break;
-
-        default:
-          state = STATE.NONE;
-      }
-
-      if (state !== STATE.NONE) {
-        scope.dispatchEvent(_startEvent);
-      }
-    }
-
-    function onTouchMove(event: any) {
-      trackPointer(event);
-
-      switch (state) {
-        case STATE.TOUCH_ROTATE:
-          if (scope.enableRotate === false) return;
-
-          handleTouchMoveRotate(event);
-
-          scope.update();
-
-          break;
-
-        case STATE.TOUCH_PAN:
-          if (scope.enablePan === false) return;
-
-          handleTouchMovePan(event);
-
-          scope.update();
-
-          break;
-
-        default:
-          state = STATE.NONE;
-      }
-    }
-
-    function onContextMenu(event: { preventDefault: () => void }) {
-      if (scope.enabled === false) return;
-
-      event.preventDefault();
-    }
-
-    function addPointer(event: any) {
-      pointers.push(event);
-    }
-
-    function removePointer(event: PointerEvent) {
-      delete pointerPositions[event.pointerId];
-
-      for (let i = 0; i < pointers.length; i += 1) {
-        if (pointers[i].pointerId === event.pointerId) {
-          pointers.splice(i, 1);
-          return;
-        }
-      }
-    }
-
-    function trackPointer(event: PointerEvent) {
-      let position = pointerPositions[event.pointerId];
-
-      if (position === undefined) {
-        position = new Vector2();
-        pointerPositions[event.pointerId] = position;
-      }
-
-      position.set(event.pageX, event.pageY);
-    }
-
-    function getSecondPointerPosition(event: { pointerId: any }) {
-      const pointer =
-        event.pointerId === pointers[0].pointerId ? pointers[1] : pointers[0];
-
-      return pointerPositions[pointer.pointerId];
-    }
-
-    scope.domElement.addEventListener('contextmenu', onContextMenu);
+    this.dispose = () => {
+      scope.domElement.removeEventListener('pointerdown', onPointerDown);
+      scope.domElement.removeEventListener('pointercancel', onPointerCancel);
+
+      scope.domElement.removeEventListener('pointermove', onPointerMove);
+      scope.domElement.removeEventListener('pointerup', onPointerUp);
+    };
 
     scope.domElement.addEventListener('pointerdown', onPointerDown);
     scope.domElement.addEventListener('pointercancel', onPointerCancel);

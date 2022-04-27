@@ -36,7 +36,7 @@ import {
   Ray,
   BufferAttribute,
 } from 'three';
-import { OrbitControls } from './OrbitControlsEdit.js';
+import { OrbitControls } from './OrbitControls.js';
 import './contact-form.js';
 
 export class BenderDemo extends LitElement {
