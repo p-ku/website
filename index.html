@@ -10,7 +10,11 @@
       name="Description"
       content="Pleased to meet you. よろしくお願いします。"
     />
-    <base href="/" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+
     <style>
       html,
       body {
@@ -49,9 +53,12 @@
     </style>
     <title>p-ku</title>
 
-    <script type="module" src="./out-tsc/src/web-site.js"></script>
-    <!--     <script type="module" src="./out-tsc/src/bendPrep.js" defer></script>
- -->
+    <script
+      type="module"
+      src="./out-tsc/src/web-site.js"
+      integrity="sha384-tSyqP/P0eF4DrPNbrrRWwtGOqb8EGuyDOGu2XSa0HZdHZ1spLU3TQGznmes7mUkn"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <web-site></web-site>

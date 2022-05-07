@@ -85,7 +85,7 @@ export class WebSite extends LitElement {
     }
 
     #navbar {
-      background-image: linear-gradient(-45deg, #321e00, #683e00);
+      background-image: linear-gradient(180deg, #321e00, #593500);
       box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.5);
       min-width: 100%;
       width: 100%;

@@ -1,0 +1,7 @@
+{
+  "name": "ピ-クu",
+  "short_name": "ピ-クu",
+  "icons": [{ "src": "icon-192.png", "type": "image/png", "sizes": "192x192" }],
+  "theme_color": "#321e00",
+  "background_color": "#321e00"
+}

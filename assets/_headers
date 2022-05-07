@@ -1,6 +1,6 @@
 /*
 
-    Content-Security-Policy: default-src https: 'unsafe-inline'
+    Content-Security-Policy: default-src 'none'; img-src 'self'; script-src 'self' https://d33wubrfki0l68.cloudfront.net 'sha256-tXwEnbr/5LzXU7ayrT8rZzwnRF8URUXydL8XyQpgSBs='; style-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
     X-Frame-Options: DENY
     X-XSS-Protection: 1; mode=block
     X-Content-Type-Options: nosniff
