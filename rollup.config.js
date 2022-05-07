@@ -1,10 +1,7 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import html from '@web/rollup-plugin-html';
-// import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
 import { terser } from 'rollup-plugin-terser';
-// import { generateSW } from 'rollup-plugin-workbox';
-// import path from 'path';
 import copy from 'rollup-plugin-copy';
 
 export default {
@@ -30,8 +27,6 @@ export default {
     nodeResolve(),
     /** Minify JS */
     terser(),
-    /** Bundle assets references via import.meta.url */
-    // importMetaAssets(),
     /** Compile JS to a lower language target */
     babel({
       babelHelpers: 'bundled',
@@ -68,26 +63,12 @@ export default {
         ],
       ],
     }),
-    /** Create and inject a service worker */
-    //  generateSW({
-    //    globIgnores: ['polyfills/*.js', 'nomodule-*.js'],
-    //    navigateFallback: '/index.html',
-    //    // where to output the generated sw
-    //    swDest: path.join('dist', 'sw.js'),
-    //    // directory to match patterns against to be precached
-    //    globDirectory: path.join('dist'),
-    //    // cache any html js and css by default
-    //    globPatterns: ['**/*.{html,js,css,webmanifest}'],
-    //    skipWaiting: true,
-    //    clientsClaim: true,
-    //    runtimeCaching: [{ urlPattern: 'polyfills/*.js', handler: 'CacheFirst' }],
-    //  }),
     copy({
       targets: [
-        { src: 'icon-192.png', dest: 'dist/assets' },
-        { src: 'apple-touch-icon.png', dest: 'dist' },
-        { src: 'favicon.ico', dest: 'dist' },
-        { src: 'icon.svg', dest: 'dist' },
+        { src: 'assets/icon-192.png', dest: 'dist/assets' },
+        { src: 'assets/apple-touch-icon.png', dest: 'dist' },
+        { src: 'assets/favicon.ico', dest: 'dist' },
+        { src: 'assets/icon.svg', dest: 'dist' },
         { src: 'assets/_headers', dest: 'dist' },
         { src: 'assets/_redirects', dest: 'dist' },
         { src: 'assets/404.html', dest: 'dist' },
