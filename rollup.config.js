@@ -20,7 +20,6 @@ export default {
     html({
       minify: true,
       injectServiceWorker: false,
-      // serviceWorkerPath: 'dist/sw.js',
       strictCSS: true,
     }),
     /** Resolve bare module imports */

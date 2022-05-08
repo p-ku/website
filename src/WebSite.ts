@@ -13,12 +13,21 @@ export class WebSite extends LitElement {
 
   @property({ type: Boolean }) isOpen = false;
 
+  firstUpdated() {
+    if (localStorage.myLang) {
+      this.lang = localStorage.myLang;
+      this.english = false;
+    }
+  }
+
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
   }
 
   switchLanguage() {
     this.english = !this.english;
+    if (this.english) localStorage.clear();
+    else localStorage.myLang = 'jp';
   }
 
   displayContent() {
