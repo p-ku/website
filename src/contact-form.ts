@@ -9,8 +9,8 @@ export class ContactForm extends LitElement {
 
   @property({ type: Boolean }) tipOpen = false;
 
-  @property({ type: Object }) entooltip = html`Encrypted with&nbsp;
-    <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a></span>    `;
+  @property({ type: Object }) entooltip = html`
+    <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a></span>&nbsp;Encryption`;
 
   @property({ type: Object })
   jptooltip = html`<a href="https://ja.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">&#65328;&#65319;&#65328;</a>で暗号化</span>`;
@@ -69,7 +69,7 @@ TComQBkFSpoM
     }
 
     h2::selection {
-      color: var(--white);
+      color: #fffde8;
       background-color: #ef8127;
     }
     a::selection,
@@ -136,9 +136,9 @@ TComQBkFSpoM
       height: 1.7em;
       align-self: right;
       background-color: rgba(255, 253, 232, 0.8);
-      color: var(--navbar);
+      color: #321e00;
       border-radius: 0 0 1rem 1rem;
-      border: solid 0.3em var(--navbar);
+      border: solid 0.3em#321e00;
       border-top: none;
       width: max-content;
       min-width: max-content;
@@ -214,15 +214,15 @@ TComQBkFSpoM
       color: #ef8127;
     }
     .tooltip a {
-      color: var(--navbar);
+      color: #321e00;
     }
 
     .tooltiptext {
       display: flex;
       height: min-content;
       width: 100%;
-      background-color: var(--navbar);
-      color: var(--white);
+      background-color: #321e00;
+      color: #fffde8;
       text-align: left;
       padding: 0.5em;
       border-radius: 1em;

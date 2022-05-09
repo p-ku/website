@@ -17,7 +17,8 @@ body {
 }
 
 #post article.norm,
-body#collection a.read-more, body#subpage a.read-more,
+body#collection a.read-more,
+body#subpage a.read-more,
 header p.description,
 body#collection article.norm,
 header p.description body#collection #wrapper h2 + time,
@@ -137,7 +138,7 @@ body#subpage code {
   color: #321e00;
   border: 1px solid #ffc342;
 }
-body#post img{
+body#post img {
   display: block;
   margin-left: auto;
   margin-right: auto;

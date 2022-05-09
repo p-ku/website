@@ -1,79 +1,55 @@
-import nodeResolve from '@rollup/plugin-node-resolve';
-import babel from '@rollup/plugin-babel';
-import html from '@web/rollup-plugin-html';
+// import html from '@rollup/plugin-html';
+import htmlWeb from '@web/rollup-plugin-html';
+
+import { copy } from '@web/rollup-plugin-copy';
+import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
-import copy from 'rollup-plugin-copy';
+import minifyHTML from 'rollup-plugin-minify-html-literals';
 
 export default {
-  input: 'index.html',
-  output: {
-    entryFileNames: '[hash].js',
-    chunkFileNames: '[hash].js',
-    assetFileNames: '[hash][extname]',
-    format: 'es',
-    dir: 'dist',
-  },
-  preserveEntrySignatures: false,
-
   plugins: [
     /** Enable using HTML as rollup entrypoint */
-    html({
-      minify: true,
-      injectServiceWorker: false,
-      strictCSS: true,
+    htmlWeb({
+      input: 'index.html',
+      strictCSPInlineScripts: true,
+      //  transformHtml: [html => html.replace('_NONCE_HERE_', 'nonce-'.concat())],
     }),
+    //   html({
+    //     meta: [
+    //       { charset: 'utf-8' },
+    //       {
+    //         name: 'viewport',
+    //         content: 'width=device-width, initial-scale=1.0, viewport-fit=cover',
+    //       },
+    //       {
+    //         name: 'Description',
+    //         content: 'Pleased to meet you. よろしくお願いします。',
+    //       },
+    //       {
+    //         'http-equiv': 'Content-Security-Policy',
+    //         content:
+    //           "default-src 'none'; img-src 'self'; script-src https://d33wubrfki0l68.cloudfront.net; style-src https://d33wubrfki0l68.cloudfront.net; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
+    //       },
+    //     ],
+    //   }),
     /** Resolve bare module imports */
-    nodeResolve(),
+    resolve(),
+    // Minify HTML template literals
+    minifyHTML(),
     /** Minify JS */
-    terser(),
-    /** Compile JS to a lower language target */
-    babel({
-      babelHelpers: 'bundled',
-      presets: [
-        [
-          require.resolve('@babel/preset-env'),
-          {
-            targets: [
-              'last 3 Chrome major versions',
-              'last 3 Firefox major versions',
-              'last 3 Edge major versions',
-              'last 3 Safari major versions',
-            ],
-            modules: false,
-            bugfixes: true,
-          },
-        ],
-      ],
-      plugins: [
-        [
-          require.resolve('babel-plugin-template-html-minifier'),
-          {
-            modules: { lit: ['html', { name: 'css', encapsulation: 'style' }] },
-            failOnError: false,
-            strictCSS: true,
-            htmlMinifier: {
-              collapseWhitespace: true,
-              conservativeCollapse: true,
-              removeComments: true,
-              caseSensitive: true,
-              minifyCSS: true,
-            },
-          },
-        ],
-      ],
+    terser({
+      ecma: 2020,
+      module: true,
+      warnings: true,
     }),
     copy({
-      targets: [
-        { src: 'assets/icon-192.png', dest: 'dist/assets' },
-        { src: 'assets/apple-touch-icon.png', dest: 'dist' },
-        { src: 'assets/favicon.ico', dest: 'dist' },
-        { src: 'assets/icon.svg', dest: 'dist' },
-        { src: 'assets/_headers', dest: 'dist' },
-        { src: 'assets/_redirects', dest: 'dist' },
-        { src: 'assets/404.html', dest: 'dist' },
-        { src: 'assets/success.html', dest: 'dist' },
-        { src: 'assets/images/*', dest: 'dist/assets/images' },
-      ],
+      patterns: '**/*headshot.jpg',
+    }),
+    copy({
+      patterns: '**/*',
+      rootDir: './assets',
     }),
   ],
+  output: { dir: 'dist' },
+  preserveEntrySignatures: false,
 };

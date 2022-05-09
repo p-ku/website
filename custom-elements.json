@@ -4,6 +4,12 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/Noncer2.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/OrbitControls.ts",
       "declarations": [
         {
@@ -575,7 +581,7 @@
             {
               "kind": "field",
               "name": "entooltip",
-              "default": "html`Encrypted with&nbsp;\n    <a href=\"https://en.wikipedia.org/wiki/Pretty_Good_Privacy\" target=\"_blank\">PGP</a></span>    `",
+              "default": "html`\n    <a href=\"https://en.wikipedia.org/wiki/Pretty_Good_Privacy\" target=\"_blank\">PGP</a></span>&nbsp;Encryption`",
               "attribute": "entooltip"
             },
             {
@@ -631,7 +637,7 @@
             },
             {
               "name": "entooltip",
-              "default": "html`Encrypted with&nbsp;\n    <a href=\"https://en.wikipedia.org/wiki/Pretty_Good_Privacy\" target=\"_blank\">PGP</a></span>    `",
+              "default": "html`\n    <a href=\"https://en.wikipedia.org/wiki/Pretty_Good_Privacy\" target=\"_blank\">PGP</a></span>&nbsp;Encryption`",
               "fieldName": "entooltip"
             },
             {
@@ -756,6 +762,12 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "out-tsc/src/Noncer2.js",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -940,6 +952,85 @@
           "declaration": {
             "name": "OrbitControls",
             "module": "out-tsc/src/OrbitControls.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "out-tsc/src/WebSite copy.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "WebSite",
+          "members": [
+            {
+              "kind": "method",
+              "name": "switchPage",
+              "parameters": [
+                {
+                  "name": "destination",
+                  "default": "'/'"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "switchLanguage"
+            },
+            {
+              "kind": "method",
+              "name": "displayContent"
+            },
+            {
+              "kind": "field",
+              "name": "english",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "currentPage",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'"
+            },
+            {
+              "kind": "field",
+              "name": "lang",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "isOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "web-site",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "WebSite",
+          "declaration": {
+            "name": "WebSite",
+            "module": "out-tsc/src/WebSite copy.js"
           }
         }
       ]
@@ -1219,7 +1310,7 @@
             {
               "kind": "field",
               "name": "entooltip",
-              "default": "html `Encrypted with&nbsp;\n    <a href=\"https://en.wikipedia.org/wiki/Pretty_Good_Privacy\" target=\"_blank\">PGP</a></span>    `"
+              "default": "html `\n    <a href=\"https://en.wikipedia.org/wiki/Pretty_Good_Privacy\" target=\"_blank\">PGP</a></span>&nbsp;Encryption`"
             },
             {
               "kind": "field",

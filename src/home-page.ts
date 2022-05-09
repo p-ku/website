@@ -22,6 +22,7 @@ export class HomePage extends LitElement {
       align-content: center;
       align-items: center;
     }
+
     h1,
     h2,
     p {
@@ -171,13 +172,12 @@ ${
           <div id="imgcontainer">
             <img
             class=${this.loaded ? '' : 'fadein'}
-              src="assets/images/headshot-4k.jpg"
               srcset="
-                assets/images/headshot-HD.jpg   720w,
-                assets/images/headshot-FHD.jpg 1080w,
-                assets/images/headshot-QHD.jpg 1440w,
-                assets/images/headshot-4k.jpg  2160w,
-                assets/images/headshot-4k.jpg"
+                images/HD-headshot.jpg   720w,
+                images/FHD-headshot.jpg 1080w,
+                images/QHD-headshot.jpg 1440w,
+                images/4k-headshot.jpg  2160w"
+              src="images/4k-headshot.jpg"
               sizes="96vw"
               alt="A well-executed headshot."
               @loadend=${() => {
