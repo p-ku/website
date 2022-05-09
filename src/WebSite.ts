@@ -3,19 +3,20 @@ import './bender-demo.js';
 import './contact-form.js';
 import { LitElement, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
-import { v4 } from 'uuid';
+// import { v4 } from 'uuid';
 
-const myNonce = v4();
-(window as any).litNonce = myNonce;
-// const myHeaders = new Headers(); // Currently empty
-const myHeaders = document.createElement('meta');
-myHeaders.httpEquiv = 'Content-Security-Policy';
-myHeaders.content =
-  "default-src 'none'; img-src 'self'; script-src https://d33wubrfki0l68.cloudfront.net; style-src https://d33wubrfki0l68.cloudfront.net"
-    .concat(" 'nonce-")
-    .concat(myNonce)
-    .concat("'; manifest-src 'self'; base-uri 'none'; form-action 'self'");
-document.getElementsByTagName('head')[0].appendChild(myHeaders);
+// const myNonce = v4();
+// (window as any).litNonce = myNonce;
+// // const myHeaders = new Headers(); // Currently empty
+// const myHeaders = document.createElement('meta');
+// myHeaders.httpEquiv = 'Content-Security-Policy';
+// myHeaders.content =
+//   "default-src 'none'; img-src 'self'; script-src https://d33wubrfki0l68.cloudfront.net; style-src https://d33wubrfki0l68.cloudfront.net"
+//     .concat(" 'nonce-")
+//     .concat(myNonce)
+//     .concat("'; manifest-src 'self'; base-uri 'none'; form-action 'self'");
+// document.getElementsByTagName('head')[0].appendChild(myHeaders);
+
 // const CSP =
 //   "default-src 'none'; img-src 'self'; script-src https://d33wubrfki0l68.cloudfront.net; style-src"
 //     .concat('nonce-')

@@ -1,5 +1,5 @@
 /*
-    Content-Security-Policy: default-src 'self'; img-src 'self'; script-src https://d33wubrfki0l68.cloudfront.net; style-src https://d33wubrfki0l68.cloudfront.net 'unsafe-inline'; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+    Content-Security-Policy: default-src 'self'; img-src 'self'; script-src https://d33wubrfki0l68.cloudfront.net; style-src https://d33wubrfki0l68.cloudfront.net 'unsafe-inline'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
     X-Frame-Options: DENY
     X-XSS-Protection: 1; mode=block
     X-Content-Type-Options: nosniff
