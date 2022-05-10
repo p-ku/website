@@ -51,7 +51,6 @@ TComQBkFSpoM
   async sendMessage() {
     await this.encryptor().then(encrypted => {
       (this.pgp as HTMLInputElement).value = encrypted;
-      //  ((this.pgp as HTMLInputElement).value as WebStream<string>) = encrypted;
     });
     await (this.contact as HTMLFormElement).submit();
   }
