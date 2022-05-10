@@ -172,12 +172,12 @@ ${
           <div id="imgcontainer">
             <img
             class=${this.loaded ? '' : 'fadein'}
+              src="images/4k-headshot.jpg"
               srcset="
                 images/HD-headshot.jpg   720w,
                 images/FHD-headshot.jpg 1080w,
                 images/QHD-headshot.jpg 1440w,
                 images/4k-headshot.jpg  2160w"
-              src="images/4k-headshot.jpg"
               sizes="96vw"
               alt="A well-executed headshot."
               @loadend=${() => {

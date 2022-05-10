@@ -4,12 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "src/Noncer2.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/OrbitControls.ts",
       "declarations": [
         {
