@@ -46,7 +46,9 @@ export class BenderDemo extends LitElement {
 
   @property({ type: Number }) previous = 0;
 
-  @property({ type: Boolean }) tester = BenderDemo.detectWebGLContext();
+  @property({ type: Boolean }) webGLCapable = false;
+
+  // @property({ type: Object }) webGLOut: any;
 
   @property({ attribute: false }) meshLoaded: boolean[] = [];
 
@@ -91,25 +93,22 @@ export class BenderDemo extends LitElement {
 
   @property({ attribute: false }) controls2: any;
 
-  @property({ type: Object }) glMessage = html``;
+  // @property({ type: Object }) glMessage = html``;
+  //
+  // @property({ type: Object }) glTip = html`<p>NO WEBGL</p>`;
 
-  @property({ type: Object }) glTip = html`<p>NO WEBGL</p>`;
-
-  static detectWebGLContext() {
-    // Create canvas element. The canvas is not added to the
-    // document itself, so it is never displayed in the
-    // browser window.
+  constructor() {
+    super();
+    // Test for webGL
     const canvas = document.createElement('canvas');
-    // Get WebGLRenderingContext from canvas element.
     const gl =
       canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    // Report the result.
-    if (gl && gl instanceof WebGLRenderingContext) return true;
-    return false;
+    if (gl && gl instanceof WebGLRenderingContext) this.webGLCapable = true;
+    else this.webGLCapable = false;
   }
 
   firstUpdated() {
-    if (BenderDemo.detectWebGLContext()) {
+    if (this.webGLCapable) {
       this.renderer = new WebGLRenderer({ antialias: true });
       this.renderer2 = new WebGLRenderer({ antialias: true });
       this.controls = new OrbitControls(
@@ -122,7 +121,7 @@ export class BenderDemo extends LitElement {
       );
       this.init();
       this.animator();
-    } else console.log('boo');
+    }
   }
 
   handleResize = () => {
@@ -907,7 +906,7 @@ export class BenderDemo extends LitElement {
 
   render() {
     return html`
-      ${BenderDemo.detectWebGLContext()
+      ${this.webGLCapable
         ? html` <div id="main">
               <div class="colleft">
                 <div id="beam"></div>
@@ -935,7 +934,7 @@ export class BenderDemo extends LitElement {
             </p>`
         : html`<div class="nogl"><p>
             This demo requires
-            <a href="https://en.wikipedia.org/wiki/WebGL" target="_blank">WebGL</a>.
+            <a href="https://en.wikipedia.org/wiki/WebGL" target="_blank">WebGL</a>.</p>
             <p>Your browser or device <a href="https://get.webgl.org/" target="_blank">may not support</a> WebGL.</p>
           </p></div>`}
     `;
