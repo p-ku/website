@@ -18,7 +18,6 @@
     "@rollup/plugin-html": "^0.2.4",
     "@rollup/plugin-replace": "^4.0.0",
     "lit": "^2.2.2",
-    "npm-check-updates": "^12.5.9",
     "openpgp": "^5.2.1",
     "three": "^0.140.0",
     "uuid": "^8.3.2"
