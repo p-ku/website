@@ -382,6 +382,11 @@
             },
             {
               "kind": "field",
+              "name": "tester",
+              "attribute": "tester"
+            },
+            {
+              "kind": "field",
               "name": "meshLoaded",
               "type": {
                 "text": "boolean[]"
@@ -422,22 +427,47 @@
             {
               "kind": "field",
               "name": "renderer",
-              "default": "new WebGLRenderer({\n    antialias: true,\n  })"
+              "type": {
+                "text": "any"
+              }
             },
             {
               "kind": "field",
               "name": "renderer2",
-              "default": "new WebGLRenderer({\n    antialias: true,\n  })"
+              "type": {
+                "text": "any"
+              }
             },
             {
               "kind": "field",
               "name": "controls",
-              "default": "new OrbitControls(\n    this.camera,\n    this.renderer.domElement as unknown as HTMLElement\n  )"
+              "type": {
+                "text": "any"
+              }
             },
             {
               "kind": "field",
               "name": "controls2",
-              "default": "new OrbitControls(\n    this.camera,\n    this.renderer2.domElement as unknown as HTMLElement\n  )"
+              "type": {
+                "text": "any"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "glMessage",
+              "default": "html``",
+              "attribute": "glMessage"
+            },
+            {
+              "kind": "field",
+              "name": "glTip",
+              "default": "html`<p>NO WEBGL</p>`",
+              "attribute": "glTip"
+            },
+            {
+              "kind": "method",
+              "name": "detectWebGLContext",
+              "static": true
             },
             {
               "kind": "field",
@@ -508,6 +538,20 @@
               },
               "default": "0",
               "fieldName": "previous"
+            },
+            {
+              "name": "tester",
+              "fieldName": "tester"
+            },
+            {
+              "name": "glMessage",
+              "default": "html``",
+              "fieldName": "glMessage"
+            },
+            {
+              "name": "glTip",
+              "default": "html`<p>NO WEBGL</p>`",
+              "fieldName": "glTip"
             }
           ],
           "superclass": {
@@ -1119,6 +1163,11 @@
           "members": [
             {
               "kind": "method",
+              "name": "detectWebGLContext",
+              "static": true
+            },
+            {
+              "kind": "method",
               "name": "init"
             },
             {
@@ -1167,6 +1216,10 @@
             },
             {
               "kind": "field",
+              "name": "tester"
+            },
+            {
+              "kind": "field",
               "name": "meshLoaded",
               "type": {
                 "text": "array"
@@ -1206,23 +1259,13 @@
             },
             {
               "kind": "field",
-              "name": "renderer",
-              "default": "new WebGLRenderer({\n            antialias: true,\n        })"
+              "name": "glMessage",
+              "default": "html ``"
             },
             {
               "kind": "field",
-              "name": "renderer2",
-              "default": "new WebGLRenderer({\n            antialias: true,\n        })"
-            },
-            {
-              "kind": "field",
-              "name": "controls",
-              "default": "new OrbitControls(this.camera, this.renderer.domElement)"
-            },
-            {
-              "kind": "field",
-              "name": "controls2",
-              "default": "new OrbitControls(this.camera, this.renderer2.domElement)"
+              "name": "glTip",
+              "default": "html `<p>NO WEBGL</p>`"
             },
             {
               "kind": "field",

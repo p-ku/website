@@ -46,6 +46,8 @@ export class BenderDemo extends LitElement {
 
   @property({ type: Number }) previous = 0;
 
+  @property({ type: Boolean }) tester = BenderDemo.detectWebGLContext();
+
   @property({ attribute: false }) meshLoaded: boolean[] = [];
 
   @property({ attribute: false }) bendGroup: Group[] = [];
@@ -63,27 +65,64 @@ export class BenderDemo extends LitElement {
     100
   );
 
-  @property({ attribute: false }) renderer = new WebGLRenderer({
-    antialias: true,
-  });
+  // @property({ attribute: false }) renderer = new WebGLRenderer({
+  //   antialias: true,
+  // });
 
-  @property({ attribute: false }) renderer2 = new WebGLRenderer({
-    antialias: true,
-  });
+  @property({ attribute: false }) renderer: any;
 
-  @property({ attribute: false }) controls = new OrbitControls(
-    this.camera,
-    this.renderer.domElement as unknown as HTMLElement
-  );
+  // @property({ attribute: false }) renderer2 = new WebGLRenderer({
+  //   antialias: true,
+  // });
 
-  @property({ attribute: false }) controls2 = new OrbitControls(
-    this.camera,
-    this.renderer2.domElement as unknown as HTMLElement
-  );
+  @property({ attribute: false }) renderer2: any;
+
+  // @property({ attribute: false }) controls = new OrbitControls(
+  //   this.camera,
+  //   this.renderer.domElement as unknown as HTMLElement
+  // );
+  //
+  // @property({ attribute: false }) controls2 = new OrbitControls(
+  //   this.camera,
+  //   this.renderer2.domElement as unknown as HTMLElement
+  // );
+
+  @property({ attribute: false }) controls: any;
+
+  @property({ attribute: false }) controls2: any;
+
+  @property({ type: Object }) glMessage = html``;
+
+  @property({ type: Object }) glTip = html`<p>NO WEBGL</p>`;
+
+  static detectWebGLContext() {
+    // Create canvas element. The canvas is not added to the
+    // document itself, so it is never displayed in the
+    // browser window.
+    const canvas = document.createElement('canvas');
+    // Get WebGLRenderingContext from canvas element.
+    const gl =
+      canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    // Report the result.
+    if (gl && gl instanceof WebGLRenderingContext) return true;
+    return false;
+  }
 
   firstUpdated() {
-    this.init();
-    this.animator();
+    if (BenderDemo.detectWebGLContext()) {
+      this.renderer = new WebGLRenderer({ antialias: true });
+      this.renderer2 = new WebGLRenderer({ antialias: true });
+      this.controls = new OrbitControls(
+        this.camera,
+        this.renderer.domElement as unknown as HTMLElement
+      );
+      this.controls2 = new OrbitControls(
+        this.camera,
+        this.renderer2.domElement as unknown as HTMLElement
+      );
+      this.init();
+      this.animator();
+    } else console.log('boo');
   }
 
   handleResize = () => {
@@ -857,6 +896,9 @@ export class BenderDemo extends LitElement {
       align-content: center;
       justify-content: center;
     }
+    .nogl {
+      margin: auto;
+    }
   `;
 
   get sliderValue() {
@@ -865,31 +907,37 @@ export class BenderDemo extends LitElement {
 
   render() {
     return html`
-      <div id="main">
-        <div class="colleft">
-          <div id="beam"></div>
-          <div id="graph"></div>
-        </div>
-        <div class="colright">
-          <label for="myRange">${this.english ? 'bend' : '曲げる'}</label>
-          <div class="slider-wrapper">
-            <input
-              id="myRange"
-              class=${this.loading ? 'slider disabled' : 'slider'}
-              type="range"
-              min="0"
-              max="20"
-              value="10"
-              @input=${this.newBend}
-            />
-          </div>
-        </div>
-      </div>
-      <p>
-        ${this.english
-          ? 'The plot shows stress in a vertical slice: compression to the right in blue, and tension to the left in pink.'
-          : 'プロットは、垂直方向のスライスでの応力を示しています。青色で右に圧縮、ピンク色で左に引張られた状態を示しています。'}
-      </p>
+      ${BenderDemo.detectWebGLContext()
+        ? html` <div id="main">
+              <div class="colleft">
+                <div id="beam"></div>
+                <div id="graph"></div>
+              </div>
+              <div class="colright">
+                <label for="myRange">${this.english ? 'bend' : '曲げる'}</label>
+                <div class="slider-wrapper">
+                  <input
+                    id="myRange"
+                    class=${this.loading ? 'slider disabled' : 'slider'}
+                    type="range"
+                    min="0"
+                    max="20"
+                    value="10"
+                    @input=${this.newBend}
+                  />
+                </div>
+              </div>
+            </div>
+            <p>
+              ${this.english
+                ? 'The plot shows stress in a vertical slice: compression to the right in blue, and tension to the left in pink.'
+                : 'プロットは、垂直方向のスライスでの応力を示しています。青色で右に圧縮、ピンク色で左に引張られた状態を示しています。'}
+            </p>`
+        : html`<div class="nogl"><p>
+            This demo requires
+            <a href="https://en.wikipedia.org/wiki/WebGL" target="_blank">WebGL</a>.
+            <p>Your browser or device <a href="https://get.webgl.org/" target="_blank">may not support</a> WebGL.</p>
+          </p></div>`}
     `;
   }
 }
