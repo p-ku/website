@@ -48,8 +48,6 @@ export class BenderDemo extends LitElement {
 
   @property({ type: Boolean }) webGLCapable = false;
 
-  // @property({ type: Object }) webGLOut: any;
-
   @property({ attribute: false }) meshLoaded: boolean[] = [];
 
   @property({ attribute: false }) bendGroup: Group[] = [];
@@ -67,35 +65,13 @@ export class BenderDemo extends LitElement {
     100
   );
 
-  // @property({ attribute: false }) renderer = new WebGLRenderer({
-  //   antialias: true,
-  // });
-
   @property({ attribute: false }) renderer: any;
 
-  // @property({ attribute: false }) renderer2 = new WebGLRenderer({
-  //   antialias: true,
-  // });
-
   @property({ attribute: false }) renderer2: any;
-
-  // @property({ attribute: false }) controls = new OrbitControls(
-  //   this.camera,
-  //   this.renderer.domElement as unknown as HTMLElement
-  // );
-  //
-  // @property({ attribute: false }) controls2 = new OrbitControls(
-  //   this.camera,
-  //   this.renderer2.domElement as unknown as HTMLElement
-  // );
 
   @property({ attribute: false }) controls: any;
 
   @property({ attribute: false }) controls2: any;
-
-  // @property({ type: Object }) glMessage = html``;
-  //
-  // @property({ type: Object }) glTip = html`<p>NO WEBGL</p>`;
 
   constructor() {
     super();
