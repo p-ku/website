@@ -135,8 +135,6 @@ export class HomePage extends LitElement {
         margin-right: 1rem;
       }
     }
-    @media screen and (orientation: portrait) {
-    }
   `;
 
   render() {

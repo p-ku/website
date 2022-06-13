@@ -3,6 +3,7 @@ import './bender-demo.js';
 import './contact-form.js';
 import { LitElement, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
+import { cache } from 'lit/directives/cache.js';
 
 export class WebSite extends LitElement {
   @property({ type: Boolean }) english = true;
@@ -13,24 +14,26 @@ export class WebSite extends LitElement {
 
   @property({ type: Boolean }) isOpen = false;
 
+  @property({ type: Object }) bender: any;
+
   switchPage(destination = '/') {
     this.currentPage = this.lang.concat(destination);
+    this.displayContent();
   }
 
   switchLanguage() {
     this.english = !this.english;
+    this.displayContent();
   }
 
   displayContent() {
-    let content;
     if (this.currentPage.endsWith('bender')) {
-      content = html`<bender-demo ?english=${this.english}></bender-demo>`;
-    } else if (this.currentPage.endsWith('contact')) {
-      content = html`<contact-form ?english=${this.english}></contact-form>`;
-    } else {
-      content = html`<home-page ?english=${this.english}></home-page>`;
+      return html`<bender-demo ?english=${this.english}></bender-demo>`;
     }
-    return content;
+    if (this.currentPage.endsWith('contact')) {
+      return html`<contact-form ?english=${this.english}></contact-form>`;
+    }
+    return html`<home-page ?english=${this.english}></home-page>`;
   }
 
   static styles = css`
@@ -154,7 +157,7 @@ export class WebSite extends LitElement {
       color: #dfabf4;
       border: solid #dfabf4 max(4px, 0.15em);
       border-bottom: none;
-      border-radius: 1em 1em 0 0;
+      border-radius: 28px 28px 0 0;
       height: 55%;
       max-width: 960px;
       width: 12vw;
@@ -228,10 +231,10 @@ export class WebSite extends LitElement {
     #mail.chosen .linktext {
       animation: reveal 0.08s ease-out forwards;
       opacity: 1;
-      color: #ffc342;
     }
     #mail.chosen #mailcircle {
       color: #ffc342;
+      border-style: dashed;
     }
 
     #jpencircle,
@@ -625,6 +628,6 @@ export class WebSite extends LitElement {
     <span class='linktext'>日</span></div></div></button></div></div></div>
         <div id="outlet" @focus=${() => {
           if (this.isOpen) this.isOpen = !this.isOpen;
-        }}>${this.displayContent()}</div></div>`;
+        }}>${cache(this.displayContent())}</div></div>`;
   }
 }

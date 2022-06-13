@@ -23,17 +23,17 @@ class OrbitControls extends EventDispatcher {
 
   enabled: boolean = true;
 
-  target: Vector3 = new Vector3();
+  target: Vector3 = new Vector3(0, 0, 0);
 
-  minPolarAngle: number = 0;
+  minPolarAngle: number = Math.PI / 3;
 
-  maxPolarAngle: number = Math.PI;
+  maxPolarAngle: number = (2 * Math.PI) / 3;
 
-  minAzimuthAngle: number = -Infinity;
+  minAzimuthAngle: number = -Math.PI / 2;
 
-  maxAzimuthAngle: number = Infinity;
+  maxAzimuthAngle: number = Math.PI / 2;
 
-  enableDamping: boolean = false;
+  enableDamping: boolean = true;
 
   dampingFactor: number = 0.05;
 
@@ -41,7 +41,7 @@ class OrbitControls extends EventDispatcher {
 
   rotateSpeed: number = 1.0;
 
-  enablePan: boolean = true;
+  enablePan: boolean = false;
 
   panSpeed: number = 1.0;
 
