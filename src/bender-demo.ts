@@ -112,6 +112,8 @@ export class BenderDemo extends LitElement {
       const graphRoot = sRoot.getElementById('graph');
       if (beamRoot != null) beamRoot.appendChild(this.renderer.domElement);
       if (graphRoot != null) graphRoot.appendChild(this.renderer2.domElement);
+    } else {
+      return;
     }
 
     const bendLoad = new BendPlots();
@@ -126,7 +128,6 @@ export class BenderDemo extends LitElement {
     this.camera.aspect = 3 / 2.5;
     this.camera.updateProjectionMatrix();
     this.camera.position.set(2, 2, 3.2);
-    //  this.camera.lookAt(new Vector3(0, 0, 0));
 
     this.renderer2.localClippingEnabled = true;
 
@@ -211,80 +212,52 @@ export class BenderDemo extends LitElement {
       text-align: center;
       writing-mode: vertical-lr;
     }
+
     #main {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      max-width: 960px;
-      max-height: 100%;
-      color: #321e00;
+      text-align: center;
       margin: 0 auto;
+      justify-content: flex-start;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      flex-direction: column;
+      max-width: 800px;
+      flex-grow: 1;
+      align-items: center;
+    }
 
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      align-content: center;
-      flex: 0.5, 0.5, 0.5;
-    }
-    .colleft {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      align-content: center;
-      flex: 0.5, 0.5, 0.5;
-    }
-    .colright {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      align-content: center;
-      height: 66vh;
-    }
     p {
       max-width: 80vw;
       align-self: center;
     }
-    /* 
-    .slider {
-      display: flex;
-      margin: auto;
-      transform: rotate(270deg);
-      width: 30vh;
-      -moz-transform: rotate(270deg);
-      border-radius: 14px;
-      background: #ffc342;
-    } */
+
+    label {
+      white-space: nowrap;
+    }
+
     .slider {
       display: flex;
       border-radius: 14px;
       background: #ffc342;
-      width: 80vw;
+      width: 100%;
       height: 14px;
       -webkit-appearance: none;
       outline: none;
+      margin: 1em;
     }
-    #slide-text {
-      position: fixed;
-      z-index: 1;
-    }
-    #slide-text2 {
-      position: fixed;
-      /* color: #ffc342; */
-      z-index: 2;
-    }
+
     #smile {
       display: flex;
-      flex-direction: row;
-      width: max-content;
-      width: 100vw;
-      max-width: 960px;
-      min-height: 48px;
-      justify-content: center;
+      box-sizing: border-box;
+      resize: none;
+      width: 90%;
+      font-family: inherit;
+      color: #321e00;
+      background: rgba(255, 253, 232, 0.8);
+      font-size: 21px;
       align-items: center;
-      align-content: center;
-      overflow: hidden;
+      padding-top: 1em;
     }
     .disabled {
       pointer-events: none;
@@ -330,12 +303,12 @@ export class BenderDemo extends LitElement {
   render() {
     return html`
       ${this.webGLCapable
-        ? html` <div id="main">
+        ? html`
+            <div id="main">
               <h1 id="loadingNote" class=${this.loading ? '' : 'disabled'}>
                 loading...
               </h1>
               <div id="beam"></div>
-
               <div id="graph"></div>
               <div id="smile">
                 <label class=${this.loading ? 'disabled' : ''} for="myRange"
@@ -354,12 +327,13 @@ export class BenderDemo extends LitElement {
                   >(:</label
                 >
               </div>
+              <p class=${this.loading ? 'disabled' : ''}>
+                ${this.english
+                  ? 'The plot shows stress in a vertical slice: compression to the right in blue, and tension to the left in pink.'
+                  : 'プロットは、垂直方向のスライスでの応力を示しています。青色で右に圧縮、ピンク色で左に引張られた状態を示しています。'}
+              </p>
             </div>
-            <p class=${this.loading ? 'disabled' : ''}>
-              ${this.english
-                ? 'The plot shows stress in a vertical slice: compression to the right in blue, and tension to the left in pink.'
-                : 'プロットは、垂直方向のスライスでの応力を示しています。青色で右に圧縮、ピンク色で左に引張られた状態を示しています。'}
-            </p>`
+          `
         : html`<div class="nogl"><p>
             This demo requires
             <a href="https://en.wikipedia.org/wiki/WebGL" target="_blank">WebGL</a>.</p>
