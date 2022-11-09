@@ -151,7 +151,7 @@ export class HomePage extends LitElement {
         <p>${
           this.english
             ? 'I am driven to solve problems. With this in mind, changing the course of my career is in the best interest of both myself and my employer. Software is both ubiquitous and hungry for ingenuity. Working in software will allow me to reach my full potential.'
-            : '私は創作に駆り立てられます。それにもかかわらず、私の現在のキャリアパスには、ほとんど創造性が含まれていません。今が進路を変える時です。私の変革を可能にし、私の潜在能力を最大限に発揮してください。'
+            : '私は問題を解決するために駆り立てられています。これを念頭に置いて、私のキャリアの進路を変えることは、私自身と私の雇用主の両方にとって最善の利益になります。ソフトウェアはユビキタスであり、創意工夫に飢えています。ソフトウェアで働くことで、自分の可能性を最大限に引き出すことができます。'
         }
         </p>
 </div>
