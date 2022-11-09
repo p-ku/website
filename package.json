@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
-    "integrity": "sed -i '' \"s/SRI_HERE/sha256-$(curl -s https://d33wubrfki0l68.cloudfront.net/js/36af740df3881b8e21b618e8b0cc1129812d2fc6/web-site.js | openssl dgst -sha256 -binary | openssl base64 -A)/g\" dist/index.html",
+    "integrity": "sed -i '' \"s/SRI_HERE/sha256-$(curl -s https://d33wubrfki0l68.cloudfront.net/js/a5a4a2454e2bec14424f15b16fd91bb2399bc99e/web-site.js | openssl dgst -sha256 -binary | openssl base64 -A)/g\" dist/index.html",
     "build": "rimraf dist && tsc && rollup -c rollup.config.js && npm run analyze -- --exclude dist && npm run integrity",
     "start:build": "web-dev-server --root-dir dist --app-index index.html --open",
     "analyze": "cem analyze --litelement",

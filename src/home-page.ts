@@ -150,16 +150,9 @@ export class HomePage extends LitElement {
         }</h2></div>        <div class="bottomtext">
         <p>${
           this.english
-            ? 'I am driven to create. Despite this, my current career path involves little creativity. Now is the time to change course. Enable my transformation and witness my full potential.'
+            ? 'I am driven to solve problems. With this in mind, changing the course of my career is in the best interest of both myself and my employer. Software is both ubiquitous and hungry for ingenuity. Working in software will allow me to reach my full potential.'
             : '私は創作に駆り立てられます。それにもかかわらず、私の現在のキャリアパスには、ほとんど創造性が含まれていません。今が進路を変える時です。私の変革を可能にし、私の潜在能力を最大限に発揮してください。'
         }
-        </p>
-        <p>
-${
-  this.english
-    ? 'Software is both ubiquitous and hungry for ingenuity. With that in mind, the solution has become painfully obvious—I must work in software.'
-    : 'ソフトウェアはユビキタスであり、創意工夫に飢えています。それを念頭に置いて、解決策は痛々しいほど明白になった。ソフトウェアで作業する必要があります。'
-}
         </p>
 </div>
   </div>
