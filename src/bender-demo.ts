@@ -271,9 +271,6 @@ export class BenderDemo extends LitElement {
       border-radius: 50%;
       background: #321e00;
       cursor: pointer;
-      align-items: center;
-      align-content: center;
-      justify-content: center;
       -webkit-box-shadow: none;
       box-shadow: none;
     }
@@ -283,9 +280,6 @@ export class BenderDemo extends LitElement {
       border-radius: 50%;
       background: #321e00;
       cursor: pointer;
-      align-items: center;
-      align-content: center;
-      justify-content: center;
     }
     .nogl {
       margin: auto;
