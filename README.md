@@ -2,7 +2,7 @@
 
 This is the source code for my website.
 
-A+ for security according to [Mozilla Observatory](https://observatory.mozilla.org) as of May 9, 2022.
+B+ for security according to [Mozilla Observatory](https://observatory.mozilla.org) as of July 22, 2026 (I had an A+ but got tired of maintaining it).
 
 [![Built with open-wc recommendations](https://img.shields.io/badge/built%20with-open--wc-blue.svg)](https://github.com/open-wc)
 
