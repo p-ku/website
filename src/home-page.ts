@@ -171,8 +171,11 @@ export class HomePage extends LitElement {
                 images/4k-headshot.jpg  2160w"
               sizes="96vw"
               alt="A well-executed headshot."
-              @loadend=${() => {
+              @load=${() => {
                 this.initImage();
+              }}
+              @error=${() => {
+                this.initImage(); 
               }}
             />
           </div>
