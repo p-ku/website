@@ -569,10 +569,12 @@ export class WebSite extends LitElement {
       this.currentPage.endsWith('bender') ? 'chosen' : ''
     } @click=${() => this.switchPage('/bender')}>${
       this.english ? 'demo⋆' : 'デモ'
-    }<span class="buttonspace"></span></button>
+    }
+    <!--<span class="buttonspace"></span></button>
             <a id='burgerblog' href="https://blog.p-ku.com" target="_blank">${
               this.english ? 'blog⤴' : 'ブログ⤴'
-            }<span class="buttonspace"></span></a></div>                      
+            }-->
+            <span class="buttonspace"></span></a></div>                      
             <div id="burgerlink">
               <button class="burgerspace" @click=${() =>
                 this.switchPage('/contact')}>
@@ -596,11 +598,11 @@ export class WebSite extends LitElement {
                 if (this.isOpen) this.isOpen = !this.isOpen;
               }}>ピ-クu</button></div>
           <div id="navcenter">
-                 <a class="blog" href="https://blog.p-ku.com" target="_blank" @click=${() => {
+               <!--  <a class="blog" href="https://blog.p-ku.com" target="_blank" @click=${() => {
                    if (this.isOpen) this.isOpen = !this.isOpen;
                  }}><span class='linktext'></span>${
       this.english ? 'blog⤴' : 'ブログ⤴'
-    }</a>
+    }</a> -->
             <div id="demobar">
               <button class=${
                 this.currentPage.endsWith('bender') ? 'chosen' : ''
