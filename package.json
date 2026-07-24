@@ -21,7 +21,7 @@
     "lit": "^2.2.2",
     "openpgp": "^5.2.1",
     "three": "^0.140.0",
-    "uuid": "^8.3.2"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
