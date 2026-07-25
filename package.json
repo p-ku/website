@@ -18,7 +18,7 @@
     "@rollup/plugin-alias": "^6.0.0",
     "@rollup/plugin-html": "^2.0.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "lit": "^2.2.2",
+    "lit": "^3.3.3",
     "openpgp": "^5.2.1",
     "three": "^0.140.0",
     "uuid": "^14.0.1"
