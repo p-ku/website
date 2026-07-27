@@ -1,8 +1,8 @@
-import html from '@web/rollup-plugin-html';
+import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
 import { copy } from '@web/rollup-plugin-copy';
 import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
-import minifyHTML from 'rollup-plugin-minify-html-literals';
+import terser from '@rollup/plugin-terser';
+// import minifyHTML from 'rollup-plugin-minify-html-literals';
 
 export default {
   plugins: [
@@ -11,9 +11,11 @@ export default {
       input: 'index.html',
     }),
     /** Resolve bare module imports */
-    resolve(),
-    // Minify HTML template literals
-    minifyHTML(),
+    resolve({
+      browser: true,
+      preferBuiltins: false,
+      exportConditions: ["browser", "default"],
+    }),
     /** Minify JS */
     terser({
       ecma: 2020,

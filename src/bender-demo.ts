@@ -60,8 +60,8 @@ export class BenderDemo extends LitElement {
 
   async firstUpdated() {
     if (this.webGLCapable) {
-      this.renderer = new WebGLRenderer({ antialias: true });
-      this.renderer2 = new WebGLRenderer({ antialias: true });
+      this.renderer = new WebGLRenderer({ antialias: true, stencil: true });
+      this.renderer2 = new WebGLRenderer({ antialias: true, stencil: true});
       this.renderer.setSize(
         window.outerHeight / 2.525,
         window.outerHeight / 3.03

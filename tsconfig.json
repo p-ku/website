@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "es2020",
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmitOnError": true,
@@ -12,7 +12,9 @@
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "./",
-    "incremental": true
+    "incremental": true,
+    "allowJs": true,
+    "types": ["node"]
   },
-  "include": ["**/*.ts"]
+  "include": ["src/**/*"]
 }
