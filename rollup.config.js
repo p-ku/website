@@ -11,7 +11,11 @@ export default {
       input: 'index.html',
     }),
     /** Resolve bare module imports */
-    resolve(),
+    resolve({
+      browser: true,
+      preferBuiltins: false,
+      exportConditions: ["browser", "default"],
+    }),
     /** Minify JS */
     terser({
       ecma: 2020,
