@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import { encrypt, createMessage, readKey } from 'openpgp/lightweight';
+import { encrypt, createMessage, readKey } from 'openpgp';
 
 export class ContactForm extends LitElement {
   @property({ type: String }) lang = '';
